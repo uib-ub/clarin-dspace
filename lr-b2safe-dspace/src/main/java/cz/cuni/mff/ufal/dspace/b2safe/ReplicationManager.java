@@ -52,7 +52,7 @@ import fr.cines.eudat.repopack.b2safe_rp_core.DataSet.B2SAFE_CONFIGURATION;
  */
 @SuppressWarnings("deprecation")
 public class ReplicationManager {
-	
+		
 	static final Logger log = Logger.getLogger(ReplicationManager.class);
 
 	static boolean replicationOn = ConfigurationManager.getBooleanProperty("lr", "lr.replication.eudat.on", false);
@@ -65,6 +65,7 @@ public class ReplicationManager {
 	public static final List<String> inProgress = new ArrayList<String>();
 	public static final Map<String, Exception> failed = new HashMap<String, Exception>();
 	
+	private static String replicadirectory = ConfigurationManager.getProperty("lr", "lr.replication.eudat.replicadirectory");
 	
 	private static boolean replicateAll = ConfigurationManager.getBooleanProperty("lr", "lr.replication.eudat.replicateall", false);
 	
@@ -113,7 +114,7 @@ public class ReplicationManager {
 	}
 
 	public static List<DataObject> list() throws Exception {
-		List<DataObject> dos = replicationService.listDOFromDirectory("", false);
+		List<DataObject> dos = replicationService.listDOFromDirectory(replicadirectory, false);
         return dos;
 	}
 	
@@ -351,7 +352,7 @@ public class ReplicationManager {
 		config.put(B2SAFE_CONFIGURATION.ZONE.name(),
 		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.zone"));
 		config.put(B2SAFE_CONFIGURATION.DEFAULT_STORAGE.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.defaultstorage"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.defaultstorage"));		
 		config.put(B2SAFE_CONFIGURATION.RESOURCE_ID.name(),
 		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.id"));
     }
