@@ -337,23 +337,23 @@ public class ReplicationManager {
     
     static void populateConfig(Properties config) {
 		config.put(B2SAFE_CONFIGURATION.B2SAFE_TRANS_PROTOCOL.name(),
-		        ConfigurationManager.getProperty("lr", "lr.replication.protocol"));
+		        ConfigurationManager.getProperty("lr", "lr.replication.eudat.protocol"));
 		config.put(B2SAFE_CONFIGURATION.HOST.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.host"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.host"));
 		config.put(B2SAFE_CONFIGURATION.PORT.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.port"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.port"));
 		config.put(B2SAFE_CONFIGURATION.USER_NAME.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.username"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.username"));
 		config.put(B2SAFE_CONFIGURATION.PASSWORD.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.password"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.password"));
 		config.put(B2SAFE_CONFIGURATION.HOME_DIRECTORY.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.homedirectory"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.homedirectory"));
 		config.put(B2SAFE_CONFIGURATION.ZONE.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.zone"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.zone"));
 		config.put(B2SAFE_CONFIGURATION.DEFAULT_STORAGE.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.defaultstorage"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.defaultstorage"));
 		config.put(B2SAFE_CONFIGURATION.RESOURCE_ID.name(),
-		    ConfigurationManager.getProperty("lr", "lr.replication.id"));
+		    ConfigurationManager.getProperty("lr", "lr.replication.eudat.id"));
     }
     
     public static Map<String, String> getServerInformation() {
