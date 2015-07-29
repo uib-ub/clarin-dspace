@@ -73,7 +73,7 @@ public class ControlPanelReplicationTabHelper {
 					ReplicationManager.initialize();
 				} catch (Exception e) {
 					List info = mainDiv.addList("replication-config");
-					info.addItem().addContent(e.getLocalizedMessage());
+					info.addItem().addContent(e.toString());
 					return;
 				}
 			}					
@@ -110,7 +110,7 @@ public class ControlPanelReplicationTabHelper {
 					continue;
                   }
 				String value = config.getProperty(key);
-				if (value == null) {
+				if (value == null || value.isEmpty()) {
 					value = "N/A";
 				}
 				statusList.addLabel(key);
