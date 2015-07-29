@@ -422,7 +422,6 @@ class ReplicationThread implements Runnable {
 	}
 
 	public void run() {
-		Context context = null;
 		try {
 
 			//If retrying a failed item removed from failed
