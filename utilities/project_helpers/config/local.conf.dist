@@ -147,8 +147,6 @@ lr.replication.eudat.port=
 lr.replication.eudat.username=
 lr.replication.eudat.password=
 lr.replication.eudat.homedirectory=
-# directory in homedirectory where to put replicas for this instance
-lr.replication.eudat.replicadirectory=
 lr.replication.eudat.zone=
 lr.replication.eudat.defaultstorage=
 lr.replication.eudat.notification_email=${lr.info.recipient}
