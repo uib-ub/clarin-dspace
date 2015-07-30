@@ -392,7 +392,7 @@ class ReplicationThread implements Runnable {
 	boolean force;
 	Context context;
 
-	public ReplicationThread(String handle, Item item, boolean force) {
+	public ReplicationThread(String handle, Item item, boolean force) throws SQLException {
 		this.context = new Context();
 		this.handle = handle;
 		this.item = item;
