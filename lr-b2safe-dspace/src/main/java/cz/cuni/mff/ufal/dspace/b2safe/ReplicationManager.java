@@ -400,7 +400,6 @@ class ReplicationThread implements Runnable {
 	}
 
 	public Item waitForDspaceItem(Context context) {
-		Item item = null;
 		// loop for few secs
 		for (int i = 0; i < 20; ++i) {
 			// sleep 1 sec
