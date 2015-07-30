@@ -427,8 +427,7 @@ class ReplicationThread implements Runnable {
 			if(ReplicationManager.failed.containsKey(handle)) ReplicationManager.failed.remove(handle);						
 			ReplicationManager.inProgress.add(handle);
 			ReplicationManager.log.info("Replication started for item: " + handle);	
-			
-			context.turnOffAuthorisationSystem();
+						
 			ReplicationManager.log.info("Replicating to IRODS");
 
 			// wait for DSpace for submitting the item
@@ -449,7 +448,17 @@ class ReplicationThread implements Runnable {
 			File file = getTemporaryFile(ReplicationManager.handleToFileName(handle));
 			file.deleteOnExit();
 
-			new DSpaceAIPDisseminator().disseminate(context, item, new PackageParameters(), file);
+			Context ctx = new Context();
+			ctx.turnOffAuthorisationSystem();
+			new DSpaceAIPDisseminator().disseminate(ctx, item, new PackageParameters(), file);
+			try {
+				if (ctx != null) {
+					ctx.restoreAuthSystemState();
+					ctx.complete();
+				}
+			} catch (SQLException e) {
+			}
+
 
 			// AIP failure
 			if (!file.exists()) {
@@ -477,13 +486,6 @@ class ReplicationThread implements Runnable {
 			ReplicationManager.failed.put(handle, e);			
 		}
 
-		try {
-			if (context != null) {
-				context.restoreAuthSystemState();
-				context.complete();
-			}
-		} catch (SQLException e) {
-		}
 	}
 
 	private static File getTemporaryFile(String fileName) throws IOException {
