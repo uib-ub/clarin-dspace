@@ -33,6 +33,7 @@ importClass(Packages.org.dspace.app.xmlui.aspect.administrative.FlowAuthorizatio
 importClass(Packages.org.dspace.app.xmlui.aspect.administrative.FlowContainerUtils);
 importClass(Packages.org.dspace.app.xmlui.aspect.administrative.FlowCurationUtils);
 importClass(Packages.org.dspace.app.xmlui.aspect.administrative.FlowMetadataImportUtils);
+importClass(Packages.cz.cuni.mff.ufal.dspace.app.xmlui.aspect.administrative.FlowHandleUtils);
 importClass(Packages.org.dspace.app.xmlui.aspect.administrative.FlowBatchImportUtils);
 importClass(Packages.java.lang.System);
 importClass(Packages.org.dspace.core.ConfigurationManager);
@@ -369,6 +370,16 @@ function assertEditGroup(groupID)
 }
 
 /**
+ * Assert that the currently authenticated eperson can edit the given handle. If they can
+ * not then this method will never return.
+ */
+function assertEditHandle(handleID)
+{    
+    // only system admin can create or edit handles at the moment
+    assertAdministrator();    
+}
+
+/**
  * Return whether the currently authenticated eperson is an
  * administrator.
  */
@@ -639,6 +650,20 @@ function startCurate()
         cocoon.exit();
 }
 
+
+/**
+ * Start (site-wide) handles
+ */
+function startManageHandles()
+{
+        assertAdministrator();
+
+        doManageHandles();
+
+        cocoon.redirectTo(cocoon.request.getContextPath());
+        getDSContext().complete();
+        cocoon.exit();
+}
 
 
 
@@ -1950,6 +1975,162 @@ function doMetadataImportConfirm()
     return null;
 }
 
+
+
+/********************
+ * Handle flows
+ ********************/
+
+/**
+ * Manage handles, allow users to create new, edit exiting,
+ * or remove handles. The user may also list handles
+ * and change prefixes of handles.
+ *
+ * The is typicaly used as an entry point flow.
+ */
+function doManageHandles()
+{
+	assertAdministrator();
+
+    var result = null;
+    
+    do {
+	    sendPageAndWait("admin/handle/main",{},result);
+	    assertAdministrator();
+	
+	    result = null;
+	
+	    if (cocoon.request.get("submit_add"))
+	    {
+	        // Just create a blank handle then pass it to the handle editor.
+	        result = doEditHandle(-1);
+	    }
+	    else if (cocoon.request.get("submit_edit") && cocoon.request.get("handle_id"))
+	    {
+	        // Edit a specific handle
+	        var handleID = cocoon.request.get("handle_id");
+	        result = doEditHandle(handleID);
+	    }
+	    else if (cocoon.request.get("submit_delete") && cocoon.request.get("handle_id"))
+	    {
+	        // Delete a specific handle
+	        var handleID = cocoon.request.get("handle_id");
+	        result = doDeleteHandle(handleID);
+	    }	 
+	    else if (cocoon.request.get("submit_change_prefix"))
+	    {
+	        // Change prefix	        
+	        result = doChangeHandlePrefix();
+	    }
+    } while (true);
+}
+
+
+/**
+ * This flow allows for the full editing of a handle.
+ */
+
+function doEditHandle(handleID)
+{
+    assertEditHandle();
+
+    var result = null;
+    do {
+        sendPageAndWait("admin/handle/edit",{"handle_id":handleID},result);
+        assertEditHandle();
+
+        result = null;
+
+        if (cocoon.request.get("submit_cancel"))
+        {
+            // Just return with out saving anything.
+            return null;
+        }
+        else if (cocoon.request.get("submit_save"))
+        {            
+
+            var handle = cocoon.request.get("handle");
+            var url = cocoon.request.get("url");
+
+            var resourceTypeID = cocoon.request.get("resource_type_id");
+            if(resourceTypeID == null) 
+                resourceTypeID = -1;
+
+            var resourceID = cocoon.request.get("resource_id");
+            if(resourceID == null) 
+                resourceID = -1;
+            
+            var archiveOldHandle = cocoon.request.get("archive_old_handle") == null ? false : true;
+
+            result = FlowHandleUtils.processSave(getDSContext(),handleID,handle,url,resourceTypeID,resourceID,archiveOldHandle);
+
+            // In case a handle was created, update our id.
+            if (result != null && result.getParameter("handle_id"))
+                handleID = result.getParameter("handle_id");
+        }
+
+    } while (result == null || !result.getContinue())
+
+    return result;
+}
+
+/**
+ * Confirm that the given handleID should be deleted, if confirmed it will be deleted.
+ */
+function doDeleteHandle(handleID)
+{
+	assertEditHandle();
+	
+    var result = null;
+    do {
+	    sendPageAndWait("admin/handle/delete",{"handle_id":handleID},result);
+	    assertEditHandle();	
+	    
+	    result = null;
+	    
+	    if (cocoon.request.get("submit_cancel"))
+        {
+            // Just return with out saving anything.
+            return null;
+        }
+	    else if (cocoon.request.get("submit_confirm"))
+	    {
+	        // The user has confirmed, actualy delete the handle	        
+	        result = FlowHandleUtils.processDelete(getDSContext(),handleID);
+	    }
+    } while (result == null || !result.getContinue())
+    return result;
+}
+
+/**
+ * Change handle prefix.
+ */
+function doChangeHandlePrefix()
+{
+	assertEditHandle();
+
+	var result = null;
+	do {
+	    sendPageAndWait("admin/handle/change-prefix",{},result);
+	    assertEditHandle();
+	    
+	    result = null;
+	    
+	    if (cocoon.request.get("submit_cancel")) {
+	    	// Just return with out saving anything.
+            return null;
+	    }
+	    if (cocoon.request.get("submit_change"))
+	    {   
+	        var oldPrefix = cocoon.request.get("old_prefix");
+	        var newPrefix = cocoon.request.get("new_prefix");
+	        var archiveOldHandles = cocoon.request.get("archive_old_handles") == null ? false : true;                
+	        
+	        result = FlowHandleUtils.changePrefix(getDSContext(),oldPrefix,newPrefix,archiveOldHandles);
+	    }
+	} while (result == null || !result.getContinue())
+    return result;
+}
 /**
  * Manage batch metadata import
  *
