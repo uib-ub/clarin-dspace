@@ -325,7 +325,7 @@ public class ReplicationManager {
 			throw new UnsupportedOperationException(msg);
 		}
 
-		Thread runner = new Thread(new ReplicationThread(context, handle, item, force));
+		Thread runner = new Thread(new ReplicationThread(handle, item, force));
 		runner.setPriority(Thread.MIN_PRIORITY);
 		runner.setDaemon(true);
 		runner.start();
@@ -392,8 +392,8 @@ class ReplicationThread implements Runnable {
 	boolean force;
 	Context context;
 
-	public ReplicationThread(Context context, String handle, Item item, boolean force) {
-		this.context = context;
+	public ReplicationThread(String handle, Item item, boolean force) {
+		this.context = new Context();
 		this.handle = handle;
 		this.item = item;
 		this.force = force;
@@ -448,17 +448,9 @@ class ReplicationThread implements Runnable {
 			File file = getTemporaryFile(ReplicationManager.handleToFileName(handle));
 			file.deleteOnExit();
 
-			Context ctx = new Context();
-			ctx.turnOffAuthorisationSystem();
-			new DSpaceAIPDisseminator().disseminate(ctx, item, new PackageParameters(), file);
-			try {
-				if (ctx != null) {
-					ctx.restoreAuthSystemState();
-					ctx.complete();
-				}
-			} catch (SQLException e) {
-			}
-
+			context.turnOffAuthorisationSystem();
+			new DSpaceAIPDisseminator().disseminate(context, item, new PackageParameters(), file);
+			context.restoreAuthSystemState();
 
 			// AIP failure
 			if (!file.exists()) {
@@ -484,6 +476,13 @@ class ReplicationThread implements Runnable {
 			ReplicationManager.log.error(String.format("Could not replicate [%s] [%s]", this.handle, e.toString()), e);
 			ReplicationManager.inProgress.remove(handle);
 			ReplicationManager.failed.put(handle, e);			
+		}
+		
+		try {
+			if (context != null) {
+				context.complete();
+			}
+		} catch (SQLException e) {
 		}
 
 	}
