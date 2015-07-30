@@ -181,7 +181,7 @@ public class ReplicationManager {
 	public static boolean delete(String path) throws Exception  {
         DataObject one_do = new DataObject();
         one_do.setFileName( path );
-        one_do.setRemoteDirPath( "" );
+        one_do.setRemoteDirPath(replicadirectory);
         one_do.setRemoteDirPathIsAbsolute( true );
         one_do = replicationService.deleteDO(one_do);
         return one_do.getOperationIsSuccess();
@@ -467,7 +467,7 @@ class ReplicationThread implements Runnable {
             one_do.setRor(itemUrl);
             one_do.setLocalFilePath(file.getAbsolutePath());
             one_do.setFileName(file.getName());
-            one_do.setRemoteDirPath("");
+            one_do.setRemoteDirPath(replicadirectory);
             one_do.setRemoteDirPathIsAbsolute(false);			
             ReplicationManager.getReplicationService().replicateOneDO(one_do);
             ReplicationManager.log.info("Replication finished: " + handle);
