@@ -65,8 +65,6 @@ public class ReplicationManager {
 	public static final List<String> inProgress = new ArrayList<String>();
 	public static final Map<String, Exception> failed = new HashMap<String, Exception>();
 	
-	private static String replicadirectory = ConfigurationManager.getProperty("lr", "lr.replication.eudat.replicadirectory");
-	
 	private static boolean replicateAll = ConfigurationManager.getBooleanProperty("lr", "lr.replication.eudat.replicateall", false);
 	
 	//only one replication job at a time
@@ -114,7 +112,7 @@ public class ReplicationManager {
 	}
 
 	public static List<DataObject> list() throws Exception {
-		List<DataObject> dos = replicationService.listDOFromDirectory(replicadirectory, false);
+		List<DataObject> dos = replicationService.listDOFromDirectory( "" , false);
         return dos;
 	}
 	
@@ -181,7 +179,7 @@ public class ReplicationManager {
 	public static boolean delete(String path) throws Exception  {
         DataObject one_do = new DataObject();
         one_do.setFileName( path );
-        one_do.setRemoteDirPath(replicadirectory);
+        one_do.setRemoteDirPath( "" );
         one_do.setRemoteDirPathIsAbsolute( true );
         one_do = replicationService.deleteDO(one_do);
         return one_do.getOperationIsSuccess();
@@ -467,7 +465,7 @@ class ReplicationThread implements Runnable {
             one_do.setRor(itemUrl);
             one_do.setLocalFilePath(file.getAbsolutePath());
             one_do.setFileName(file.getName());
-            one_do.setRemoteDirPath(replicadirectory);
+            one_do.setRemoteDirPath("");
             one_do.setRemoteDirPathIsAbsolute(false);			
             ReplicationManager.getReplicationService().replicateOneDO(one_do);
             ReplicationManager.log.info("Replication finished: " + handle);
