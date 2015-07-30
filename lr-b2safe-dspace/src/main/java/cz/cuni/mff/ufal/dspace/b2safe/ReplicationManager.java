@@ -399,6 +399,28 @@ class ReplicationThread implements Runnable {
 		this.force = force;
 	}
 
+	public Item waitForDspaceItem(Context context) {
+		Item item = null;
+		// loop for few secs
+		for (int i = 0; i < 20; ++i) {
+			// sleep 1 sec
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+			try {
+				item = Item.find(context, item.getID());
+				if (item.getOwningCollection()!=null && item.isArchived()) {
+					break;
+				}
+			} catch (SQLException e) {
+			}
+		}
+
+		return item;
+	}
+
 	public void run() {
 		try {
 
@@ -410,6 +432,9 @@ class ReplicationThread implements Runnable {
 			context.turnOffAuthorisationSystem();
 			ReplicationManager.log.info("Replicating to IRODS");
 
+			// wait for DSpace for submitting the item
+			// should not be needed with the new event listener - investigate!
+			Item item = waitForDspaceItem(context);
 			if (handle == null) {
 				handle = item.getHandle();
 			}
