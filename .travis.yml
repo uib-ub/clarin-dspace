@@ -5,8 +5,10 @@ addons:
   postgresql: "9.4"
 
 before_install:
+  - sudo free -m -t
+  - echo date
   - sudo rm /etc/mavenrc
-  - export MAVEN_OPTS="-Dmaven.repo.local=/home/travis/.m2/repository -Xmx2048M -XX:MaxPermSize=256m"
+  - export MAVEN_OPTS="-Dmaven.repo.local=/home/travis/.m2/repository -Xmx1024M -XX:MaxPermSize=256m"
   -     echo "########################"
   - whoami
   - java -version
@@ -19,6 +21,8 @@ before_install:
   -     echo "########################"
 
 install:
+  - sudo free -m -t
+  - echo date
   - echo "Update settings"
   - cd $FS/utilities/project_helpers
   - sed -i'' 's/tomcat.(TOMCAT_VERSION)/travis/' ./config/variable.makefile.example
@@ -36,9 +40,15 @@ install:
   - make print_message
 
 script:
+  - sudo free -m -t
+  - echo date
   - make test_dspace_database
   - make test_utilities_database
   - cd $FS/ && mvn -Dmaven.test.skip=false -Dtest=cz.cuni.mff.ufal.dspace.**.*Test,cz.cuni.mff.ufal.*Test -DfailIfNoTests=false test | grep -v "Download"
+
+script:
+  - sudo free -m -t
+  - echo date
   - cd $FS/utilities/project_helpers/scripts
   - make tests
   - #make selenium_tests || echo "Tests failed"
