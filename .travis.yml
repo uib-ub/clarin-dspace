@@ -8,7 +8,7 @@ before_install:
   - sudo free -m -t
   - date
   - sudo rm /etc/mavenrc
-  - export MAVEN_OPTS="-Dmaven.repo.local=/home/travis/.m2/repository -Xmx1024M -XX:MaxPermSize=256m"
+  - export MAVEN_OPTS="-Dmaven.repo.local=/home/travis/.m2/repository -Xmx512M -XX:MaxPermSize=256m"
   -     echo "########################"
   - whoami
   - java -version
@@ -33,10 +33,14 @@ install:
   - cd $FS/utilities/project_helpers/scripts
   - echo "Creating dspace DB user and initialising databases"
   - sudo -u postgres createuser --superuser dspace
+  - sudo free -m -t
   - make create_databases
+  - sudo free -m -t
   - echo "Installing prerequisites"
   - make install_libs
+  - sudo free -m -t
   - make new_deploy | grep -v "Download"
+  - sudo free -m -t
   - make print_message
 
 script:
