@@ -40,7 +40,9 @@ install:
   - make install_libs
   - sudo free -m -t
   - #make new_deploy | grep -v "Download"
-  - make compile | grep -v "Download"
+  - #make compile | grep -v "Download"
+  - cd /home/travis/build/ufal/lindat-dspace/utilities/project_helpers/scripts/../sources 
+  - mvn -Dassembly.recompressZippedFiles=false -Dassembly.ignorePermissions=true -Denforcer.skip=true -Dfork=true -Denv=local -Dmaven.test.skip=true -P 'xpdf-mediafilter-support,!dspace-jspui,!dspace-sword-client,!dspace-swordv2,!dspace-sword,!dspace-lni,!dspace-rdf,!dspace-xmlui-mirage2' -P '!generate-test-env' package
   - sudo free -m -t
   - make fresh_install | grep -v "Download"
   - sudo free -m -t
