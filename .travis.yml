@@ -39,7 +39,12 @@ install:
   - echo "Installing prerequisites"
   - make install_libs
   - sudo free -m -t
-  - make new_deploy | grep -v "Download"
+  - #make new_deploy | grep -v "Download"
+  - make compile | grep -v "Download"
+  - sudo free -m -t
+  - make fresh_install | grep -v "Download"
+  - sudo free -m -t
+  - make postinstall | grep -v "Download"
   - sudo free -m -t
   - make print_message
 
