@@ -44,6 +44,7 @@ install:
   - cd /home/travis/build/ufal/lindat-dspace/utilities/project_helpers/scripts/../sources 
   - mvn -Dassembly.recompressZippedFiles=false -Dassembly.ignorePermissions=true -Denforcer.skip=true -Dfork=true -Denv=local -Dmaven.test.skip=true -P 'xpdf-mediafilter-support,!dspace-jspui,!dspace-sword-client,!dspace-swordv2,!dspace-sword,!dspace-lni,!dspace-rdf,!dspace-xmlui-mirage2' -P '!generate-test-env' package
   - sudo free -m -t
+  - cd $FS/utilities/project_helpers/scripts
   - make fresh_install | grep -v "Download"
   - sudo free -m -t
   - make postinstall | grep -v "Download"
