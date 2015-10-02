@@ -88,7 +88,7 @@ MVN_ENV			:=local
 
 MVN_OPTS_BASE	:=-Dassembly.recompressZippedFiles=false -Dassembly.ignorePermissions=true -Denforcer.skip=true -Dfork=true -Denv=$(MVN_ENV)
 MVN_OPTS		:=$(MVN_OPTS_BASE) -Dmaven.test.skip=true $(DSPACE_MVN_PROJECTS) -P '!generate-test-env'
-MVN_OPTS_TEST	:=$(MVN_OPTS_BASE) -Dmaven.test.skip=false $(DSPACE_MVN_PROJECTS)
+MVN_OPTS_TEST	:=$(MVN_OPTS_BASE) -Dmaven.test.skip=false $(DSPACE_MVN_PROJECTS) -B
 
 # makefile specific
 
