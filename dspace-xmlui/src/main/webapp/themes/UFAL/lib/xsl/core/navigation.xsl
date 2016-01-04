@@ -34,7 +34,7 @@
     <xsl:output indent="yes" />
     
 	<xsl:template match="/dri:document/dri:options" priority="10">	
-		<div id="options-menu" class="sidebar col-sm-3 col-xs-12 hidden-xs">
+		<div id="options-menu" class="sidebar col-md-3 hidden-sm hidden-xs">
 			<ul class="nav nav-list">
 				<xsl:if test="not(//dri:div[@n='site-home'])">
 					<li class="always-open hidden-xs">
@@ -63,7 +63,7 @@
 				</xsl:if>
 			</ul>
 		</div>
-		<div class="sidebar col-sm-3 placeholder col-xs-12 hidden-xs">&#160;</div>
+		<div class="sidebar col-md-3 placeholder hidden-sm hidden-xs">&#160;</div>
 	</xsl:template>
 
 	<xsl:template match="/dri:document/dri:options/dri:list" priority="10">

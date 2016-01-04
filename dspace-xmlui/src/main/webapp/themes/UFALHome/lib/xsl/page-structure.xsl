@@ -282,10 +282,7 @@
 				<!-- Top banner with lindat logo -->
 				<xsl:call-template name="top-banner" />
 				
-				<!-- A line with lindat branding colors -->
-				<div class="row hidden-xs" style="background: url('{$theme-path}/images/lindat_color_line.png'); height: 3px;">&#160;</div>
-
-		       	<div class="visible-xs text-center" style="margin-top: 5px; ">
+		       	<div class="row visible-sm visible-xs text-center" style="margin: 5px; ">
 					<button id="showhidemenu" type="button" class="btn btn-default btn-sm" style="border-radius: 30px; width: 100%;">
 							<i class="fa fa-align-justify">&#160;</i> Show/Hide Menu
 					</button>        	        		
@@ -296,26 +293,92 @@
 				<xsl:call-template name="search-box" />
 
 				<!-- Rest of the Body -->
-				<div class="row contents">
-				
-					<div id="main-contents" class="col-sm-9">																								
-						<xsl:choose>
-							<xsl:when test="dri:div[@n='site-home']/dri:div[@n='site-recent-submission']/dri:referenceSet/dri:reference">
-								<xsl:call-template name="recent-submission" />
-							</xsl:when>
-							<xsl:otherwise>
-										<div class="alert alert-warning">No Recent Items !</div>
-							</xsl:otherwise>
-						</xsl:choose>
+				<div class="contents row">
 
-						<xsl:choose>
-							<xsl:when test="count(dri:div[@n='home']/dri:div[@n='stats']//dri:table[@n='list-table']/dri:row) > 1">
-								<xsl:call-template name="top-items" />
-							</xsl:when>
-						</xsl:choose>
+					<div class="left-sidebar col-md-3 placeholder hidden-sm hidden-xs">&#160;</div>					
+				
+					<div id="main-contents" style="font-family: verdana;">
+					    <div class="col-md-3 text-center" style="color: #707070">
+					      <div>
+					        <h4>
+					        	<span class="label label-default label-lg">Features</span>
+							</h4>
+					      </div>
+					      <div class="text-center">
+					        <h3 style="color: #707070 !important;">Easy-to-Find</h3>
+					        <span class="fa fa-search fa-4x">&#160;</span>
+					        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
+					          The data is visible, giving you maximal credit
+							  for your work (google, VLO, DataCite, OLAC, Data Citation Index, arXive).
+					        </div>
+					      </div>
+					      <div class="text-center" style="margin-top: 30px;">
+					        <h3 style="color: #707070 !important;">Easy-to-Cite</h3>
+					        <span class="fa fa-quote-right fa-4x">&#160;</span>
+					        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
+								The data is easy to cite. We provide ready-to-use
+					            one-click citations in BibTex, RIS, and other popular
+					            reference formats. All the citations include permanent
+					            links created from persistent identifiers (we use handles for PIDs).
+					            These PIDs are future-proof.        
+					        </div>
+					      </div>      
+					      <div class="text-center" style="margin-top: 30px;">
+					        <h3 style="color: #707070 !important;">Easy-to-Share</h3>
+					        <span class="fa fa-cc fa-4x">&#160;</span>
+					        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
+								We respect your license. We encourage Free Data and believe
+					            it benefits not only users, but also the data providers.
+					            However we accept also more closed data and we can make
+					            users sign a license before downloading your data,
+					            if that is what you need.         
+					        </div>
+					      </div>
+					    </div>
+					                					
+						<div class="col-md-6 text-left">
+							<div>
+								<div style="padding: 20px 0px 0px 0px;">
+	      							<div class="well panel panel-info" style="padding: 5px 10px;">
+										<div class="panel-body">
+											<blockquote>
+												<strong class="text-info">
+													<i class="fa fa-quote-left fa-2x pull-left">&#160;</i>
+														“There ought to be only one grand dépôt of art in the world, to
+														which the artist might repair with his works, and on presenting them
+														receive what he required... ”
+												</strong>
+												<small>Ludwig van Beethoven, 1801</small>
+											</blockquote>      
+	       								</div>      
+									</div>
+								</div>
+							</div>
+							
+							<xsl:choose>
+								<xsl:when test="dri:div[@n='site-home']/dri:div[@n='site-recent-submission']/dri:referenceSet/dri:reference">
+									<xsl:call-template name="recent-submission" />
+								</xsl:when>
+								<xsl:otherwise>
+											<div class="alert alert-warning">No Recent Items !</div>
+								</xsl:otherwise>
+							</xsl:choose>
+	
+							<xsl:choose>
+								<xsl:when test="count(dri:div[@n='home']/dri:div[@n='stats']//dri:table[@n='list-table']/dri:row) > 1">
+									<xsl:call-template name="top-items" />
+								</xsl:when>
+							</xsl:choose>
+														
+							
+							<!-- sidebar -->
+							<!-- xsl:apply-templates select="/dri:document/dri:options" /-->														
+							
+						</div>
+						
+						<xsl:apply-templates select="/dri:document/dri:options" />
+												
 					</div>
-					<!-- sidebar -->
-					<xsl:apply-templates select="/dri:document/dri:options" />
 										
 				</div>
 			</div>
@@ -323,7 +386,7 @@
 	</xsl:template>
 
 	<xsl:template name="facet-box">
-		<div id="facet-box" class="row text-center">
+		<div id="facet-box" class="row text-center" style="margin-top: 10px;">
 				<xsl:for-each select="/dri:document/dri:options/dri:list[@n='discovery']/dri:list">
 					<div>
 						<xsl:attribute name="class">
@@ -376,8 +439,11 @@
 	<xsl:template name="recent-submission">
 		<xsl:for-each
 			select="/dri:document/dri:body/dri:div[@n='site-home']/dri:div[@n='site-recent-submission']">
-			<div class="well well-lg" id="recent-submissions">
-				<h3 class="recent-submissions-head">What's New</h3>
+			<div id="recent-submissions">
+				<h4>
+          			<span class="label label-default label-lg">What's New</span>          
+      			</h4>
+				
 				<xsl:for-each select="dri:referenceSet">
 					<xsl:for-each select="dri:reference">
 						<xsl:if test="position() &lt; 4">
@@ -514,9 +580,6 @@
 			</xsl:element>
 		</div>
 		<div class="artifact-info">
-			<div class="author-head">
-				Author(s):
-			</div>
 			<div class="author">
 				<xsl:choose>
 					<xsl:when test="dim:field[@element='contributor'][@qualifier='author' or @qualifier='other']">
@@ -561,9 +624,6 @@
 				test="dim:field[@element = 'description' and @qualifier='abstract']">
 				<xsl:variable name="abstract"
 					select="dim:field[@element = 'description' and @qualifier='abstract']/node()" />
-				<div class="artifact-abstract-head">
-					Description:
-				</div>
 				<div class="artifact-abstract">
 					<xsl:value-of select="util:shortenString($abstract, 220, 10)" />
 				</div>
@@ -571,9 +631,6 @@
 			<xsl:when test="dim:field[@element = 'description' and not(@qualifier)]">
 				<xsl:variable name="description"
 					select="dim:field[@element = 'description' and not(@qualifier)]/node()" />
-				<div class="artifact-abstract-head">
-					Description:
-				</div>
 				<div class="artifact-abstract">
 					<xsl:value-of select="util:shortenString($description, 220, 10)" />
 				</div>
@@ -585,8 +642,10 @@
 
 		<xsl:for-each
 			select="/dri:document/dri:body/dri:div[@n='home']/dri:div[@n='stats']">
-			<div class="container well well-lg" id="top-items">
-				<h3 class="top-items-head"><xsl:copy-of select="dri:head/node()" /></h3>
+			<div id="top-items">
+				<h4>
+					<span class="label label-default label-lg"><xsl:copy-of select="dri:head/node()" /></span>          
+				</h4>			
 				<xsl:for-each select="dri:div/dri:table">
 					<div class="col-md-12 no-padding" style="padding: 2px;">
 					<div class="panel panel-default">
@@ -619,45 +678,52 @@
 	</xsl:template>
 
 	<xsl:template name="search-box">
-		<div class="row jumbotron" style="margin-bottom: 0px;">		
-			<form class="form-search" method="post">
-				<xsl:attribute name="action">
-                            <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath']" />
-                            <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='simpleURL']" />
-                        </xsl:attribute>
-                <div class="row">
-					<div class="input-group input-group-lg col-md-6 col-md-offset-3">
-						<span class="input-group-addon"><i class="fa fa-search fa-lg" style="color: #7479B8;">&#160;</i></span>
-						<input class="form-control" type="text">
-							<xsl:attribute name="name">
-								<xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='queryField']" />
-							</xsl:attribute>
-						</input>
-						<span class="input-group-btn">
-							<input class="btn btn-large btn-repository" name="submit" type="submit" i18n:attr="value" value="xmlui.general.search" />
-						</span>
-					</div>
+		<div class="row" style="padding: 20px; min-height: 100px; background-color: #f0f0f0; border-bottom: 1px solid #d2d2d2; border-top: 1px solid #d2d2d2;" onmouseleave="$('#facet-box-div').collapse('hide');">
+  			<div class="text-center" style="display:table; width: 100%; height: 100%;">
+    			<div style="display: table-cell; vertical-align: middle;">
+					<form class="form-search" method="post">
+						<xsl:attribute name="action">
+							<xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath']" />
+							<xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='simpleURL']" />
+						</xsl:attribute>
+						<div class="row">
+							<div class="input-group input-group-lg col-md-6 col-md-offset-3">
+								<span class="input-group-addon" style="height: 60px;">
+									<i style="color: #7479B8;" class="fa fa-search fa-lg">&#160;</i>
+								</span>
+								<input type="text" class="form-control" style="height: 60px;">
+									<xsl:attribute name="name">
+										<xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='queryField']" />
+									</xsl:attribute>									
+								</input>
+								<span class="input-group-btn">
+									<input class="btn btn-large bold" style="height: 60px; background-color: #8592c0; color: #f0f0f0;" name="submit" type="submit" i18n:attr="value" value="xmlui.general.search" />
+								</span>
+							</div>
+						</div>
+					</form>
 				</div>
-				<div class="container-fluid text-center">
-					<ul class="list-inline">
-						<!--Only add if the advanced search url is different from the simple search -->
-						<xsl:if
-							test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='advancedURL'] != /dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='simpleURL']">
-								<li class="no-padding">
-									<strong>
-									<a class="btn btn-link btn-small no-padding">
-									<xsl:attribute name="href"><xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='advancedURL']" /><xsl:text>?advance</xsl:text></xsl:attribute>
-									<i18n:text>xmlui.dri2xhtml.structural.search-advanced</i18n:text>
-									</a>
-									</strong>
-								</li>
-						</xsl:if>
-					</ul>
-				</div>
-			</form>
-                        <xsl:if test="/dri:document/dri:options/dri:list[@n='discovery']/dri:list">
-                                <xsl:call-template name="facet-box" />
-                        </xsl:if>			
+			</div> 	
+	
+			<!-- div class="container-fluid text-center">
+				<ul class="list-inline">
+					Only add if the advanced search url is different from the simple search
+					<xsl:if
+						test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='advancedURL'] != /dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='simpleURL']">
+							<li class="no-padding">
+								<strong>
+								<a class="btn btn-link btn-small no-padding">
+								<xsl:attribute name="href"><xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='advancedURL']" /><xsl:text>?advance</xsl:text></xsl:attribute>
+								<i18n:text>xmlui.dri2xhtml.structural.search-advanced</i18n:text>
+								</a>
+								</strong>
+							</li>
+					</xsl:if>
+				</ul>
+			</div-->
+            <xsl:if test="/dri:document/dri:options/dri:list[@n='discovery']/dri:list">
+                    <xsl:call-template name="facet-box" />
+            </xsl:if>			
 		</div>
 	</xsl:template>
 
@@ -827,60 +893,37 @@
 	</xsl:template>
 	
 	<xsl:template name="top-banner">
-	<div class="row hidden-xs">
-		<div style="height: 160px;" class="carousel col-xs-12 col-sm-12 col-md-7 col-lg-8" id="layerslider">
-			<ol class="carousel-indicators">
-				<li class="active" data-slide-to="0" data-target="#layerslider" />
-				<li data-slide-to="1" data-target="#layerslider" />
-				<li data-slide-to="2" data-target="#layerslider" />
-			</ol>
-			<div class="carousel-inner">
-				<div class="item active">
-					<div style="position: relative; height: 180px;">
-						<img style="width: 100px; position: absolute; left: 22%; top: 20%" src="{$context-path}/themes/UFALHome/lib/images/glass.png" />
-						<h3 style="left: 34%; position: absolute; top: 25%;">Linguistic Data and NLP Tools</h3>
-						<h5 style="left: 40%; position: absolute; top: 15%;">Find</h5>
-						<h5 style="left: 54%; position: absolute; top: 45%;">Citation Support (with Persistent IDs)</h5>
-					</div>
-				</div>
-				<div class="item">
-					<div style="position: relative; height: 180px;">
-						<h3 style="left: 40%; position: absolute; top: 10%;">Deposit Free and Safe</h3>
-						<h5 style="left: 28%; position: absolute; top: 30%;">License of your Choice (Open licenses encouraged)</h5>
-						<h5 style="left: 32%; position: absolute; top: 42%;">Easy to Find</h5>
-						<h5 style="left: 36%; position: absolute; top: 54%;">Easy to Cite</h5>
-					</div>
-				</div>
-				<div class="item">
-					<div style="position: relative; height: 180px;">
-						<div style="position: absolute; width: 65%; top: 20%; left: 20%; line-height: 20px;">
-							<blockquote>
-								<strong>
-									<i class="fa fa-quote-left fa-2x pull-left">&#160;</i>
-									“There ought to be only one grand dépôt of art in the world, to
-									which the artist might repair with his works, and on presenting them
-									receive what he required... ”
-								</strong>
-								<small>Ludwig van Beethoven, 1801</small>
-							</blockquote>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="row text-center" style="background-color: #8592c0; height: 500px; margin-top: 1px; font-family: Verdana !important;">
+		  <div class="text-center" style="display:table; width: 100%; height: 100%;">
+		    <div style="display: table-cell; vertical-align: middle;">
+		      <div>
+		        <h1 style="color: #f8f8ff;">
+		          SUBMIT YOUR DATA TODAY
+		        </h1>
+		        <h3 style="color: #f8f8ff; margin-top: -10px; font-weight: normal">
+		          Deposit Free and Safe, Easy-to-Find, Easy-to-Cite
+		        </h3>              
+		      </div>
+		      <div style="padding: 10px;">
+		        <a href="/repository/xmlui/submit" class="btn btn-default btn-lg bold" style="margin-right: 10px; background-color: #2d386b; color: #f8f8ff; border-color: #2d386b; border-radius: 0px">Submit Now</a>
+		        <a href="/repository/xmlui/browse" class="btn btn-default btn-lg bold" style="background-color: #f8f8ff; color: #2d386b; border-color: #f8f8ff; border-radius: 0px;">Browse</a>
+		      </div>
+		      <div style="margin-top: 20px;">
+		        <img src="{$theme-path}/images/lindat-cloud.png" alt="" usemap="#lindat_cloud" border="0" />
+				<map name="lindat_cloud">
+					<area shape="poly" coords="123,60,123,37,76,37,76,86,209,87,209,43,164,43,164,60" href="https://www.openaire.eu" alt="OpenAIRE" title="The FP7 project OpenAIRE aimed to support the implementation of the EC and ERC Open Access policies." target="_blank" />
+					<area shape="poly" coords="381,150,382,175,415,175,431,186,452,185,465,169,462,146,445,137,423,141,417,150" href="https://lindat.mff.cuni.cz" alt="LINDAT/CLARIN" title="Centre for Language Research Infrastructure in the Czech Republic" target="_blank" />
+					<area shape="rect" coords="351,95,415,147" href="http://www.clarin.eu/" alt="CLARIN" title="CLARIN is the Common Language Resources and Technology Infrastructure, which aims to provide easy and sustainable access for scholars in the humanities and social sciences to digital language data (in written, spoken, video or multimodal form), and advanced tools to discover, explore, exploit, annotate, analyse or combine them, wherever they are located." target="_blank" />
+					<area shape="poly" coords="73,199,36,199,36,225,240,225,241,200,149,200,149,145,79,145,79,199" href="http://www.language-archives.org" alt="OLAC: Open Language Archives Community" title="OLAC: Open Language Archives Community" target="_blank" />
+					<area shape="poly" coords="360,200,315,200,315,225,384,225,384,242,499,243,527,209,509,178,482,178,466,200,410,200" href="https://vlo.clarin.eu" alt="Virtual Language Observatory" title="Virtual Language Observatory: Explore the world of language resources and technology from different perspective" target="_blank" />
+					<area shape="circle" coords="492,97,33" href="http://wokinfo.com/products_tools/multidisciplinary/dci/" alt="DATA Citation Index" title="Data Citation Index - Thomson Reuters" target="_blank" />
+					<area shape="rect" coords="344,18,435,60" href="https://scholar.google.com" alt="Google Scholar" title="Google Scholar provides a simple way to broadly search for scholarly literature." target="_blank" />
+				</map>		        
+		      </div>
+		    </div>
+		  </div>
 		</div>
-		<div class="col-md-5 col-lg-4 hidden-xs hidden-sm">
-			<div class="row">
-				<div style="height: 160px; position: relative;" class="col-md-7 col-lg-7">
-				  <a href="/lindat">
-			            <img src="{$context-path}/themes/UFAL/images/lindat/lindat-logo.png" style="position: absolute; height: 60%; top: 0px; bottom: 0px; margin: auto;" class="logo" alt="LINDAT/CLARIN logo" /></a>
-				</div>
-		                <div style="height: 160px; position: relative;" class="col-md-5 col-lg-5">
-				    <a href="http://www.clarin.eu/">
-		                    <img src="{$context-path}/themes/UFAL/images/lindat/clarin-logo.png" style="position: absolute; height: 70%; top: 0px; bottom: 0px; margin: auto;" class="logo" alt="LINDAT/CLARIN logo" /></a>
-		                </div>
-			</div>
-        </div>		
-	</div>	
+		
 	</xsl:template>
 </xsl:stylesheet>
 
