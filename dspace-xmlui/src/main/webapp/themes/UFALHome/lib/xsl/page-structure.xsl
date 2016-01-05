@@ -909,16 +909,33 @@
 		        <a href="/repository/xmlui/browse" class="btn btn-default btn-lg bold" style="background-color: #f8f8ff; color: #2d386b; border-color: #f8f8ff; border-radius: 0px;">Browse</a>
 		      </div>
 		      <div style="margin-top: 20px;">
-		        <img src="{$theme-path}/images/lindat-cloud.png" alt="" usemap="#lindat_cloud" border="0" />
-				<map name="lindat_cloud">
-					<area shape="poly" coords="123,60,123,37,76,37,76,86,209,87,209,43,164,43,164,60" href="https://www.openaire.eu" alt="OpenAIRE" title="The FP7 project OpenAIRE aimed to support the implementation of the EC and ERC Open Access policies." target="_blank" />
-					<area shape="poly" coords="381,150,382,175,415,175,431,186,452,185,465,169,462,146,445,137,423,141,417,150" href="https://lindat.mff.cuni.cz" alt="LINDAT/CLARIN" title="Centre for Language Research Infrastructure in the Czech Republic" target="_blank" />
-					<area shape="rect" coords="351,95,415,147" href="http://www.clarin.eu/" alt="CLARIN" title="CLARIN is the Common Language Resources and Technology Infrastructure, which aims to provide easy and sustainable access for scholars in the humanities and social sciences to digital language data (in written, spoken, video or multimodal form), and advanced tools to discover, explore, exploit, annotate, analyse or combine them, wherever they are located." target="_blank" />
-					<area shape="poly" coords="73,199,36,199,36,225,240,225,241,200,149,200,149,145,79,145,79,199" href="http://www.language-archives.org" alt="OLAC: Open Language Archives Community" title="OLAC: Open Language Archives Community" target="_blank" />
-					<area shape="poly" coords="360,200,315,200,315,225,384,225,384,242,499,243,527,209,509,178,482,178,466,200,410,200" href="https://vlo.clarin.eu" alt="Virtual Language Observatory" title="Virtual Language Observatory: Explore the world of language resources and technology from different perspective" target="_blank" />
-					<area shape="circle" coords="492,97,33" href="http://wokinfo.com/products_tools/multidisciplinary/dci/" alt="DATA Citation Index" title="Data Citation Index - Thomson Reuters" target="_blank" />
-					<area shape="rect" coords="344,18,435,60" href="https://scholar.google.com" alt="Google Scholar" title="Google Scholar provides a simple way to broadly search for scholarly literature." target="_blank" />
-				</map>		        
+		      	<div style="display: inline-block; position: relative;">
+		      		<a href="https://www.openaire.eu" target="_blank">	      		
+		      			<img id="openaire" src="{$theme-path}/images/openaire.png" alt="" border="0" style="position: absolute; top:0; left:0; display: none;" onmouseleave="$('#openaire').css('display', 'none');" data-toggle="tooltip" data-placement="top" title="The FP7 project OpenAIRE aimed to support the implementation of the EC and ERC Open Access policies."/>
+		      		</a>
+		      		<a href="http://www.language-archives.org" target="_blank">
+		      			<img id="olac" src="{$theme-path}/images/olac.png" alt="" border="0" style="position: absolute; bottom:0; left:3px; display: none;" onmouseleave="$('#olac').css('display', 'none');" data-toggle="tooltip" data-placement="bottom" title="OLAC: Open Language Archives Community" />
+		      		</a>
+		      		<a href="https://scholar.google.com" target="_blank">
+		      			<img id="google" src="{$theme-path}/images/google.png" alt="" border="0" style="position: absolute; top:0; right:4px; display: none;" onmouseleave="$('#google').css('display', 'none');" data-toggle="tooltip" data-placement="top" title="Google Scholar provides a simple way to broadly search for scholarly literature." />
+					</a>
+					<a href="http://wokinfo.com/products_tools/multidisciplinary/dci/" target="_blank">
+						<img id="dci" src="{$theme-path}/images/dci.png" alt="" border="0" style="position: absolute; top:59px; right:3px; display: none;" onmouseleave="$('#dci').css('display', 'none');" data-toggle="tooltip" data-placement="right" title="Data Citation Index - Thomson Reuters" />
+					</a>
+					<a href="https://vlo.clarin.eu" target="_blank">
+						<img id="vlo" src="{$theme-path}/images/vlo.png" alt="" border="0" style="position: absolute; bottom:0; right:3px; display: none;" onmouseleave="$('#vlo').css('display', 'none');" data-toggle="tooltip" data-placement="bottom" title="Virtual Language Observatory: Explore the world of language resources and technology from different perspective"/>							      		
+			        </a>
+			        <img src="{$theme-path}/images/lindat-cloud.png" alt="" usemap="#lindat_cloud" border="0" />			        
+					<map name="lindat_cloud">
+						<area shape="poly" coords="123,60,123,37,76,37,76,86,209,87,209,43,164,43,164,60" href="https://www.openaire.eu" alt="OpenAIRE"  target="_blank" onmouseenter="$('#openaire').css('display', 'block');" />
+						<area shape="poly" coords="381,150,382,175,415,175,431,186,452,185,465,169,462,146,445,137,423,141,417,150" href="https://lindat.mff.cuni.cz" alt="LINDAT/CLARIN" title="Centre for Language Research Infrastructure in the Czech Republic" target="_blank" />
+						<area shape="rect" coords="351,95,415,147" href="http://www.clarin.eu/" alt="CLARIN" title="CLARIN is the Common Language Resources and Technology Infrastructure, which aims to provide easy and sustainable access for scholars in the humanities and social sciences to digital language data (in written, spoken, video or multimodal form), and advanced tools to discover, explore, exploit, annotate, analyse or combine them, wherever they are located." target="_blank" />
+						<area shape="poly" coords="73,199,36,199,36,225,240,225,241,200,149,200,149,145,79,145,79,199" href="http://www.language-archives.org" alt="OLAC: Open Language Archives Community" target="_blank" onmouseenter="$('#olac').css('display', 'block');" />
+						<area shape="poly" coords="360,200,315,200,315,225,384,225,384,242,499,243,527,209,509,178,482,178,466,200,410,200" href="https://vlo.clarin.eu" alt="Virtual Language Observatory" target="_blank" onmouseenter="$('#vlo').css('display', 'block');"/>
+						<area shape="circle" coords="492,97,33" href="http://wokinfo.com/products_tools/multidisciplinary/dci/" alt="DATA Citation Index" title="Data Citation Index - Thomson Reuters" target="_blank" onmouseenter="$('#dci').css('display', 'block');" />
+						<area shape="rect" coords="344,18,435,60" href="https://scholar.google.com" alt="Google Scholar" target="_blank" onmouseenter="$('#google').css('display', 'block');" />
+					</map>	
+				</div>	        
 		      </div>
 		    </div>
 		  </div>
