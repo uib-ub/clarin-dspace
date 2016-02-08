@@ -34,7 +34,7 @@
     <xsl:output indent="yes" />
     
 	<xsl:template match="/dri:document/dri:options" priority="10">	
-		<div id="options-menu" class="sidebar col-md-3 hidden-sm hidden-xs">
+		<div id="options-menu" class="sidebar col-md-3 col-xs-12 hidden-sm hidden-xs">
 			<ul class="nav nav-list">
 				<xsl:if test="not(//dri:div[@n='site-home'])">
 					<li class="always-open hidden-xs">
@@ -52,15 +52,15 @@
 						</div>					
 					</li>
 				</xsl:if>
-				<li class="always-open hidden-xs">
+				<!-- li class="always-open hidden-xs">
 					<xsl:call-template name="howto-panel" />
-				</li>
+				</li-->
 				<xsl:apply-templates select="dri:list[count(child::*)!=0]" />
-				<xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='feed']">
+				<!-- xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='feed']">
 					<li class="always-open">
 						<xsl:call-template name="addRSSLinks" />
 					</li>				
-				</xsl:if>
+				</xsl:if -->
 			</ul>
 		</div>
 		<div class="sidebar col-md-3 placeholder hidden-sm hidden-xs">&#160;</div>

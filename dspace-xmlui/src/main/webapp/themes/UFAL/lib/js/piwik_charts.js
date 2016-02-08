@@ -1,10 +1,14 @@
 jQuery(document).ready(function (){
 
-	jQuery("#visits_over_time_chart").each(function(){
+	jQuery("#piwik-charts").each(function(){
 
 		var targetDiv = jQuery(this);
 		var reportURL = targetDiv.attr("data-url");
-
+		var tickInterval = targetDiv.attr("interval");
+		
+		var visitsPlot;
+		var downloadPlot;
+		
 		jQuery.ajax(
 				{
 					url : reportURL,
@@ -21,7 +25,7 @@ jQuery(document).ready(function (){
 					
 						var nb_views = [];
 						var nb_downloads = [];
-						var dates = Object.keys(data);
+						var dates = Object.keys(data[0]);
 						dates.sort(dateSorter);
 						var total_views = 0;
 						var total_unique_views = 0;
@@ -30,29 +34,33 @@ jQuery(document).ready(function (){
 						var total_visits = 0;
 						var total_unique_visits = 0;
 						for(var i=0;i<dates.length;i++) {
-                            var values = data[dates[i]];
-                            nb_views[i] = [dates[i], values['nb_pageviews']||0];
-                            nb_downloads[i] = [dates[i], values['nb_downloads']||0];
+                            var values0 = data[0][dates[i]];
+                            var values1 = data[1][dates[i]];
+                            nb_views[i] = [dates[i], values0['nb_pageviews']||0];
+                            nb_downloads[i] = [dates[i], values1['nb_pageviews']||0];
                             total_views += nb_views[i][1];
-                            total_unique_views += values['nb_uniq_pageviews']||0;
+                            total_unique_views += values0['nb_uniq_pageviews']||0;
                             total_downloads += nb_downloads[i][1];
-                            total_unique_downloads += values['nb_uniq_downloads']||0;
-                            total_visits += values['nb_visits']||0;
-                            total_unique_visits += values['nb_uniq_visitors']||0;
+                            total_unique_downloads += values1['nb_uniq_pageviews']||0;
+                            total_visits += values0['nb_visits']||0;
+                            total_unique_visits += values0['nb_uniq_visitors']||0;
 						}
 		jQuery('#visits_summary_report .views').html("<strong>" + total_views + "</strong> pageviews, <strong>" + total_unique_views + "</strong> unique pageviews.");
 		jQuery('#visits_summary_report .visits').html("<strong>" + total_visits + "</strong> visits, <strong>" + total_unique_visits + "</strong> unique visitors.");
 		jQuery('#visits_summary_report .downloads').html("<strong>" + total_downloads + "</strong> downloads, <strong>" + total_unique_downloads + "</strong> unique downloads.");
+		jQuery('#views_tab_count').html("<strong>" + total_views + "</strong>");
+		jQuery('#downloads_tab_count').html("<strong>" + total_downloads + "</strong>");
+		jQuery('#period').html(dates[0] + " to " + dates[dates.length-1]);
 
-                        var visitsPlot = $.jqplot ('visits_over_time_chart', [nb_views, nb_downloads], {
+                         visitsPlot = $.jqplot ('visits_over_time_chart', [nb_views, nb_views], {
                         		axes:{
                         			xaxis:{
                         				renderer:$.jqplot.DateAxisRenderer,
                         				tickOptions:{
-                        					formatString:'%a %#d %b',
+                        					formatString:'%Y %a %#d %b',
 								showGridline: false,
                         				},
-                        				tickInterval: '1 day',
+                        				tickInterval: tickInterval,
                         				min: dates[0],
                         				max: dates[dates.length-1],
                         			},
@@ -63,20 +71,21 @@ jQuery(document).ready(function (){
                         			}
                         		},
 
-                        		seriesDefaults: {
-                        			lineWidth:1,
-                        			markerOptions: {
-                        				size: 6
-                        			}
-                        		},
+                          		seriesDefaults: {
+                          			lineWidth:3,
+                          			shadow:false,
+                          			markerOptions: {
+                          				size: 6
+                          			},
+                          			highlighter: {formatString: "<div style='color: #FFFFFF;'>%s<BR/><strong style='font-size: 14px;'>%s</strong> Visits</div>"}                              			
+                          		},
 
-                        		grid: {background: '#FFFFFF', borderWidth: 0, shadow: false},
+                        		grid: {background: '#F0F0F0', borderWidth: 0, shadow: false},
 
-                        		seriesColors: [ "#d4291f", "#1f78b4", "#ff7f00", "#33a02c", "#6a3d9a", "#b15928", "#fdbf6f", "#cab2d6" ],
+                        		seriesColors: [ "#bee89c", "#60a22a" ],
 
 					series: [
-						{highlighter: {formatString: "%s<BR/><strong style='font-size: 14px;'>%s</strong> Visits"}},
-						{highlighter: {formatString: "%s<BR/><strong style='font-size: 14px;'>%s</strong> Downloads"}}
+					        {fill: [true, false]}
 					],
 
                         		highlighter: {
@@ -85,23 +94,108 @@ jQuery(document).ready(function (){
                         			tooltipAxes: "both",
                         		},
 
-					legend: {
-						renderer: $.jqplot.EnhancedLegendRenderer,
-					        show: true,
-						placement: 'outsideGrid',
-						location: 'n',
-						showSwatches: true,
-                    				rendererOptions: {
-                        				numberColumns: 2,
-                    				},
-						seriesToggle: true,
-						labels: ['Views', 'Downloads'],
-					},
-
                         });
+                        
+                        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                        	  //e.target // newly activated tab
+                        	  //e.relatedTarget // previous active tab
+                        	  var target = e.target.getAttribute("aria-controls");
+                        	  if(target=='views') {
+                        		  visitsPlot = $.jqplot ('visits_over_time_chart', [nb_views, nb_views], {
+                              		axes:{
+                              			xaxis:{
+                              				renderer:$.jqplot.DateAxisRenderer,
+                              				tickOptions:{
+                              					formatString:'%Y %a %#d %b',
+      								showGridline: false,
+                              				},
+                              				tickInterval: tickInterval,
+                              				min: dates[0],
+                              				max: dates[dates.length-1],
+                              			},
+
+                              			yaxis:{
+                              				min: 0,
+                              				numberTicks: 3
+                              			}
+                              		},
+
+                                		seriesDefaults: {
+                                			lineWidth:3,
+                                			shadow:false,
+                                			markerOptions: {
+                                				size: 6
+                                			},
+                                			highlighter: {formatString: "<div style='color: #FFFFFF;'>%s<BR/><strong style='font-size: 14px;'>%s</strong> Visits</div>"}                              			
+                                		},
+
+                              		grid: {background: '#F0F0F0', borderWidth: 0, shadow: false},
+
+                              		seriesColors: [ "#bee89c", "#60a22a" ],
+
+      					series: [
+      					        {fill: [true, false]}
+      					],
+
+                              		highlighter: {
+                              			show: true,
+                              			sizeAdjust: 7.5,
+                              			tooltipAxes: "both",
+                              		},
+
+                              });                        		  
+                        	  } else
+                        	  if(target=='downloads'){
+                                  downloadPlot = $.jqplot ('downloads_over_time_chart', [nb_downloads, nb_downloads], {
+                              		axes:{
+                              			xaxis:{
+                              				renderer:$.jqplot.DateAxisRenderer,
+                              				tickOptions:{
+                              					formatString:'%Y %a %#d %b',
+      								showGridline: false,
+                              				},
+                              				tickInterval: tickInterval,
+                              				min: dates[0],
+                              				max: dates[dates.length-1],
+                              			},
+
+                              			yaxis:{
+                              				min: 0,
+                              				numberTicks: 3
+                              			}
+                              		},
+
+                              		seriesDefaults: {
+                              			lineWidth:3,
+                              			shadow:false,
+                              			markerOptions: {
+                              				size: 6
+                              			},
+                              			highlighter: {formatString: "<div style='color: #FFFFFF;'>%s<BR/><strong style='font-size: 14px;'>%s</strong> Downloads</div>"}                              			
+                              		},
+
+                              		grid: {background: '#F0F0F0', borderWidth: 0, shadow: false},
+
+                              		seriesColors: ["#94c7ea", "#1f78b4"],                              		
+
+      					series: [      						
+      						{fill: [true, false]}
+      					],
+
+                              		highlighter: {
+                              			show: true,
+                              			sizeAdjust: 7.5,
+                              			tooltipAxes: "both",
+                              		},
+
+                              });                        		  
+                        	  }
+                        })
+                        
 
                         jQuery(window).resize(function(){
                         	visitsPlot.replot();
+                        	downloadPlot.replot();
                         });
 
 					}

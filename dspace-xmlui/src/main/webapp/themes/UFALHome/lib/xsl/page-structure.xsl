@@ -295,65 +295,11 @@
 				<!-- Rest of the Body -->
 				<div class="contents row">
 
-					<div class="left-sidebar col-md-3 placeholder hidden-sm hidden-xs">&#160;</div>					
+					<!--   div class="left-sidebar col-md-3 placeholder hidden-sm hidden-xs">&#160;</div-->					
 				
-					<div id="main-contents" style="font-family: verdana;">
-					    <div class="col-md-3 text-center" style="color: #707070">
-					      <div>
-					        <h4>
-					        	<span class="label label-default label-lg">Features</span>
-							</h4>
-					      </div>
-					      <div class="text-center">
-					        <h3 style="color: #707070 !important;">Easy-to-Find</h3>
-					        <span class="fa fa-search fa-4x">&#160;</span>
-					        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
-					          The data is visible, giving you maximal credit
-							  for your work (google, VLO, DataCite, OLAC, Data Citation Index, arXive).
-					        </div>
-					      </div>
-					      <div class="text-center" style="margin-top: 30px;">
-					        <h3 style="color: #707070 !important;">Easy-to-Cite</h3>
-					        <span class="fa fa-quote-right fa-4x">&#160;</span>
-					        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
-								The data is easy to cite. We provide ready-to-use
-					            one-click citations in BibTex, RIS, and other popular
-					            reference formats. All the citations include permanent
-					            links created from persistent identifiers (we use handles for PIDs).
-					            These PIDs are future-proof.        
-					        </div>
-					      </div>      
-					      <div class="text-center" style="margin-top: 30px;">
-					        <h3 style="color: #707070 !important;">Easy-to-Share</h3>
-					        <span class="fa fa-cc fa-4x">&#160;</span>
-					        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
-								We respect your license. We encourage Free Data and believe
-					            it benefits not only users, but also the data providers.
-					            However we accept also more closed data and we can make
-					            users sign a license before downloading your data,
-					            if that is what you need.         
-					        </div>
-					      </div>
-					    </div>
-					                					
-						<div class="col-md-6 text-left">
-							<div>
-								<div style="padding: 20px 0px 0px 0px;">
-	      							<div class="well panel panel-info" style="padding: 5px 10px;">
-										<div class="panel-body">
-											<blockquote>
-												<strong class="text-info">
-													<i class="fa fa-quote-left fa-2x pull-left">&#160;</i>
-														“There ought to be only one grand dépôt of art in the world, to
-														which the artist might repair with his works, and on presenting them
-														receive what he required... ”
-												</strong>
-												<small>Ludwig van Beethoven, 1801</small>
-											</blockquote>      
-	       								</div>      
-									</div>
-								</div>
-							</div>
+					<div style="font-family: verdana;">
+										                					
+						<div id="main-contents" class="col-md-9 text-left">
 							
 							<xsl:choose>
 								<xsl:when test="dri:div[@n='site-home']/dri:div[@n='site-recent-submission']/dri:referenceSet/dri:reference">
@@ -441,7 +387,7 @@
 			select="/dri:document/dri:body/dri:div[@n='site-home']/dri:div[@n='site-recent-submission']">
 			<div id="recent-submissions">
 				<h4>
-          			<span class="label label-default label-lg">What's New</span>          
+          			<span class="label label-default label-lg" style="background-color: #324FA7;">What's New</span>          
       			</h4>
 				
 				<xsl:for-each select="dri:referenceSet">
@@ -643,14 +589,13 @@
 		<xsl:for-each
 			select="/dri:document/dri:body/dri:div[@n='home']/dri:div[@n='stats']">
 			<div id="top-items">
-				<h4>
+				<!-- h4>
 					<span class="label label-default label-lg"><xsl:copy-of select="dri:head/node()" /></span>          
-				</h4>			
+				</h4-->			
 				<xsl:for-each select="dri:div/dri:table">
-					<div class="col-md-12 no-padding" style="padding: 2px;">
-					<div class="panel panel-default">
-					<div class="panel-heading bold"><xsl:copy-of select="dri:head/node()" /></div>
-					<div class="panel-body">
+					<h4>
+						<span class="label label-default label-lg" style="background-color: #f89406;"><xsl:copy-of select="dri:head/node()" /></span>
+					</h4>
 					<xsl:for-each select="dri:row">
 					<xsl:if test="position() &gt; 1 and position() &lt;= 4">
 						<xsl:for-each select="dri:cell">
@@ -668,9 +613,6 @@
 						</xsl:for-each>						
 					</xsl:if>
 					</xsl:for-each>&#160;
-					</div>
-					</div>		
-					</div>			
 				</xsl:for-each>
 			</div>
 		</xsl:for-each>
@@ -678,8 +620,8 @@
 	</xsl:template>
 
 	<xsl:template name="search-box">
-		<div class="row" style="padding: 20px; min-height: 100px; background-color: #f0f0f0; border-bottom: 1px solid #d2d2d2; border-top: 1px solid #d2d2d2;" onmouseleave="$('#facet-box-div').collapse('hide');">
-  			<div class="text-center" style="display:table; width: 100%; height: 100%;">
+		<div id="search-box" class="row" style="padding: 20px; min-height: 100px; background-color: #f0f0f0; border-bottom: 1px solid #d2d2d2; border-top: 1px solid #d2d2d2;">
+  			<div class="text-center" style="display:table; width: 100%; height: 100%; margin-top: 30px; ">
     			<div style="display: table-cell; vertical-align: middle;">
 					<form class="form-search" method="post">
 						<xsl:attribute name="action">
@@ -691,7 +633,7 @@
 								<span class="input-group-addon" style="height: 60px;">
 									<i style="color: #7479B8;" class="fa fa-search fa-lg">&#160;</i>
 								</span>
-								<input type="text" class="form-control" style="height: 60px;">
+								<input type="text" class="form-control" style="height: 60px;" placeholder="Enter query or just click the search button">
 									<xsl:attribute name="name">
 										<xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='queryField']" />
 									</xsl:attribute>									
@@ -721,9 +663,45 @@
 					</xsl:if>
 				</ul>
 			</div-->
-            <xsl:if test="/dri:document/dri:options/dri:list[@n='discovery']/dri:list">
+            <!-- xsl:if test="/dri:document/dri:options/dri:list[@n='discovery']/dri:list">
                     <xsl:call-template name="facet-box" />
-            </xsl:if>			
+            </xsl:if-->	
+            
+		    <div class="text-center" style="color: #707070; margin-top: 30px;">
+		      <div class="col-md-4 text-center">
+		        <h3 style="color: #707070 !important;">Easy-to-Find</h3>
+		        <span class="fa fa-search fa-4x">&#160;</span>
+		        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
+		          The data is visible, giving you maximal credit
+				  for your work (google, VLO, OLAC, Data Citation Index).
+				  For some data, like text corpora or treebanks, we can provide additional services,
+				  like full-text or even tree-query search.
+		        </div>
+		      </div>
+		      <div class="col-md-4 text-center">
+		        <h3 style="color: #707070 !important;">Easy-to-Cite</h3>
+		        <span class="fa fa-quote-right fa-4x">&#160;</span>
+		        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
+					The data is easy to cite. We provide ready-to-use
+		            one-click citations in BibTex, RIS, and other popular
+		            reference formats. All the citations include permanent
+		            links created from persistent identifiers (we use handles for PIDs).
+		            These PIDs are future-proof.        
+		        </div>
+		      </div>      
+		      <div class="col-md-4 text-center">
+		        <h3 style="color: #707070 !important;">Easy-to-Share</h3>
+		        <span class="fa fa-cc fa-4x">&#160;</span>
+		        <div style="margin: 10px; padding-left: 30px; padding-right: 30px; font-size: 12px;">
+					We respect your license. We encourage Free Data and believe
+		            it benefits not only users, but also the data providers.
+		            However we accept also more closed data and we can make
+		            users sign a license before downloading your data,
+		            if that is what you need.         
+		        </div>
+		      </div>
+		    </div>            
+            		
 		</div>
 	</xsl:template>
 
@@ -893,7 +871,7 @@
 	</xsl:template>
 	
 	<xsl:template name="top-banner">
-		<div class="row text-center" style="background-color: #8592c0; height: 500px; margin-top: 1px; font-family: Verdana !important;">
+		<div id="banner" class="row text-center" style="background-color: #8592c0; margin-top: 1px; font-family: Verdana !important; padding: 20px 0px;">
 		  <div class="text-center" style="display:table; width: 100%; height: 100%;">
 		    <div style="display: table-cell; vertical-align: middle;">
 		      <div>
@@ -901,14 +879,14 @@
 		          SUBMIT YOUR DATA TODAY
 		        </h1>
 		        <h3 style="color: #f8f8ff; margin-top: -10px; font-weight: normal">
-		          Deposit Free and Safe, Easy-to-Find, Easy-to-Cite
+		          A Free and Safe repository for linguistic data and tools
 		        </h3>              
 		      </div>
 		      <div style="padding: 10px;">
-		        <a href="/repository/xmlui/submit" class="btn btn-default btn-lg bold" style="margin-right: 10px; background-color: #2d386b; color: #f8f8ff; border-color: #2d386b; border-radius: 0px">Submit Now</a>
-		        <a href="/repository/xmlui/browse" class="btn btn-default btn-lg bold" style="background-color: #f8f8ff; color: #2d386b; border-color: #f8f8ff; border-radius: 0px;">Browse</a>
+		        <a class="btn btn-default btn-lg bold" style="background-color: #324FA7; color: #f8f8f8; border-color: #f8f8f8; border-radius: 0px;"><xsl:attribute name="href">/repository/xmlui/submit</xsl:attribute><i class="fa fa-lock ">&#160;</i>Submit Now</a>
+		        <a class="btn btn-default btn-lg bold" style="background-color: #f89406; color: #2d386b; border-color: #f8f8f8; border-radius: 0px;"><xsl:attribute name="href"><xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath']" /><xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='simpleURL']" /></xsl:attribute>Browse</a>
 		      </div>
-		      <div style="margin-top: 20px;">
+		      <div style="margin-top: 20px;" class="hidden-xs hidden-sm">
 		      	<div style="display: inline-block; position: relative;">
 		      		<a href="https://www.openaire.eu" target="_blank">	      		
 		      			<img id="openaire" src="{$theme-path}/images/openaire.png" alt="" border="0" style="position: absolute; top:0; left:0; display: none;" onmouseleave="$('#openaire').css('display', 'none');" data-toggle="tooltip" data-placement="top" title="The FP7 project OpenAIRE aimed to support the implementation of the EC and ERC Open Access policies."/>

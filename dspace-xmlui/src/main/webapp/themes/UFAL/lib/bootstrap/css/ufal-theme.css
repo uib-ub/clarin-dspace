@@ -1418,3 +1418,13 @@ div.modal-scrollbar {
 .refbox {
 	margin-bottom: 10px;
 }
+
+@media(max-width: 480px) {
+  #banner  h1{
+    font-size: 150% !important;
+  }
+
+  #banner h3{
+    font-size: 130% !important;
+  }
+}
