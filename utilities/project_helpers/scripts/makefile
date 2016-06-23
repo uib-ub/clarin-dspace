@@ -201,9 +201,13 @@ install_dspace:
 	@echo "INSTALLATION SUCCESSFUL ..."
 
 postinstall: 
-	@$(MAKE) update_lindat_common
-	@$(MAKE) grant_rights
-	@echo "DEPLOYMENT (INSTALL + POSTINSTALL) SUCCESSFUL"
+	@if [[ -f postinstall.sh ]]; then \
+            bash postinstall.sh $(DIR_SOURCE) $(DIR_INSTALLATION); \
+        elif [[ -f postinstall_example.sh ]]; then \
+            bash postinstall_example.sh $(DIR_SOURCE) $(DIR_INSTALLATION); \
+        else \
+            echo "Nothing to start, do you have postinstall.sh?"; \
+        fi
 
 fresh_install:
 	@echo "INSTALLING FRESH LINDAT/CLARIN DSpace ..."
