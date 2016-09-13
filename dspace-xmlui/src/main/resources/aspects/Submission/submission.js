@@ -209,6 +209,13 @@ function doSubmission()
        // Resume a previous submission
        var workspace = WorkspaceItem.find(getDSContext(), workspaceID);
 
+	   if(!workspace){
+		   var contextPath = cocoon.request.getContextPath();
+		   cocoon.redirectTo(contextPath+"/submissions",true);
+		   getDSContext().complete();
+		   cocoon.exit();
+	   }
+
        // Get the collection handle for this item.
        var handle = workspace.getCollection().getHandle();
 
