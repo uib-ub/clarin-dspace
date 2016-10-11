@@ -3475,4 +3475,8 @@
 	<message key="xmlui.ContractPage.collection_name">{0}</message>
 	<message key="xmlui.ContractPage.explain_non_localized_license">Smlouva se uzavírá v angličtině a její plné znění naleznete níže. Následující český překlad je pouze orientační. V případě rozporů platí anglická verze. </message>
 
+	<!-- cz.cuni.mff.ufal.dspace.app.xmlui.aspect.general.Custom404Transformer -->
+	<message key="xmlui.Custom404Transformer.default_error">Vámi požadovanou stránku jsme nenalezli.</message>
+	<message key="xmlui.Custom404Transformer.NoWorkspaceItem">Požadovaný WorkspaceItem ({0}) nenalezen. Buď jste zadali špatné id, nebo byl záznam již dokončen.</message>
+
 </catalogue>

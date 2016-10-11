@@ -211,8 +211,9 @@ function doSubmission()
 
 	   if(!workspace){
 		   var contextPath = cocoon.request.getContextPath();
-		   cocoon.redirectTo(contextPath+"/submissions",true);
-		   getDSContext().complete();
+		   sendPage("submissions/not_found",{"message_key":"xmlui.Custom404Transformer.NoWorkspaceItem",
+			   				"message_param":workspaceID
+		   });
 		   cocoon.exit();
 	   }
 

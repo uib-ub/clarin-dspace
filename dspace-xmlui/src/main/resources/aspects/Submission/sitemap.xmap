@@ -35,6 +35,7 @@
       <map:transformer name="RemovedStep" src="org.dspace.app.xmlui.aspect.submission.submit.RemovedStep"/>
       <map:transformer name="CompletedStep" src="org.dspace.app.xmlui.aspect.submission.submit.CompletedStep"/>
       <map:transformer name="ControlledVocabularyTransformer" src="org.dspace.app.xmlui.aspect.submission.ControlledVocabularyTransformer"/>
+      <map:transformer name="Custom404Transformer" src="cz.cuni.mff.ufal.dspace.app.xmlui.aspect.general.Custom404Transformer"/>
     </map:transformers>
     
     <map:selectors>
@@ -156,6 +157,14 @@
               
             <map:transform type="Submissions"/>
           </map:match>
+
+        <!-- ufal 404 page -->
+            <map:match pattern="submissions/not_found">
+                <map:transform type="Custom404Transformer">
+                        <map:parameter name="message_key" value="{flow-attribute:message_key}"/>
+                        <map:parameter name="message_param" value="{flow-attribute:message_param}"/>
+                </map:transform>
+            </map:match>
           
           
           
