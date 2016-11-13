@@ -3217,5 +3217,9 @@
 	<message key="xmlui.ContractPage.head">Distribution License Agreement</message>
 	<message key="xmlui.ContractPage.collection_name">{0}</message>
 
+	<!-- cz.cuni.mff.ufal.dspace.app.xmlui.aspect.general.Custom404Transformer -->
+	<message key="xmlui.Custom404Transformer.default_error">We failed to find the page you've requested.</message>
+	<message key="xmlui.Custom404Transformer.NoWorkspaceItem">WorkspaceItem ({0}) not found. You either provided wrong id or the item was already submitted</message>
+
 </catalogue>
 
