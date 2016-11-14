@@ -209,6 +209,14 @@ function doSubmission()
        // Resume a previous submission
        var workspace = WorkspaceItem.find(getDSContext(), workspaceID);
 
+	   if(!workspace){
+		   var contextPath = cocoon.request.getContextPath();
+		   sendPage("submissions/not_found",{"message_key":"xmlui.Custom404Transformer.NoWorkspaceItem",
+			   				"message_param":workspaceID
+		   });
+		   cocoon.exit();
+	   }
+
        // Get the collection handle for this item.
        var handle = workspace.getCollection().getHandle();
 
