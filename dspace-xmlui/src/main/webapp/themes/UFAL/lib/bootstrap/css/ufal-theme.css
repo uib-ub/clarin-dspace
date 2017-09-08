@@ -1476,3 +1476,17 @@ div.modal-scrollbar {
     background-color: azure;
     display: block;
 }
+#command-div {
+  display:none;
+}
+
+#command-div .repo-copy-btn {
+  opacity: 0;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#command-div:hover .repo-copy-btn, #command-div .repo-copy-btn:focus {
+  opacity: 1;
+}
