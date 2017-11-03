@@ -162,12 +162,39 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
         return map;
     }
 
+    private static JSONArray shrink(JSONArray jsonArray){
+        for(Object entityO : jsonArray){
+            JSONObject entity = (JSONObject) entityO;
+            // Logos (in contrast to icon) are currently unused by the fronted; they just eat bandwidth
+            entity.remove("Logos");
+            // The same for InformationURLs
+            entity.remove("InformationURLs");
+            // if there are DisplayNames only the first one will be used anyway, get rid of the rest
+            if(entity.containsKey("DisplayNames")) {
+                JSONArray displayNames = new JSONArray();
+                displayNames.add(((JSONArray) entity.get("DisplayNames")).get(0));
+                entity.put("DisplayNames", displayNames);
+            }
+            //take the first value in Descriptions and put it under "descr"
+            if(entity.containsKey("Descriptions")) {
+                try {
+                    String descr = (String) ((JSONObject) ((JSONArray) entity.get("Descriptions")).get(0)).get("value");
+                    entity.put("descr", descr);
+                }catch (Exception e){
+                    //Do nothing
+                }
+                entity.remove("Descriptions");
+            }
+        }
+        return jsonArray;
+    }
+
     public static String createFeedsContent(String feedsConfig, String shibbolethDiscoFeedUrl){
         String old_value = System.getProperty("jsse.enableSNIExtension");
         System.setProperty("jsse.enableSNIExtension", "false");
 
         //Obtain shibboleths discofeed
-        final Map<String,JSONObject> shibDiscoEntities = toMap(DiscoJuiceFeeds.downloadJSON(shibbolethDiscoFeedUrl));
+        final Map<String,JSONObject> shibDiscoEntities = toMap(shrink(DiscoJuiceFeeds.downloadJSON(shibbolethDiscoFeedUrl)));
 
         //true is the default http://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html
         old_value = (old_value == null) ? "true" : old_value;
