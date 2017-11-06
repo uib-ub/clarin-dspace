@@ -171,20 +171,17 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
             entity.remove("InformationURLs");
             // if there are DisplayNames only the first one will be used anyway, get rid of the rest
             if(entity.containsKey("DisplayNames")) {
-                JSONArray displayNames = new JSONArray();
-                displayNames.add(((JSONArray) entity.get("DisplayNames")).get(0));
-                entity.put("DisplayNames", displayNames);
-            }
-            //take the first value in Descriptions and put it under "descr"
-            if(entity.containsKey("Descriptions")) {
                 try {
-                    String descr = (String) ((JSONObject) ((JSONArray) entity.get("Descriptions")).get(0)).get("value");
-                    entity.put("descr", descr);
+                    String displayName = (String) ((JSONObject) ((JSONArray) entity.get("DisplayNames")).get(0)).get("value");
+                    entity.put("title", displayName);
                 }catch (Exception e){
                     //Do nothing
                 }
-                entity.remove("Descriptions");
+                entity.remove("DisplayNames");
             }
+            entity.remove("Descriptions");
+            entity.remove("Keywords");
+            entity.remove("PrivacyStatementURLs");
         }
         return jsonArray;
     }
