@@ -19,6 +19,7 @@ import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.log4j.Logger;
 import org.dspace.core.ConfigurationManager;
 
+import org.dspace.utils.DSpace;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -165,25 +166,53 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
     private static JSONArray shrink(JSONArray jsonArray){
         for(Object entityO : jsonArray){
             JSONObject entity = (JSONObject) entityO;
-            // Logos (in contrast to icon) are currently unused by the fronted; they just eat bandwidth
-            entity.remove("Logos");
-            // The same for InformationURLs
-            entity.remove("InformationURLs");
             // if there are DisplayNames only the first one will be used anyway, get rid of the rest
             if(entity.containsKey("DisplayNames")) {
-                try {
-                    String displayName = (String) ((JSONObject) ((JSONArray) entity.get("DisplayNames")).get(0)).get("value");
-                    entity.put("title", displayName);
-                }catch (Exception e){
-                    //Do nothing
+                JSONArray displayNames = (JSONArray) entity.get("DisplayNames");
+                List<String> titles = getValues(displayNames);
+                if(!titles.isEmpty()){
+                    entity.put("title", titles.remove(0));
+                    if(!titles.isEmpty()){
+                        // treat the rest of the titles as keywords
+                        entity.put("keywords", titles);
+                    }
                 }
-                entity.remove("DisplayNames");
             }
-            entity.remove("Descriptions");
-            entity.remove("Keywords");
-            entity.remove("PrivacyStatementURLs");
+            // copy any value in Keywords to keywords
+            if(entity.containsKey("Keywords")){
+                JSONArray keywordsObjects = (JSONArray) entity.get("Keywords");
+                List<String> keywords = getValues(keywordsObjects);
+                if(!keywords.isEmpty()){
+                    if(entity.containsKey("keywords")){
+                        keywords.addAll((List<String>)entity.get("keywords"));
+                    }
+                    entity.put("keywords", keywords);
+                }
+            }
+
+            // Logos (in contrast to icon) are currently unused by the fronted; they just eat bandwidth
+            // The same for InformationURLs, Descriptions, PrivacyStatementURLs
+            // Can be configured
+            String[] toRemove = new DSpace().getConfigurationService().getPropertyAsType("discojuice" +
+                    ".remove_from_shib_feed_object", new String[]{"Logos", "InformationURLs",
+                    "Descriptions", "PrivacyStatementURLs", "DisplayNames", "Keywords"});
+            for(String key : toRemove){
+                entity.remove(key);
+            }
         }
         return jsonArray;
+    }
+
+    private static List<String> getValues(JSONArray array){
+        ArrayList<String> res = new ArrayList<>(array.size());
+        for(Object obj : array){
+            JSONObject jObj = (JSONObject) obj;
+            if(jObj.containsKey("value")){
+                res.add((String)jObj.get("value"));
+            }
+
+        }
+        return res;
     }
 
     public static String createFeedsContent(String feedsConfig, String shibbolethDiscoFeedUrl){
