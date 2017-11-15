@@ -700,7 +700,7 @@
 		        </xsl:choose>
                     </xsl:attribute>&#160;</script>
 
-        <script type="text/javascript" src="{concat($aaiURL, '/discojuice/discojuice-2.1.en.min.js')}">&#160;</script>
+        <script type="text/javascript" src="{concat($aaiURL, '/discojuice/discojuice-3.0.en.min.js')}">&#160;</script>
         <script type="text/javascript" src="{concat($aaiURL, '/aai.js')}">&#160;</script>
 
 		<xsl:variable name="localJQuerySrc">
