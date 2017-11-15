@@ -166,27 +166,25 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
     private static JSONArray shrink(JSONArray jsonArray){
         for(Object entityO : jsonArray){
             JSONObject entity = (JSONObject) entityO;
-            // if there are DisplayNames only the first one will be used anyway, get rid of the rest
-            if(entity.containsKey("DisplayNames")) {
-                JSONArray displayNames = (JSONArray) entity.get("DisplayNames");
-                List<String> titles = getValues(displayNames);
-                if(!titles.isEmpty()){
-                    entity.put("title", titles.remove(0));
-                    if(!titles.isEmpty()){
-                        // treat the rest of the titles as keywords
-                        entity.put("keywords", titles);
+            // if there are DisplayNames only the first one will be used in title copy the rest
+            // to keywords
+            // copy any value in Keywords and Description to keywords
+            for(String key: new String[]{"DisplayNames", "Keywords", "Descriptions"}) {
+                if (entity.containsKey(key)) {
+                    JSONArray keyObjects = (JSONArray) entity.get(key);
+                    List<String> values = getValues(keyObjects);
+                    if (!values.isEmpty()) {
+                        if("DisplayNames".equals(key)){
+                            entity.put("title", values.remove(0));
+                            if(values.isEmpty()){
+                                continue;
+                            }
+                        }
+                        if (entity.containsKey("keywords")) {
+                            values.addAll((List<String>) entity.get("keywords"));
+                        }
+                        entity.put("keywords", values);
                     }
-                }
-            }
-            // copy any value in Keywords to keywords
-            if(entity.containsKey("Keywords")){
-                JSONArray keywordsObjects = (JSONArray) entity.get("Keywords");
-                List<String> keywords = getValues(keywordsObjects);
-                if(!keywords.isEmpty()){
-                    if(entity.containsKey("keywords")){
-                        keywords.addAll((List<String>)entity.get("keywords"));
-                    }
-                    entity.put("keywords", keywords);
                 }
             }
 
