@@ -210,6 +210,7 @@ public class InstallItem
         }
 		// check replaced by
         checkSymmetricRelation(c, item, "dc.relation.replaces", "dc.relation.isreplacedby", false);
+        checkSymmetricRelation(c, item, "dc.relation.ispartof", "dc.relation.haspart", true);
 
         Context context = new Context(Context.READ_ONLY);
         context.setCurrentUser(null);
