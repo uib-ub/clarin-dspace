@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    Document   : footer.xsl
-    Created on : April 14, 2012, 4:48 PM
-    Author     : sedlak
-    Description:
-        Purpose of transformation follows.
 -->
 
 <xsl:stylesheet xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
@@ -33,21 +28,6 @@
                     </xsl:attribute>
                     <xsl:text>&#160;</xsl:text>
                 </a>
-
-      <xsl:variable name="currentLocale" select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='page'][@qualifier='currentLocale']"/>
-      <xsl:variable name="localizedDiskPath" select="concat($theme-path-on-disk,'/lib/lindat/',$currentLocale,'/footer.htm')" />
-      <xsl:variable name="defaultDiskPath" select="concat($theme-path-on-disk,'/lib/lindat/','/footer.htm')" />
-      <xsl:variable name="path" select="file:new($localizedDiskPath)"/>
-      <xsl:variable name="collection"
-                    select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='focus'][@qualifier='container']"/>
-      <xsl:choose>
-          <xsl:when test="file:isFile($path)">
-              <xsl:copy-of select="psu:readFooter($localizedDiskPath, $collection)" />
-          </xsl:when>
-          <xsl:otherwise>
-              <xsl:copy-of select="psu:readFooter($defaultDiskPath, $collection)" />
-          </xsl:otherwise>
-      </xsl:choose>
     </xsl:template>
 
 
