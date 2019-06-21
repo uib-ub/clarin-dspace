@@ -16,6 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.dspace.app.util.MetadataExposure;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
@@ -272,6 +273,12 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
         {
             mainForm.addHidden("page").setValue(request.getParameter("page"));
         }
+
+        String showNarrators = Boolean.TRUE.toString();
+        if("false".equals(request.getParameter("showNarrators"))){
+            showNarrators = Boolean.FALSE.toString();
+        }
+        mainForm.addHidden("showNarrators").setValue(showNarrators);
     }
 
     protected abstract String getBasicUrl() throws SQLException;
@@ -426,10 +433,16 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
     }
 
     protected String addFilterQueriesToUrl(String pageURLMask) throws UIException {
+        StringBuilder maskBuilder = new StringBuilder(pageURLMask);
+
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        String showNarratorsParam = request.getParameter("showNarrators");
+        boolean showNarrators = !"false".equals(showNarratorsParam);
+        maskBuilder.append("&").append("showNarrators=").append(Boolean.toString(showNarrators));
+
         Map<String, String[]> filterQueryParams = getParameterFilterQueries();
         if(filterQueryParams != null)
         {
-            StringBuilder maskBuilder = new StringBuilder(pageURLMask);
             for (String filterQueryParam : filterQueryParams.keySet())
             {
                 String[] filterQueryValues = filterQueryParams.get(filterQueryParam);
@@ -441,10 +454,8 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
                     }
                 }
             }
-
-            pageURLMask = maskBuilder.toString();
         }
-        return pageURLMask;
+        return maskBuilder.toString();
     }
 
     /**
@@ -751,6 +762,9 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
 
         // Escape any special characters in this user-entered query
         query = DiscoveryUIUtils.escapeQueryChars(query);
+        if(query == null || query.isEmpty()){
+            query = "*:*";
+        }
 
         int page = getParameterPage();
 
@@ -771,10 +785,49 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
         List<String> defaultFilterQueries = discoveryConfiguration.getDefaultFilterQueries();
         queryArgs.addFilterQueries(defaultFilterQueries.toArray(new String[defaultFilterQueries.size()]));
 
-        if (filterQueries.size() > 0) {
-            queryArgs.addFilterQueries(filterQueries.toArray(new String[filterQueries.size()]));
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        String showNarratorsParam = request.getParameter("showNarrators");
+        boolean showNarrators = !"false".equals(showNarratorsParam);
+
+        List<String> narratorQueries = new ArrayList<>();
+        List<String> interviewQueries = new ArrayList<>();
+
+        for(String fq : filterQueries){
+            if(fq.contains("narrator")){
+                narratorQueries.add(fq);
+            }else if(fq.contains("interview")){
+                interviewQueries.add(fq);
+            }else{
+                log.error("Neither interview nor narrator filter " + fq);
+            }
         }
 
+        String toRelation;
+        String type;
+        if(showNarrators){
+            for (ListIterator<String> it = interviewQueries.listIterator(); it.hasNext();){
+                //queries for interviews return narrators
+                String fq = "{!join from=identifier_keyword to=haspart_keyword}" + it.next();
+                it.set(fq);
+            }
+            toRelation = "haspart_keyword";
+            type = "narrator";
+        }else {
+            for (ListIterator<String> it = narratorQueries.listIterator(); it.hasNext(); ) {
+                // this join returns interview
+                String fq = "{!join from=identifier_keyword to=ispartof_keyword}" + it.next();
+                it.set(fq);
+            }
+            toRelation = "ispartof_keyword";
+            type = "interview";
+        }
+        queryArgs.addFilterQueries(narratorQueries.toArray(new String[narratorQueries.size()]));
+        queryArgs.addFilterQueries(interviewQueries.toArray(new String[interviewQueries.size()]));
+        String escapedQuery = ClientUtils.escapeQueryChars(query);
+        query = query + " OR _query_:\"{!join from=identifier_keyword to=" + toRelation + "}" + escapedQuery + "\"";
+        //type_keyword is defined in schema.xml as a copy of dc.type
+        String filter = "type_keyword:" + type;
+        queryArgs.addFilterQueries(filter);
 
         queryArgs.setMaxResults(getParameterRpp());
 
