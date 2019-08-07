@@ -391,11 +391,7 @@ public class SimpleSearch extends AbstractSearch implements CacheableProcessingC
             }
         }
 
-        String showNarrators = Boolean.TRUE.toString();
-        if("false".equals(request.getParameter("showNarrators"))){
-            showNarrators = Boolean.FALSE.toString();
-        }
-        division.addHidden("showNarrators").setValue(showNarrators);
+        division.addHidden("showNarrators").setValue(Boolean.toString(showNarrators()));
     }
 
     protected String getSuggestUrl(String newQuery) throws UIException {

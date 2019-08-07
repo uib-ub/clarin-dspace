@@ -349,7 +349,7 @@
     <message key="xmlui.ArtifactBrowser.Navigation.browse_narratordateissued">Narátory dle data publikování</message>
 
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_publisher">Vydavatel</message>
-	<message key="xmlui.ArtifactBrowser.Navigation.browse_language">Jazyk</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_interviewLanguage">Jazyk</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_type">Typ</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_mediatype">Druh média</message>
 

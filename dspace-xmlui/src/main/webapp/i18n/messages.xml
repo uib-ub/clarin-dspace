@@ -365,7 +365,7 @@
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_narratordateissued">Narrators by issue date</message>
 
     <message key="xmlui.ArtifactBrowser.Navigation.browse_publisher">Publisher</message>
-    <message key="xmlui.ArtifactBrowser.Navigation.browse_language">Language</message>
+    <message key="xmlui.ArtifactBrowser.Navigation.browse_interviewLanguage">Language</message>
     <message key="xmlui.ArtifactBrowser.Navigation.browse_type">Type</message>
     <message key="xmlui.ArtifactBrowser.Navigation.browse_mediatype">Medium Type</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_narrator">Narrator</message>

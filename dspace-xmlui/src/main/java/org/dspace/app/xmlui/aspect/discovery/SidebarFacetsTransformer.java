@@ -157,7 +157,11 @@ public class SidebarFacetsTransformer extends AbstractDSpaceTransformer implemen
 
 
     public void performSearch() throws SearchServiceException, UIException, SQLException {
-        DSpaceObject dso = getScope();
+        // Scope can be set when comming from browse
+        // We expect two collections - narrators/interviews - scope makes it difficult to display/switch between them
+        // so we ignore the scope
+        DSpaceObject dso = null;
+        //DSpaceObject dso = getScope();
         Request request = ObjectModelHelper.getRequest(objectModel);
         //If we are on a search page performing a search a query may be used
         String query = request.getParameter("query");
@@ -180,7 +184,10 @@ public class SidebarFacetsTransformer extends AbstractDSpaceTransformer implemen
             }else if(fq.contains("interview")){
                 interviewFilterQueries.add(fq);
             }else{
+                narratorResults = new DiscoverResult();
+                interviewResults = new DiscoverResult();
                 log.error("Neither interview nor narrator filter " + fq);
+                return;
             }
         }
 
@@ -360,9 +367,7 @@ public class SidebarFacetsTransformer extends AbstractDSpaceTransformer implemen
         if(StringUtils.isNotBlank(request.getParameter("rpp"))){
             parameters.add("rpp=" + request.getParameter("rpp"));
         }
-        String showNarratorsParam = request.getParameter("showNarrators");
-        boolean showNarrators = !"false".equals(showNarratorsParam);
-        parameters.add("showNarrators=" + Boolean.toString(showNarrators));
+        parameters.add("showNarrators=" + Boolean.toString(showNarrators()));
 
 
         Map<String, String[]> parameterFilterQueries = DiscoveryUIUtils.getParameterFilterQueries(request);
@@ -562,6 +567,17 @@ public class SidebarFacetsTransformer extends AbstractDSpaceTransformer implemen
         }
 
         return dso;
+    }
+
+    private boolean showNarrators() {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        if(StringUtils.isNotBlank(request.getParameter("showNarrators"))){
+            // explicit showNarrators parameter
+            return Boolean.valueOf(request.getParameter("showNarrators"));
+        }else{
+            // default
+            return true;
+        }
     }
 
 

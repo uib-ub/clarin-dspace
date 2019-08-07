@@ -274,11 +274,18 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
             mainForm.addHidden("page").setValue(request.getParameter("page"));
         }
 
-        String showNarrators = Boolean.TRUE.toString();
-        if("false".equals(request.getParameter("showNarrators"))){
-            showNarrators = Boolean.FALSE.toString();
+        mainForm.addHidden("showNarrators").setValue(Boolean.toString(showNarrators()));
+    }
+
+    boolean showNarrators() {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        if(StringUtils.isNotBlank(request.getParameter("showNarrators"))){
+            // explicit showNarrators parameter
+            return Boolean.valueOf(request.getParameter("showNarrators"));
+        }else{
+            // default
+            return true;
         }
-        mainForm.addHidden("showNarrators").setValue(showNarrators);
     }
 
     protected abstract String getBasicUrl() throws SQLException;
@@ -436,9 +443,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
         StringBuilder maskBuilder = new StringBuilder(pageURLMask);
 
         Request request = ObjectModelHelper.getRequest(objectModel);
-        String showNarratorsParam = request.getParameter("showNarrators");
-        boolean showNarrators = !"false".equals(showNarratorsParam);
-        maskBuilder.append("&").append("showNarrators=").append(Boolean.toString(showNarrators));
+        maskBuilder.append("&").append("showNarrators=").append(Boolean.toString(showNarrators()));
 
         Map<String, String[]> filterQueryParams = getParameterFilterQueries();
         if(filterQueryParams != null)
@@ -753,6 +758,11 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
      */
     public void performSearch(DSpaceObject scope) throws UIException, SearchServiceException {
 
+        // Scope can be set when comming from browse
+        // We expect two collections - narrators/interviews - scope makes it difficult to display/switch between them
+        // so we ignore the scope
+        scope = null;
+
         if (queryResults != null)
         {
             return;
@@ -785,9 +795,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
         List<String> defaultFilterQueries = discoveryConfiguration.getDefaultFilterQueries();
         queryArgs.addFilterQueries(defaultFilterQueries.toArray(new String[defaultFilterQueries.size()]));
 
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        String showNarratorsParam = request.getParameter("showNarrators");
-        boolean showNarrators = !"false".equals(showNarratorsParam);
+        boolean showNarrators = showNarrators();
 
         List<String> narratorQueries = new ArrayList<>();
         List<String> interviewQueries = new ArrayList<>();
@@ -798,7 +806,9 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
             }else if(fq.contains("interview")){
                 interviewQueries.add(fq);
             }else{
+                queryResults = new DiscoverResult();
                 log.error("Neither interview nor narrator filter " + fq);
+                return;
             }
         }
 
