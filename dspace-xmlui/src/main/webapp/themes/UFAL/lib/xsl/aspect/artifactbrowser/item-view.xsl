@@ -176,7 +176,7 @@
 						<div class="item-branding label pull-right">
 							<a>
 								<xsl:attribute name="href">
-									<xsl:copy-of select="$contextPath"/>
+									<xsl:value-of select="$contextPath"/>
 									<xsl:value-of select="concat('/discover?filtertype=branding&amp;filter_relational_operator=equals&amp;filter=',encoder:encode(dim:field[@mdschema='local' and @element='branding'][1]/node()))"/>
 								</xsl:attribute>
 								<xsl:value-of select="dim:field[@mdschema='local' and @element='branding'][1]/node()"/>
@@ -197,12 +197,12 @@
 										<xsl:attribute name="class"><xsl:text>ds-dc_contributor_author-authority</xsl:text></xsl:attribute>
 									</xsl:if>
 									<a>
-								<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/browse?value=<xsl:copy-of select="dim:field[@element='narrator'][@qualifier='name']" />&amp;type=narrator</xsl:attribute>
-								<xsl:copy-of select="dim:field[@element='narrator'][@qualifier='name']" />
+								<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/browse?value=<xsl:value-of select="dim:field[@element='narrator'][@qualifier='name']" />&amp;type=narrator</xsl:attribute>
+								<xsl:value-of select="dim:field[@element='narrator'][@qualifier='name']" />
 										<xsl:if
 												test="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='identifier']">
 											<xsl:text> - </xsl:text>
-												<xsl:copy-of
+												<xsl:value-of
 														select="dim:field[@mdschema='viadat'][@element='narrator'][@qualifier='identifier']" />
 
 										</xsl:if>
@@ -231,7 +231,7 @@
 					</dt>
 		<dd style="pading-right: 40px;">
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='alias']">
-			<xsl:copy-of select="node()" />
+			<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -244,9 +244,34 @@
 				</xsl:call-template>
 			</xsl:when>
 
+			<!-- Link narrators from interviews -->
+			<xsl:when test="$clause = 4">
+				<xsl:variable name="narratorHdl">
+					<xsl:value-of select="java:replaceAll(java:java.lang.String.new(//dim:field[@mdschema='dc' and @element='relation' and @qualifier='ispartof']), '.*hdl.handle.net/', '')"/>
+				</xsl:variable>
+				<xsl:variable name="narratorMets">
+					<xsl:text>cocoon://metadata/handle/</xsl:text>
+					<xsl:value-of select="$narratorHdl"/>
+					<xsl:text>/mets.xml</xsl:text>
+				</xsl:variable>
+				<xsl:if test="$narratorMets">
+					<dl id="item-interview-narrator-link" class="dl-horizontal" style="clear:both;">
+						<dt style="text-align: left">
+							<i class="fa fa-link">&#160;</i>
+							<span><i18n:text>xmlui.UFAL.artifactbrowser.narrator</i18n:text></span>
+						</dt>
+						<dd style="pading-right: 40px;">
+							<a>
+								<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/handle/<xsl:value-of select="$narratorHdl"/></xsl:attribute>
+								<xsl:value-of select="document($narratorMets)//dim:field[@mdschema='dc' and @element='title']"/>
+							</a>
+						</dd>
+					</dl>
+				</xsl:if>
+
 			<!-- ///// interview interviewer begin //// -->
 			<!-- interviewer -->
-			<xsl:when test="$clause = 4 and (dim:field[@mdschema='viadat' and @element='interview' and @qualifier='interviewer'])">
+			<xsl:if test="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='interviewer']">
 				<dl id="item-interview-interviewer" class="dl-horizontal" style="clear:both;">
 					<dt style="text-align: left">
 						<i class="fa fa-user">&#160;</i>
@@ -254,7 +279,7 @@
 					</dt>
 					<dd style="pading-right: 40px;">
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='interviewer']">
-							<xsl:copy-of select="node()" />
+							<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -265,6 +290,7 @@
 					<xsl:with-param name="clause" select="($clause + 1)" />
 					<xsl:with-param name="phase" select="$otherPhase" />
 				</xsl:call-template>
+			</xsl:if>
 			</xsl:when>
 			<!-- ///// interview interviewer end //// -->
 
@@ -277,7 +303,7 @@
 					</dt>
 		<dd style="pading-right: 40px;">
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='birthdate']">
-			<xsl:copy-of select="node()" />
+			<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -300,7 +326,7 @@
 					<dd style="pading-right: 40px;">
 						<xsl:for-each
 								select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='date']">
-							<xsl:copy-of select="node()" />
+							<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -325,7 +351,7 @@
 		<dd style="pading-right: 40px;">
 						<xsl:for-each
 								select="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='project']">
-			<xsl:copy-of select="node()" />
+			<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -349,7 +375,7 @@
 					<dd style="pading-right: 40px;">
 						<xsl:for-each
 								select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='length']">
-							<xsl:copy-of select="node()" />
+							<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -374,8 +400,8 @@
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='keywordsTopic']">
 							<span class="tag">
 								<a class="label label-primary">
-									<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/discover?filtertype=narratorKeywordsTopic&amp;filter_relational_operator=equals&amp;filter=<xsl:copy-of select="node()"/></xsl:attribute>
-									<xsl:copy-of select="node()" />
+									<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/discover?filtertype=narratorKeywordsTopic&amp;filter_relational_operator=equals&amp;filter=<xsl:value-of select="node()"/></xsl:attribute>
+									<xsl:value-of select="node()" />
 								</a>
 							</span>
 						</xsl:for-each>
@@ -398,8 +424,8 @@
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='keywordsProfession']">
 							<span class="tag">
 								<a class="label label-primary">
-									<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/discover?filtertype=narratorKeywordsProfession&amp;filter_relational_operator=equals&amp;filter=<xsl:copy-of select="node()"/></xsl:attribute>
-									<xsl:copy-of select="node()" />
+									<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/discover?filtertype=narratorKeywordsProfession&amp;filter_relational_operator=equals&amp;filter=<xsl:value-of select="node()"/></xsl:attribute>
+									<xsl:value-of select="node()" />
 								</a>
 							</span>
 						</xsl:for-each>
@@ -423,8 +449,8 @@
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='keywords']">
 							<span class="tag">
 								<a class="label label-primary">
-									<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/discover?filtertype=interviewKeywords&amp;filter_relational_operator=equals&amp;filter=<xsl:copy-of select="node()"/></xsl:attribute>
-									<xsl:copy-of select="node()" />
+									<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/discover?filtertype=interviewKeywords&amp;filter_relational_operator=equals&amp;filter=<xsl:value-of select="node()"/></xsl:attribute>
+									<xsl:value-of select="node()" />
 								</a>
 							</span>
 						</xsl:for-each>
@@ -447,8 +473,8 @@
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='detailedKeywords']">
 							<span class="tag">
 								<a class="label label-primary">
-									<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/discover?filtertype=interviewDetailedKeywords&amp;filter_relational_operator=equals&amp;filter=<xsl:copy-of select="node()"/></xsl:attribute>
-									<xsl:copy-of select="node()" />
+									<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/discover?filtertype=interviewDetailedKeywords&amp;filter_relational_operator=equals&amp;filter=<xsl:value-of select="node()"/></xsl:attribute>
+									<xsl:value-of select="node()" />
 								</a>
 							</span>
 						</xsl:for-each>
@@ -470,7 +496,7 @@
 					</dt>
 		<dd style="pading-right: 40px;">
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='consent']">
-			<xsl:copy-of select="node()" />
+			<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -493,7 +519,7 @@
 					</dt>
 					<dd style="pading-right: 40px;">
 						<xsl:for-each select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='transcript']">
-							<xsl:copy-of select="node()" />
+							<xsl:value-of select="node()" />
 							<xsl:if test="position() != last()">
 								<xsl:text>; </xsl:text>
 							</xsl:if>
@@ -544,9 +570,9 @@
 								<xsl:if test="self::node()[text()!='']">
 									<a target="_blank">
 										<xsl:attribute name="href">
-		                            <xsl:copy-of select="./node()" />
+		                            <xsl:value-of select="./node()" />
 		                        </xsl:attribute>
-										<xsl:copy-of select="./node()" />
+										<xsl:value-of select="./node()" />
 									</a>
 									<xsl:if
 										test="count(following-sibling::dim:field[@element='source' and @qualifier='uri']) != 0">
@@ -577,9 +603,9 @@
 								<xsl:if test="self::node()[text()!='']">
 									<a target="_blank">
 										<xsl:attribute name="href">
-		                            <xsl:copy-of select="./node()" />
+		                            <xsl:value-of select="./node()" />
 		                        </xsl:attribute>
-										<xsl:copy-of select="./node()" />
+										<xsl:value-of select="./node()" />
 									</a>
 									<xsl:if
 										test="count(following-sibling::dim:field[@mdschema='local' and @element='demo' and @qualifier='uri']) != 0">
@@ -610,9 +636,9 @@
 							<xsl:if test="self::node()[text()!='']">
 								<a target="_blank">
 									<xsl:attribute name="href">
-										<xsl:copy-of select="./node()" />
+										<xsl:value-of select="./node()" />
 									</xsl:attribute>
-									<xsl:copy-of select="./node()" />
+									<xsl:value-of select="./node()" />
 								</a>
 								<xsl:if
 										test="count(following-sibling::dim:field[@element='relation' and @qualifier='isreferencedby']) != 0">
@@ -639,7 +665,7 @@
 					</dt>
 					<dd>
 						<xsl:for-each select="dim:field[@element='date' and @qualifier='issued']">							
-							<xsl:copy-of select="substring(./node(),1,10)" />
+							<xsl:value-of select="substring(./node(),1,10)" />
 							<xsl:if
 								test="count(following-sibling::dim:field[@element='date' and @qualifier='issued']) != 0">
 								<br />
@@ -685,8 +711,8 @@
 					</dt>
 					<dd>
 						<a>
-							<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/discover?filtertype=interviewType&amp;filter_relational_operator=equals&amp;filter=<xsl:copy-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='type']"/></xsl:attribute>
-							<xsl:copy-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='type']" />
+							<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/discover?filtertype=interviewType&amp;filter_relational_operator=equals&amp;filter=<xsl:value-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='type']"/></xsl:attribute>
+							<xsl:value-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='type']" />
 						</a>
 					</dd>
 				</dl>
@@ -707,9 +733,9 @@
 					</dt>
 					<dd>
 						<a>
-							<xsl:attribute name="href"><xsl:copy-of
-									select="$contextPath"/>/discover?filtertype=interviewPeriod&amp;filter_relational_operator=equals&amp;filter=<xsl:copy-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='period']"/></xsl:attribute>
-							<xsl:copy-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='period']" />
+							<xsl:attribute name="href"><xsl:value-of
+									select="$contextPath"/>/discover?filtertype=interviewPeriod&amp;filter_relational_operator=equals&amp;filter=<xsl:value-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='period']"/></xsl:attribute>
+							<xsl:value-of select="dim:field[@mdschema='viadat' and @element='interview' and @qualifier='period']" />
 						</a>
 					</dd>
 				</dl>
@@ -725,7 +751,7 @@
 					<xsl:variable name="sizeInfo">
 						<xsl:choose>
 							<xsl:when test="dim:field[@mdschema='local' and @element='size' and @qualifier='info'][1]/node()">
-								<xsl:copy-of select="dim:field[@mdschema='local' and @element='size' and @qualifier='info']"/>
+								<xsl:value-of select="dim:field[@mdschema='local' and @element='size' and @qualifier='info']"/>
 							</xsl:when>
 							<xsl:when test="dim:field[@mdschema='metashare' and @element='ResourceInfo#TextInfo#SizeInfo' and @qualifier='size']">
 								<xsl:call-template name="convert_metashare_size">
@@ -778,8 +804,8 @@
 								select="dim:field[@element='language'][@qualifier='iso']">
 								<xsl:sort select="isocodes:getLangForCode(node())" />
 								<a>
-									<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/browse?value=<xsl:copy-of select="isocodes:getLangForCode(node())" />&amp;type=language</xsl:attribute>
-									<span class="language-iso-code"><xsl:copy-of select="isocodes:getLangForCode(node())" /></span>
+									<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/discover?filter=<xsl:value-of select="isocodes:getLangForCode(node())" />&amp;filtertype=interviewLanguage&amp;filter_relational_operator=equals</xsl:attribute>
+									<span class="language-iso-code"><xsl:value-of select="isocodes:getLangForCode(node())" /></span>
 								</a>
 								<xsl:if
 									test="position() != last()">
@@ -816,9 +842,9 @@
 								<xsl:for-each
 										select="dim:field[@element='interview'][@qualifier='place']">
 									<a>
-										<xsl:attribute name="href"><xsl:copy-of
-												select="$contextPath"/>/discover?field=interviewPlace&amp;filtertype=interviewPlace&amp;filter_relational_operator=equals&amp;filter=<xsl:copy-of select="node()" /></xsl:attribute>
-										<xsl:copy-of select="node()" />
+										<xsl:attribute name="href"><xsl:value-of
+												select="$contextPath"/>/discover?field=interviewPlace&amp;filtertype=interviewPlace&amp;filter_relational_operator=equals&amp;filter=<xsl:value-of select="node()" /></xsl:attribute>
+										<xsl:value-of select="node()" />
 									</a>
 									<xsl:if
 											test="position() != last()">
@@ -892,7 +918,7 @@
 						</xsl:if>
 						<xsl:for-each
 							select="dim:field[@element='description' and not(@qualifier)]">
-							<xsl:copy-of select="./node()" />
+							<xsl:value-of select="./node()" />
 							<xsl:if
 								test="count(following-sibling::dim:field[@element='description' and not(@qualifier)]) != 0">
 								<div class="spacer">&#160;</div>
@@ -921,7 +947,7 @@
 					<dd style="white-space: pre-line;">
 						<xsl:for-each
 								select="dim:field[@element='interview' and @qualifier='note']">
-							<xsl:copy-of select="./node()" />
+							<xsl:value-of select="./node()" />
 							<xsl:if
 									test="count(following-sibling::dim:field[@element='interview' and @qualifier='note']) != 0">
 								<div class="spacer">&#160;</div>
@@ -951,8 +977,8 @@
 						<xsl:for-each
 							select="dim:field[@element='publisher' and not(@qualifier)]">
 							<a>
-								<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/browse?value=<xsl:copy-of select="./node()" />&amp;type=publisher</xsl:attribute>
-								<xsl:copy-of select="./node()" />									
+								<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/browse?value=<xsl:value-of select="./node()" />&amp;type=publisher</xsl:attribute>
+								<xsl:value-of select="./node()" />									
 							</a>													
 							<xsl:if
 								test="count(following-sibling::dim:field[@element='publisher' and not(@qualifier)]) != 0">
@@ -979,10 +1005,10 @@
 						<xsl:variable name="my_elem">
 							<xsl:choose>
 								<xsl:when test="dim:field[@element='sponsor' and not(@qualifier)]">
-									<xsl:copy-of select="dim:field[@element='sponsor' and not(@qualifier)]"/>
+									<xsl:value-of select="dim:field[@element='sponsor' and not(@qualifier)]"/>
 								</xsl:when>
 								<xsl:when test="dim:field[@element='ResourceInfo#ResourceCreationInfo#FundingInfo#ProjectInfo' and @qualifier='projectName']">
-									<xsl:copy-of select="dim:field[@element='ResourceInfo#ResourceCreationInfo#FundingInfo#ProjectInfo' and @qualifier='projectName']"/>
+									<xsl:value-of select="dim:field[@element='ResourceInfo#ResourceCreationInfo#FundingInfo#ProjectInfo' and @qualifier='projectName']"/>
 								</xsl:when>
 							</xsl:choose>	
 						</xsl:variable>
@@ -1051,8 +1077,8 @@
 							select="dim:field[@element='subject' and not(@qualifier)]">
 							<span class="tag">
 								<a class="label label-primary">
-									<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/browse?value=<xsl:copy-of select="node()" />&amp;type=subject</xsl:attribute>
-									<xsl:copy-of select="node()" />
+									<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/browse?value=<xsl:value-of select="node()" />&amp;type=subject</xsl:attribute>
+									<xsl:value-of select="node()" />
 								</a>
 							</span>														
 						</xsl:for-each>
