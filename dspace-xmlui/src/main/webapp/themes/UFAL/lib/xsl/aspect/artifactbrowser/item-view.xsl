@@ -168,60 +168,6 @@
 				</xsl:call-template>
 			</xsl:when>
 
-			<!-- Narrator(s) row -->
-			<xsl:when
-				test="$clause = 3 and dim:field[@element='narrator'][@qualifier='name']">
-
-					<xsl:if test="dim:field[@mdschema='local' and @element='branding']">
-						<div class="item-branding label pull-right">
-							<a>
-								<xsl:attribute name="href">
-									<xsl:value-of select="$contextPath"/>
-									<xsl:value-of select="concat('/discover?filtertype=branding&amp;filter_relational_operator=equals&amp;filter=',encoder:encode(dim:field[@mdschema='local' and @element='branding'][1]/node()))"/>
-								</xsl:attribute>
-								<xsl:value-of select="dim:field[@mdschema='local' and @element='branding'][1]/node()"/>
-							</a>
-						</div>
-					</xsl:if>				
-				
-					<dl id="item-authors" class="dl-horizontal" style="clear:both;">
-					<dt style="text-align: left">
-						<i class="fa fa-user">&#160;</i>
-						<span><i18n:text>xmlui.UFAL.artifactbrowser.narrator</i18n:text></span>
-					</dt>
-					<dd style="padding-right: 40px;">
-					<xsl:choose>
-						<xsl:when test="dim:field[@element='narrator'][@qualifier='name']">
-								<span>
-									<xsl:if test="@authority">
-										<xsl:attribute name="class"><xsl:text>ds-dc_contributor_author-authority</xsl:text></xsl:attribute>
-									</xsl:if>
-									<a>
-								<xsl:attribute name="href"><xsl:value-of select="$contextPath"/>/browse?value=<xsl:value-of select="dim:field[@element='narrator'][@qualifier='name']" />&amp;type=narrator</xsl:attribute>
-								<xsl:value-of select="dim:field[@element='narrator'][@qualifier='name']" />
-										<xsl:if
-												test="dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='identifier']">
-											<xsl:text> - </xsl:text>
-												<xsl:value-of
-														select="dim:field[@mdschema='viadat'][@element='narrator'][@qualifier='identifier']" />
-
-										</xsl:if>
-								</a>
-								</span>
-						</xsl:when>
-						<xsl:otherwise>
-							<i18n:text>xmlui.dri2xhtml.METS-1.0.no-narrator</i18n:text>
-						</xsl:otherwise>
-					</xsl:choose>
-
-					</dd>
-				</dl>
-				<xsl:call-template name="itemSummaryView-DIM-fields">
-					<xsl:with-param name="clause" select="($clause + 1)" />
-					<xsl:with-param name="phase" select="$otherPhase" />
-				</xsl:call-template>
-			</xsl:when>
-
 			<!-- alias -->
 			<xsl:when test="$clause = 4 and (dim:field[@mdschema='viadat' and @element='narrator' and @qualifier='alias'])">
 				<dl id="item-narrator-alias" class="dl-horizontal" style="clear:both;">
