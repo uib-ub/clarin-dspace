@@ -55,7 +55,8 @@ public class InstallItem
         final String viadat_id = (metadata != null && metadata.length == 1) ? metadata[0].value : null;
         final String prefix =
                 cz.cuni.mff.ufal.dspace.handle.PIDConfiguration.getPIDCommunityConfiguration(item).getPrefix();
-        return installItem(c, is, prefix + "/" + viadat_id);
+        final String suppliedHandle = viadat_id != null ? prefix + "/" + viadat_id : null;
+        return installItem(c, is, suppliedHandle);
     }
 
     /**
