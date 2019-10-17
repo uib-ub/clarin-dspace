@@ -8,6 +8,7 @@
 package org.dspace.discovery;
 
 import org.apache.log4j.Logger;
+import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Constants;
@@ -67,7 +68,7 @@ public class IndexEventConsumer implements Consumer {
         }
 
         int st = event.getSubjectType();
-        if (!(st == Constants.ITEM || st == Constants.BUNDLE
+        if (!(st == Constants.ITEM || st == Constants.BUNDLE || st == Constants.BITSTREAM
                 || st == Constants.COLLECTION || st == Constants.COMMUNITY)) {
             log
                     .warn("IndexConsumer should not have been given this kind of Subject in an event, skipping: "
@@ -98,6 +99,17 @@ public class IndexEventConsumer implements Consumer {
                 }
             } else
             {
+                return;
+            }
+        }else if (st == Constants.BITSTREAM){
+            if ((et == Event.MODIFY || et == Event.MODIFY_METADATA) && subject != null){
+                st = Constants.ITEM;
+                et = Event.MODIFY;
+                subject = ((Bitstream) subject).getParentObject();
+                if(log.isDebugEnabled()){
+                    log.debug("Transforming Bitstream event into MODIFY of Item " + subject.getHandle());
+                }
+            }else{
                 return;
             }
         }
