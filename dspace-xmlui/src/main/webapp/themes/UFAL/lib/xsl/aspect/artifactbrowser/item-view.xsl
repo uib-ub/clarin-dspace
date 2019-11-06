@@ -191,7 +191,7 @@
 			</xsl:when>
 
 			<!-- Link narrators from interviews -->
-			<xsl:when test="$clause = 4">
+            <xsl:when test="$clause = 4 and (//dim:field[@mdschema='dc' and @element='relation' and @qualifier='ispartof'] or dim:field[@mdschema='viadat' and @element='interview' and @qualifier='interviewer'])">
 				<xsl:variable name="narratorHdl">
 					<xsl:value-of select="java:replaceAll(java:java.lang.String.new(//dim:field[@mdschema='dc' and @element='relation' and @qualifier='ispartof']), '.*hdl.handle.net/', '')"/>
 				</xsl:variable>
@@ -232,11 +232,11 @@
 						</xsl:for-each>
 					</dd>
 				</dl>
-				<xsl:call-template name="itemSummaryView-DIM-fields">
-					<xsl:with-param name="clause" select="($clause + 1)" />
-					<xsl:with-param name="phase" select="$otherPhase" />
-				</xsl:call-template>
 			</xsl:if>
+			<xsl:call-template name="itemSummaryView-DIM-fields">
+				<xsl:with-param name="clause" select="($clause + 1)" />
+				<xsl:with-param name="phase" select="$otherPhase" />
+			</xsl:call-template>
 			</xsl:when>
 			<!-- ///// interview interviewer end //// -->
 
