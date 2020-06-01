@@ -27,6 +27,7 @@
 			<Format ref="cmdi" />
 			<Format ref="olac" />
 			<Format ref="html" />
+            <Format ref="elg" />
             <Description>
                 This is the default context of the DSpace OAI-PMH data provider.
             </Description>
@@ -157,6 +158,12 @@
 		    <Namespace>http://lindat.mff.cuni.cz/ns/experimental/html</Namespace>
 		    <SchemaLocation>http://lindat.mff.cuni.cz/schemas/experimental/html.xsd</SchemaLocation>
 		</Format>
+        <Format id="elg">
+            <Prefix>elg</Prefix>
+            <XSLT>metadataFormats/elg.xsl</XSLT>
+            <Namespace>http://w3id.org/meta-share/meta-share/</Namespace>
+            <SchemaLocation>http://w3id.org/meta-share/meta-share/ ../Schema/ELG-SHARE.xsd</SchemaLocation>
+        </Format>
     </Formats>
 
     <Transformers>
