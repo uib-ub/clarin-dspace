@@ -189,7 +189,7 @@
         <ms:resourceCreator>
           <ms:Person>
             <ms:actorType>Person</ms:actorType>
-            <!-- XXX xml:lang here is odd -->
+            <!--  xml:lang doesn't make much sense for surnames and givenName; it should be "script", en mandatory -->
             <ms:surname xml:lang="en"><xsl:value-of select="$surname"/></ms:surname>
             <ms:givenName xml:lang="en"><xsl:value-of select="$given"/></ms:givenName>
           </ms:Person>
@@ -247,8 +247,11 @@
   <xsl:template name="corpus">
       <ms:Corpus>
         <ms:lrType>Corpus</ms:lrType>
-        <!-- XXX should be undefined <ms:corpusSubclass>undefined</ms:corpusSubclass> -->
+        <ms:corpusSubclass>undefined</ms:corpusSubclass>
+        <!--
+          XXX if undefined not working
         <ms:corpusSubclass>http://w3id.org/meta-share/meta-share/rawCorpus</ms:corpusSubclass>
+        -->
         <xsl:call-template name="CommonMediaPart"/>
         <!-- xsl:call-template name="CorpusMediaPart"/ -->
         <xsl:call-template name="Distribution"/>
@@ -412,8 +415,10 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
       <ms:ToolService>
         <ms:lrType>ToolService</ms:lrType>
         <ms:function>
-            <!-- XXX fixed value -->
+          <ms:LTClassRecommended>undefined</ms:LTClassRecommended>
+            <!-- XXX if undefined not working
           <ms:LTClassRecommended>http://w3id.org/meta-share/omtd-share/Tokenization</ms:LTClassRecommended>
+            -->
         </ms:function>
         <xsl:call-template name="Distribution">
           <xsl:with-param name="distributionType" select="'Software'"/>
@@ -422,8 +427,10 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
           <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ResourceComponentType#ToolServiceInfo']/doc:element[@name='languageDependent']/doc:element/doc:field[@name='value']"/>
         </ms:languageDependent>
         <ms:inputContentResource>
-          <!-- XXX fixed value -->
+          <ms:processingResourceType>undefined</ms:processingResourceType>
+          <!-- XXX fixed value
           <ms:processingResourceType>http://w3id.org/meta-share/meta-share/file1</ms:processingResourceType>
+           -->
         </ms:inputContentResource>
         <ms:evaluated>false</ms:evaluated>
       </ms:ToolService>
@@ -432,14 +439,16 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
   <xsl:template name="languageDescription">
     <ms:LanguageDescription>
       <ms:lrType>LanguageDescription</ms:lrType>
-      <ms:LanguageDescriptionSubclass>
-        <!-- XXX this is fixed...undefined? detailed type? -->
+      <ms:LanguageDescriptionSubclass>undefined</ms:LanguageDescriptionSubclass>
+        <!-- XXX if undefined not working
+        we have only grammar/other in detailed type
         <ms:NGramModel>
           <ms:ldSubclassType>NGramModel</ms:ldSubclassType>
           <ms:baseItem>http://w3id.org/meta-share/meta-share/word</ms:baseItem>
           <ms:order>5</ms:order>
         </ms:NGramModel>
       </ms:LanguageDescriptionSubclass>
+       -->
       <xsl:call-template name="CommonMediaPart"/>
       <xsl:call-template name="Distribution"/>
       <xsl:call-template name="personalSensitiveAnon"/>
@@ -450,10 +459,10 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
     <ms:LexicalConceptualResource>
       <ms:lrType>LexicalConceptualResource</ms:lrType>
       <ms:lcrSubclass><xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $detailedType)"/></ms:lcrSubclass>
-      <!-- XXX should be undefined
       <ms:encodingLevel>undefined</ms:encodingLevel>
-      -->
+      <!-- XXX if undefined not working
       <ms:encodingLevel>http://w3id.org/meta-share/meta-share/morphology</ms:encodingLevel>
+      -->
       <xsl:call-template name="CommonMediaPart"/>
       <xsl:call-template name="Distribution"/>
       <xsl:call-template name="personalSensitiveAnon"/>
