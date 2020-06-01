@@ -218,8 +218,7 @@ fresh_install:
 
 
 dspace-oai/src/main/resources/iso-639-3.tab:
-	@echo "Downloading iso-639-3.tab from sil.org"
-	@wget -O $(DIR_SOURCE)/$@ https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab
+	@if [[ ! -f $(DIR_SOURCE)/$@ ]]; then echo "Downloading iso-639-3.tab from sil.org"; wget -O $(DIR_SOURCE)/$@ https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab; fi
 
 # Grant rights to installation
 grant_rights:
