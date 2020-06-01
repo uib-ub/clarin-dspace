@@ -10,70 +10,80 @@
     xmlns:xalan="http://xml.apache.org/xslt"
     xmlns:str="http://exslt.org/strings"
     xmlns:ms="http://w3id.org/meta-share/meta-share/" 
-    xmlns:datacite="http://purl.org/spar/datacite/"
-    xmlns:dcat="http://www.w3.org/ns/dcat#"
-    xmlns:omtd="http://w3id.org/meta-share/omtd-share/"
     exclude-result-prefixes="doc logUtil isocodes license xalan str langUtil"
     version="1.0">
     
     <xsl:output omit-xml-declaration="yes" method="xml" indent="yes" xalan:indent-amount="4"/>
 
+    <!-- VARIABLES BEGIN -->
     <xsl:variable name="identifier_uri" select="doc:metadata/doc:element[@name='dc']/doc:element[@name='identifier']/doc:element[@name='uri']/doc:element/doc:field[@name='value']"/>
     
     <xsl:variable name="handle" select="/doc:metadata/doc:element[@name='others']/doc:field[@name='handle']/text()"/>
+
     <xsl:variable name="type">
-        <xsl:call-template name="Type"/>
+      <xsl:choose>
+        <xsl:when test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='resourceType']/doc:element/doc:field[@name='value']">
+          <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='resourceType']/doc:element/doc:field[@name='value']"/>
+        </xsl:when>
+        <xsl:when test="/doc:metadata/doc:element[@name='dc']/doc:element[@name='type']/doc:element/doc:field[@name='value']">
+          <xsl:value-of select="/doc:metadata/doc:element[@name='dc']/doc:element[@name='type']/doc:element/doc:field[@name='value']"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="logUtil:logMissing('type',$handle)"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
+
     <xsl:variable name="upperType">
       <xsl:value-of select="translate(substring($type,1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
       <xsl:value-of select="substring($type,2)"/>
     </xsl:variable>
+
     <xsl:variable name="mediaType">
-        <xsl:call-template name="MediaType"/>
+      <!-- No media type for toolService -->
+      <xsl:if test="not($type='toolService')">
+        <xsl:choose>
+          <xsl:when test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='mediaType']/doc:element/doc:field[@name='value']">
+            <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='mediaType']/doc:element/doc:field[@name='value']"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="logUtil:logMissing('mediaType',$handle)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
     </xsl:variable>
+
     <xsl:variable name="upperMediaType">
       <xsl:value-of select="translate(substring($mediaType,1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
       <xsl:value-of select="substring($mediaType,2)"/>
     </xsl:variable>
+
     <xsl:variable name="detailedType">
-        <xsl:call-template name="DetailedType"/>
+      <!-- No detailed type for corpus -->
+      <xsl:if test="not($type='corpus')">
+        <xsl:choose>
+          <xsl:when
+                  test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='detailedType']/doc:element/doc:field[@name='value'] = 'wordList' ">
+            <xsl:value-of select="'wordlist'"/>
+          </xsl:when>
+          <xsl:when
+                  test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='detailedType']/doc:element/doc:field[@name='value'] ">
+            <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='detailedType']/doc:element/doc:field[@name='value']"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="logUtil:logMissing('detailedType',$handle)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
     </xsl:variable>
-
-
-  <xsl:template name="Type">
-    <xsl:choose>
-      <xsl:when test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='resourceType']/doc:element/doc:field[@name='value']">
-        <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='resourceType']/doc:element/doc:field[@name='value']"/>
-      </xsl:when>
-      <xsl:when test="/doc:metadata/doc:element[@name='dc']/doc:element[@name='type']/doc:element/doc:field[@name='value']">
-        <xsl:value-of select="/doc:metadata/doc:element[@name='dc']/doc:element[@name='type']/doc:element/doc:field[@name='value']"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="logUtil:logMissing('type',$handle)"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="MediaType">
-    <!-- No media type for toolService -->
-    <xsl:if test="not($type='toolService')">
-      <xsl:choose>
-        <xsl:when test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='mediaType']/doc:element/doc:field[@name='value']">
-          <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='mediaType']/doc:element/doc:field[@name='value']"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="logUtil:logMissing('mediaType',$handle)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
-  </xsl:template>
+  <!-- VARIABLES END -->
 
   <xsl:template match="/">
     <xsl:call-template name="MetadataRecord"/>
   </xsl:template>
 
   <xsl:template name="MetadataRecord">
-    <ms:MetadataRecord>
+    <ms:MetadataRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://w3id.org/meta-share/meta-share/ ../Schema/ELG-SHARE.xsd">
       <ms:MetadataRecordIdentifier ms:MetadataRecordIdentifierScheme="http://w3id.org/meta-share/meta-share/elg">value automatically assigned - leave as is</ms:MetadataRecordIdentifier>
       <ms:metadataCreationDate><xsl:value-of select="str:split(doc:metadata/doc:element[@name='dc']/doc:element[@name='date']/doc:element[@name='available']/doc:element/doc:field[@name='value'], 'T')[1]"/></ms:metadataCreationDate>
       <ms:metadataLastDateUpdated><xsl:value-of select="doc:metadata/doc:element[@name='others']/doc:field[@name='lastModifyDate']"/></ms:metadataLastDateUpdated>
@@ -206,6 +216,11 @@
             </xsl:otherwise>
           </xsl:choose>
         </ms:ProjectIdentifier>
+          <!--
+        <ms:fundingType>
+          <xsl:value-of select="$proj_arr[4]"/>
+        </ms:fundingType>
+        -->
       </ms:fundingProject>
     </xsl:for-each>
   </xsl:template>
@@ -445,89 +460,4 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
     </ms:LexicalConceptualResource>
   </xsl:template>
 
-  <xsl:template name="FundingType">
-    <xsl:param name="funding"/>
-    <ms:fundingType>
-      <xsl:choose>
-        <xsl:when test="$funding='EU'">euFunds</xsl:when>
-        <xsl:when test="$funding='Own'">ownFunds</xsl:when>
-        <xsl:when test="$funding='National'">nationalFunds</xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$funding"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </ms:fundingType>
-  </xsl:template>
-
-  <xsl:template name="DetailedType">
-    <!-- No detailed type for corpus -->
-    <xsl:if test="not($type='corpus')">
-      <xsl:choose>
-        <xsl:when
-                test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='detailedType']/doc:element/doc:field[@name='value'] = 'wordList' ">
-            <xsl:value-of select="'wordlist'"/>
-        </xsl:when>
-        <xsl:when
-                test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='detailedType']/doc:element/doc:field[@name='value'] ">
-          <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='detailedType']/doc:element/doc:field[@name='value']"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="logUtil:logMissing('detailedType',$handle)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="SizeInfo">
-    <ms:sizeInfo>
-      <ms:size>
-        <xsl:choose>
-          <xsl:when test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#TextInfo#SizeInfo']/doc:element[@name='size']/doc:element/doc:field[@name='value']">
-            <xsl:apply-templates select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#TextInfo#SizeInfo']/doc:element[@name='size']"/>
-          </xsl:when>
-          <xsl:when test="doc:metadata/doc:element[@name='local']/doc:element[@name='size']/doc:element[@name='info']/doc:element/doc:field[@name='value']">
-            <xsl:value-of select="str:split(doc:metadata/doc:element[@name='local']/doc:element[@name='size']/doc:element[@name='info']/doc:element/doc:field[@name='value'], '@@')[1]"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:variable name="iJustWantToLog" select="logUtil:logMissing('size',$handle)"/>
-            <xsl:value-of select="count(/doc:metadata/doc:element[@name='bundles']/doc:element[@name='bundle']/doc:field[@name='name'][text()='ORIGINAL']/../doc:element[@name='bitstreams']/doc:element[@name='bitstream'])"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </ms:size>
-      <ms:sizeUnit>
-        <xsl:choose>
-          <xsl:when test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#TextInfo#SizeInfo']/doc:element[@name='sizeUnit']/doc:element/doc:field[@name='value']">
-            <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#TextInfo#SizeInfo']/doc:element[@name='sizeUnit']/doc:element/doc:field[@name='value']"/>
-          </xsl:when>
-          <xsl:when test="doc:metadata/doc:element[@name='local']/doc:element[@name='size']/doc:element[@name='info']/doc:element/doc:field[@name='value']">
-            <xsl:value-of select="str:split(doc:metadata/doc:element[@name='local']/doc:element[@name='size']/doc:element[@name='info']/doc:element/doc:field[@name='value'], '@@')[2]"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:variable name="iJustWantToLog" select="logUtil:logMissing('size',$handle)"/>
-            <xsl:text>files</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
-      </ms:sizeUnit>
-    </ms:sizeInfo>
-  </xsl:template>
-
-  <xsl:template match="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#TextInfo#SizeInfo']/doc:element[@name='size']">
-    <xsl:choose>
-      <xsl:when test="../doc:element[@name='sizeUnitMultiplier']/doc:element/doc:field[@name='value']='kilo'">
-        <xsl:value-of select="./doc:element/doc:field[@name='value']*1000"/>
-      </xsl:when>
-      <xsl:when test="../doc:element[@name='sizeUnitMultiplier']/doc:element/doc:field[@name='value']='hundred'">
-        <xsl:value-of select="./doc:element/doc:field[@name='value']*100"/>
-      </xsl:when>
-      <xsl:when test="../doc:element[@name='sizeUnitMultiplier']/doc:element/doc:field[@name='value']='mega' or ../doc:element[@name='sizeUnitMultiplier']/doc:element/doc:field[@name='value']='million'">
-        <xsl:value-of select="format-number(./doc:element/doc:field[@name='value']*1000000,'0')"/>
-      </xsl:when>
-      <xsl:when test="../doc:element[@name='sizeUnitMultiplier']/doc:element/doc:field[@name='value']='tera'">
-        <xsl:value-of select="format-number(./doc:element/doc:field[@name='value']*1000000000000,'0')"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="./doc:element/doc:field[@name='value']"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 </xsl:stylesheet>
