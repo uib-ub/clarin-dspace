@@ -418,6 +418,11 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
         <ms:inputContentResource>
           <ms:processingResourceType>http://w3id.org/meta-share/meta-share/unspecified</ms:processingResourceType>
         </ms:inputContentResource>
+        <!--
+         The element can be used for adding evaluation/quality-related information,
+         e.g. BLEU scores for machine translation tools,
+         or links to evaluation reports if it has been formally evaluated by someone.
+         -->
         <ms:evaluated>false</ms:evaluated>
       </ms:ToolService>
   </xsl:template>
