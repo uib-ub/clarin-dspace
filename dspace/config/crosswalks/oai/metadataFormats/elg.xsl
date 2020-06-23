@@ -210,11 +210,15 @@
             </xsl:otherwise>
           </xsl:choose>
         </ms:ProjectIdentifier>
-          <!--
         <ms:fundingType>
-          <xsl:value-of select="$proj_arr[4]"/>
+          <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $proj_arr[4])"/>
         </ms:fundingType>
-        -->
+        <ms:funder>
+          <ms:Organization>
+            <ms:actorType>Organization</ms:actorType>
+            <ms:organizationName xml:lang="en"><xsl:value-of select="$proj_arr[1]"/></ms:organizationName>
+          </ms:Organization>
+        </ms:funder>
       </ms:fundingProject>
     </xsl:for-each>
   </xsl:template>
