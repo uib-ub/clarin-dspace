@@ -247,7 +247,6 @@
         <ms:lrType>Corpus</ms:lrType>
         <ms:corpusSubclass>http://w3id.org/meta-share/meta-share/unspecified</ms:corpusSubclass>
         <xsl:call-template name="CommonMediaPart"/>
-        <!-- xsl:call-template name="CorpusMediaPart"/ -->
         <xsl:call-template name="Distribution"/>
         <xsl:call-template name="personalSensitiveAnon"/>
       </ms:Corpus>
@@ -303,6 +302,9 @@
           <xsl:otherwise>multilingual</xsl:otherwise>
         </xsl:choose>
       </ms:lingualityType>
+      <ms:multilingualityType>
+        <ms:multilingualityTypeDetails>http://w3id.org/meta-share/meta-share/unspecified</ms:multilingualityTypeDetails>
+      </ms:multilingualityType>
       <xsl:for-each
               select="/doc:metadata/doc:element[@name='dc']/doc:element[@name='language']/doc:element[@name='iso']/doc:element/doc:field[@name='value']">
         <xsl:call-template name="Language">
