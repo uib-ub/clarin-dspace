@@ -85,8 +85,17 @@
   <xsl:template name="MetadataRecord">
     <ms:MetadataRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://w3id.org/meta-share/meta-share/ ../Schema/ELG-SHARE.xsd">
       <ms:MetadataRecordIdentifier ms:MetadataRecordIdentifierScheme="http://w3id.org/meta-share/meta-share/elg">value automatically assigned - leave as is</ms:MetadataRecordIdentifier>
-      <ms:metadataCreationDate><xsl:value-of select="str:split(doc:metadata/doc:element[@name='dc']/doc:element[@name='date']/doc:element[@name='available']/doc:element/doc:field[@name='value'], 'T')[1]"/></ms:metadataCreationDate>
-      <ms:metadataLastDateUpdated><xsl:value-of select="doc:metadata/doc:element[@name='others']/doc:field[@name='lastModifyDate']"/></ms:metadataLastDateUpdated>
+      <ms:metadataCreationDate>
+        <xsl:call-template name="formatDate">
+          <xsl:with-param name="date"
+                          select="doc:metadata/doc:element[@name='dc']/doc:element[@name='date']/doc:element[@name='available']/doc:element/doc:field[@name='value']"/>
+        </xsl:call-template>
+      </ms:metadataCreationDate>
+      <ms:metadataLastDateUpdated>
+        <xsl:call-template name="formatDate">
+          <xsl:with-param name="date" select="doc:metadata/doc:element[@name='others']/doc:field[@name='lastModifyDate']"/>
+        </xsl:call-template>
+      </ms:metadataLastDateUpdated>
       <ms:compliesWith>http://w3id.org/meta-share/meta-share/ELG-SHARE</ms:compliesWith>
       <ms:sourceOfMetadataRecord>LINDAT/CLARIAH-CZ</ms:sourceOfMetadataRecord>
       <ms:sourceMetadataRecord>
@@ -112,7 +121,11 @@
       </ms:additionalInfo>
       <xsl:call-template name="keyword"/>
       <xsl:call-template name="resourceProvider"/>
-      <ms:publicationDate><xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='date']/doc:element[@name='issued']/doc:element/doc:field[@name='value']"/></ms:publicationDate>
+      <ms:publicationDate>
+        <xsl:call-template name="formatDate">
+          <xsl:with-param name="date" select="doc:metadata/doc:element[@name='dc']/doc:element[@name='date']/doc:element[@name='issued']/doc:element/doc:field[@name='value']"/>
+        </xsl:call-template>
+      </ms:publicationDate>
       <xsl:call-template name="resourceCreator"/>
       <xsl:call-template name="fundingProject"/>
         <!-- TODO replaces need a title; should add that to the xoai format -->
@@ -455,6 +468,11 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
       <xsl:call-template name="Distribution"/>
       <xsl:call-template name="personalSensitiveAnon"/>
     </ms:LexicalConceptualResource>
+  </xsl:template>
+
+  <xsl:template name="formatDate">
+    <xsl:param name="date"/>
+    <xsl:value-of select="str:split($date, 'T')[1]"/>
   </xsl:template>
 
 </xsl:stylesheet>
