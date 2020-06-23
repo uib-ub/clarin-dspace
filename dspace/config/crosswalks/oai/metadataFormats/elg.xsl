@@ -87,12 +87,6 @@
       <ms:MetadataRecordIdentifier ms:MetadataRecordIdentifierScheme="http://w3id.org/meta-share/meta-share/elg">value automatically assigned - leave as is</ms:MetadataRecordIdentifier>
       <ms:metadataCreationDate><xsl:value-of select="str:split(doc:metadata/doc:element[@name='dc']/doc:element[@name='date']/doc:element[@name='available']/doc:element/doc:field[@name='value'], 'T')[1]"/></ms:metadataCreationDate>
       <ms:metadataLastDateUpdated><xsl:value-of select="doc:metadata/doc:element[@name='others']/doc:field[@name='lastModifyDate']"/></ms:metadataLastDateUpdated>
-      <ms:metadataCurator>
-        <ms:actorType>Person</ms:actorType>
-        <ms:surname xml:lang="en">FIXME</ms:surname>
-        <ms:givenName xml:lang="en">FIXME</ms:givenName>
-        <ms:email>test@example.com</ms:email>
-      </ms:metadataCurator>
       <ms:compliesWith>http://w3id.org/meta-share/meta-share/ELG-SHARE</ms:compliesWith>
       <ms:sourceOfMetadataRecord>LINDAT/CLARIAH-CZ</ms:sourceOfMetadataRecord>
       <ms:sourceMetadataRecord>
