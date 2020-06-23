@@ -245,11 +245,7 @@
   <xsl:template name="corpus">
       <ms:Corpus>
         <ms:lrType>Corpus</ms:lrType>
-        <ms:corpusSubclass>undefined</ms:corpusSubclass>
-        <!--
-          XXX if undefined not working
-        <ms:corpusSubclass>http://w3id.org/meta-share/meta-share/rawCorpus</ms:corpusSubclass>
-        -->
+        <ms:corpusSubclass>http://w3id.org/meta-share/meta-share/unspecified</ms:corpusSubclass>
         <xsl:call-template name="CommonMediaPart"/>
         <!-- xsl:call-template name="CorpusMediaPart"/ -->
         <xsl:call-template name="Distribution"/>
