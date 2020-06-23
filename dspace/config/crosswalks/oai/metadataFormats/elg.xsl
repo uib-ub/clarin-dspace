@@ -416,10 +416,7 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
           <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ResourceComponentType#ToolServiceInfo']/doc:element[@name='languageDependent']/doc:element/doc:field[@name='value']"/>
         </ms:languageDependent>
         <ms:inputContentResource>
-          <ms:processingResourceType>undefined</ms:processingResourceType>
-          <!-- XXX fixed value
-          <ms:processingResourceType>http://w3id.org/meta-share/meta-share/file1</ms:processingResourceType>
-           -->
+          <ms:processingResourceType>http://w3id.org/meta-share/meta-share/unspecified</ms:processingResourceType>
         </ms:inputContentResource>
         <ms:evaluated>false</ms:evaluated>
       </ms:ToolService>
