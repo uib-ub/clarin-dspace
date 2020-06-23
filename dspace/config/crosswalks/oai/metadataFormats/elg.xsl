@@ -455,10 +455,7 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
     <ms:LexicalConceptualResource>
       <ms:lrType>LexicalConceptualResource</ms:lrType>
       <ms:lcrSubclass><xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $detailedType)"/></ms:lcrSubclass>
-      <ms:encodingLevel>undefined</ms:encodingLevel>
-      <!-- XXX if undefined not working
-      <ms:encodingLevel>http://w3id.org/meta-share/meta-share/morphology</ms:encodingLevel>
-      -->
+      <ms:encodingLevel>http://w3id.org/meta-share/meta-share/unspecified</ms:encodingLevel>
       <xsl:call-template name="CommonMediaPart"/>
       <xsl:call-template name="Distribution"/>
       <xsl:call-template name="personalSensitiveAnon"/>
