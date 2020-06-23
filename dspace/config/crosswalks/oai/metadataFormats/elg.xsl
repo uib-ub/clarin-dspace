@@ -201,7 +201,7 @@
         <ms:ProjectIdentifier>
           <xsl:choose>
             <xsl:when test="starts-with($proj_arr[5], 'info:')">
-              <xsl:attribute name="ms:ProjectIdentifierScheme">http://w3id.org/meta-share/meta-share/cordis</xsl:attribute>
+              <xsl:attribute name="ms:ProjectIdentifierScheme">http://w3id.org/meta-share/meta-share/OpenAIRE</xsl:attribute>
               <xsl:value-of select="$proj_arr[5]"/>
             </xsl:when>
             <xsl:otherwise>
