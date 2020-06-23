@@ -311,13 +311,6 @@
           <xsl:with-param name="isoCode" select="langUtil:getShortestId(.)"/>
         </xsl:call-template>
       </xsl:for-each>
-      <xsl:if test="$type = 'lexicalConceptualResource' or $type = 'languageDescription'">
-        <ms:metalanguage>
-          <xsl:call-template name="ms_language_inside">
-            <xsl:with-param name="isoCode" select="langutil:getShortestId('und')"/>
-          </xsl:call-template>
-        </ms:metalanguage>
-      </xsl:if>
     </xsl:element>
   </xsl:template>
 
