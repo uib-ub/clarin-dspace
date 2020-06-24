@@ -324,9 +324,7 @@
           <xsl:otherwise>multilingual</xsl:otherwise>
         </xsl:choose>
       </ms:lingualityType>
-      <ms:multilingualityType>
-        <ms:multilingualityTypeDetails>http://w3id.org/meta-share/meta-share/unspecified</ms:multilingualityTypeDetails>
-      </ms:multilingualityType>
+      <ms:multilingualityType>http://w3id.org/meta-share/meta-share/unspecified</ms:multilingualityType>
       <xsl:for-each
               select="/doc:metadata/doc:element[@name='dc']/doc:element[@name='language']/doc:element[@name='iso']/doc:element/doc:field[@name='value']">
         <xsl:call-template name="Language">
