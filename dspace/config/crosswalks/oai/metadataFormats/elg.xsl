@@ -211,18 +211,19 @@
         <ms:projectName xml:lang="en">
           <xsl:value-of select="$proj_arr[3]"/>
         </ms:projectName>
-        <ms:ProjectIdentifier>
-          <xsl:choose>
-            <xsl:when test="starts-with($proj_arr[5], 'info:')">
+        <xsl:choose>
+          <xsl:when test="starts-with($proj_arr[5], 'info:')">
+            <ms:ProjectIdentifier>
               <xsl:attribute name="ms:ProjectIdentifierScheme">http://w3id.org/meta-share/meta-share/OpenAIRE</xsl:attribute>
               <xsl:value-of select="$proj_arr[5]"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:attribute name="ms:ProjectIdentifierScheme">http://w3id.org/meta-share/meta-share/other</xsl:attribute>
-              <xsl:value-of select="$proj_arr[2]"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </ms:ProjectIdentifier>
+            </ms:ProjectIdentifier>
+          </xsl:when>
+          <xsl:otherwise>
+              <ms:grantNumber>
+                <xsl:value-of select="$proj_arr[2]"/>
+              </ms:grantNumber>
+          </xsl:otherwise>
+        </xsl:choose>
         <ms:fundingType>
           <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $proj_arr[4])"/>
         </ms:fundingType>
