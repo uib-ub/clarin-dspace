@@ -105,7 +105,9 @@
         </xsl:call-template>
       </ms:metadataLastDateUpdated>
       <ms:compliesWith>http://w3id.org/meta-share/meta-share/ELG-SHARE</ms:compliesWith>
-      <ms:sourceOfMetadataRecord>LINDAT/CLARIAH-CZ</ms:sourceOfMetadataRecord>
+      <ms:sourceOfMetadataRecord>
+        <ms:repositoryName xml:lang="en">LINDAT/CLARIAH-CZ</ms:repositoryName>
+      </ms:sourceOfMetadataRecord>
       <ms:sourceMetadataRecord>
         <ms:MetadataRecordIdentifier>
           <xsl:attribute name="ms:MetadataRecordIdentifierScheme">http://purl.org/spar/datacite/handle</xsl:attribute>
