@@ -403,8 +403,8 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
       <xsl:element name="ms:{$distributionType}DistributionForm">
         <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $form)"/>
       </xsl:element>
-      <ms:accessLocation><xsl:value-of select="$identifier_uri"/></ms:accessLocation>
-      <!-- there are files -->
+
+      <!-- downloadLocation if there are files -->
       <xsl:if test="xalan:nodeset($files)/doc:element[@name='bitstream']">
         <xsl:choose>
           <!-- one file -> direct link -->
@@ -420,6 +420,7 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
           </xsl:when>
         </xsl:choose>
       </xsl:if>
+      <ms:accessLocation><xsl:value-of select="$identifier_uri"/></ms:accessLocation>
       <xsl:if test="doc:metadata/doc:element[@name='local']/doc:element[@name='demo']/doc:element[@name='uri']/doc:element/doc:field[@name='value']">
         <xsl:variable name="locType">
           <xsl:choose>
