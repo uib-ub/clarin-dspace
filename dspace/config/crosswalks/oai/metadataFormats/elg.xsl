@@ -9,8 +9,9 @@
     xmlns:license="cz.cuni.mff.ufal.utils.LicenseUtil"
     xmlns:xalan="http://xml.apache.org/xslt"
     xmlns:str="http://exslt.org/strings"
-    xmlns:ms="http://w3id.org/meta-share/meta-share/" 
-    exclude-result-prefixes="doc logUtil isocodes license xalan str langUtil"
+    xmlns:ms="http://w3id.org/meta-share/meta-share/"
+    xmlns:confman="org.dspace.core.ConfigurationManager"
+    exclude-result-prefixes="doc logUtil isocodes license xalan str langUtil confman"
     version="1.0">
     
     <xsl:output omit-xml-declaration="yes" method="xml" indent="yes" xalan:indent-amount="4"/>
@@ -76,6 +77,13 @@
         </xsl:choose>
       </xsl:if>
     </xsl:variable>
+
+  <xsl:variable name="files">
+    <xsl:copy-of
+            select="//doc:element[@name='bundle']/doc:field[@name='name'][text()='ORIGINAL']/..//doc:element[@name='bitstream']"/>
+  </xsl:variable>
+
+  <xsl:variable name="lr.download.all.limit.max.file.size" select="confman:getLongProperty('lr', 'lr.download.all.limit.max.file.size', 1073741824)"/>
   <!-- VARIABLES END -->
 
   <xsl:template match="/">
@@ -396,6 +404,22 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
         <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $form)"/>
       </xsl:element>
       <ms:accessLocation><xsl:value-of select="$identifier_uri"/></ms:accessLocation>
+      <!-- there are files -->
+      <xsl:if test="xalan:nodeset($files)/doc:element[@name='bitstream']">
+        <xsl:choose>
+          <!-- one file -> direct link -->
+          <xsl:when test="count(xalan:nodeset($files)/doc:element[@name='bitstream']) = 1">
+            <ms:downloadLocation><xsl:value-of
+                      select="xalan:nodeset($files)[1]/doc:element[@name='bitstream']/doc:field[@name='url']/text()" /></ms:downloadLocation>
+          </xsl:when>
+          <!-- multiple files within allzip limit -->
+          <xsl:when
+                  test="sum(xalan:nodeset($files)/doc:element[@name='bitstream']/doc:field[@name='size']/text()) &lt; $lr.download.all.limit.max.file.size ">
+            <ms:downloadLocation><xsl:value-of
+                    select="concat(str:split(xalan:nodeset($files)[1]/doc:element[@name='bitstream']/doc:field[@name='url']/text(), 'bitstream/')[1], $handle, '/allzip')" /></ms:downloadLocation>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
       <xsl:if test="doc:metadata/doc:element[@name='local']/doc:element[@name='demo']/doc:element[@name='uri']/doc:element/doc:field[@name='value']">
         <xsl:variable name="locType">
           <xsl:choose>
