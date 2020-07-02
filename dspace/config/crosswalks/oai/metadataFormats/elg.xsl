@@ -432,6 +432,16 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
           <xsl:value-of select="doc:metadata/doc:element[@name='local']/doc:element[@name='demo']/doc:element[@name='uri']/doc:element/doc:field[@name='value']"/>
         </xsl:element>
       </xsl:if>
+
+      <!-- distributionXfeature -->
+      <xsl:if test="$distributionType = 'Dataset'">
+        <xsl:element name="ms:distribution{$upperMediaType}Feature">
+          <xsl:call-template name="Sizes"/>
+          <ms:dataFormat></ms:dataFormat>
+        </xsl:element>
+      </xsl:if>
+
+
       <ms:licenceTerms>
         <ms:licenceTermsName xml:lang="en"><xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='rights']/doc:element/doc:field[@name='value']" /></ms:licenceTermsName>
         <ms:licenceTermsURL><xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='rights']/doc:element[@name='uri']/doc:element/doc:field[@name='value']" /></ms:licenceTermsURL>
@@ -499,6 +509,37 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
   <xsl:template name="formatDate">
     <xsl:param name="date"/>
     <xsl:value-of select="str:split($date, 'T')[1]"/>
+  </xsl:template>
+
+  <xsl:template name="Sizes">
+    <xsl:choose>
+      <xsl:when
+              test="doc:metadata/doc:element[@name='local']/doc:element[@name='size']/doc:element[@name='info']/doc:element/doc:field[@name='value']">
+        <xsl:for-each
+                select="doc:metadata/doc:element[@name='local']/doc:element[@name='size']/doc:element[@name='info']/doc:element/doc:field[@name='value']">
+          <xsl:variable name="size_arr" select="str:split(., '@@')"/>
+          <xsl:call-template name="size">
+            <xsl:with-param name="amount" select="$size_arr[1]"/>
+            <xsl:with-param name="unit" select="$size_arr[2]"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="size">
+          <xsl:with-param name="amount" select="sum(xalan:nodeset($files)/doc:element[@name='bitstream']/doc:field[@name='size']/text())"/>
+          <xsl:with-param name="unit" select="'byte'"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="size">
+    <xsl:param name="amount"/>
+    <xsl:param name="unit"/>
+    <ms:size>
+      <ms:amount><xsl:value-of select="$amount"/></ms:amount>
+      <ms:sizeUnit><xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $unit)"/></ms:sizeUnit>
+    </ms:size>
   </xsl:template>
 
 </xsl:stylesheet>
