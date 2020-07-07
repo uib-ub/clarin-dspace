@@ -437,7 +437,7 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
       <xsl:if test="$distributionType = 'Dataset'">
         <xsl:element name="ms:distribution{$upperMediaType}Feature">
           <xsl:call-template name="Sizes"/>
-          <ms:dataFormat></ms:dataFormat>
+          <xsl:call-template name="dataFormat"/>
         </xsl:element>
       </xsl:if>
 
@@ -628,6 +628,15 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
         </xsl:otherwise>
       </xsl:choose>
     </ms:size>
+  </xsl:template>
+
+  <xsl:template name="dataFormat">
+    <ms:dataFormat>
+      <xsl:choose>
+        <xsl:when test="false()"></xsl:when>
+        <xsl:otherwise><xsl:value-of select="'http://w3id.org/meta-share/omtd-share/BinaryFormat'"/></xsl:otherwise>
+      </xsl:choose>
+    </ms:dataFormat>
   </xsl:template>
 
 
