@@ -538,8 +538,97 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
     <xsl:param name="unit"/>
     <ms:size>
       <ms:amount><xsl:value-of select="$amount"/></ms:amount>
-      <ms:sizeUnit><xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $unit)"/></ms:sizeUnit>
+      <!-- sizeUnit -->
+      <!-- adapted from https://gitlab.com/european-language-grid/platform/ELG-SHARE-schema/-/blob/master/Support%20tools/META-SHARE_3.1_into_ELG/elg-conversion-tools-master/rules/elra-to-elg-body.xsl -->
+      <!-- DO NOT CHANGER ORDER DECLARATION -->
+      <xsl:choose>
+        <xsl:when test="$unit = '4-grams'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/four-gram</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = '5-grams'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/five-gram</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'articles'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/article</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'bigrams'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/bigram</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'bytes'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/byte</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'classes'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/class</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'entries'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/entry</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'expressions'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/expression</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'files'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/file</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'frames'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/frame1</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'hours'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/hour1</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'hpairs'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/T-HPair</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'images'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/image2</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'items'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/item</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'minutes'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/minute</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'segments'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/entry</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'sentences'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/sentence1</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'terms'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/term</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'texts'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/text1</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'tokens'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/token</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'units'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/unit</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'trigrams'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/trigram</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'units'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/unit</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'units'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/unit</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'unigrams'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/unigram</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'utterances'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/utterance1</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'words'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/word3</ms:sizeUnit>
+        </xsl:when>
+        <xsl:otherwise>
+          <ms:sizeUnit><xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $unit)"/></ms:sizeUnit>
+        </xsl:otherwise>
+      </xsl:choose>
     </ms:size>
   </xsl:template>
+
 
 </xsl:stylesheet>
