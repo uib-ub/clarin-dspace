@@ -235,7 +235,12 @@
           </xsl:otherwise>
         </xsl:choose>
         <ms:fundingType>
-          <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $proj_arr[4])"/>
+          <xsl:choose>
+            <xsl:when test="$proj_arr[4] = 'Other'">http://w3id.org/meta-share/meta-share/other</xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $proj_arr[4])"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </ms:fundingType>
         <ms:funder>
           <ms:Organization>
@@ -498,7 +503,16 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
   <xsl:template name="lexicalConceptualResource">
     <ms:LexicalConceptualResource>
       <ms:lrType>LexicalConceptualResource</ms:lrType>
-      <ms:lcrSubclass><xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $detailedType)"/></ms:lcrSubclass>
+      <ms:lcrSubclass>
+        <xsl:choose>
+          <xsl:when test="$detailedType = 'wordnet'">
+            <ms:sizeUnit>http://w3id.org/meta-share/meta-share/wordNet</ms:sizeUnit>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $detailedType)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </ms:lcrSubclass>
       <ms:encodingLevel>http://w3id.org/meta-share/meta-share/unspecified</ms:encodingLevel>
       <xsl:call-template name="CommonMediaPart"/>
       <xsl:call-template name="Distribution"/>
@@ -584,14 +598,26 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
         <xsl:when test="$unit = 'items'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/item</ms:sizeUnit>
         </xsl:when>
+        <xsl:when test="$unit = 'lexicalTypes'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/lexicalType</ms:sizeUnit>
+        </xsl:when>
         <xsl:when test="$unit = 'minutes'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/minute</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'multiWordUnits'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/multiWordUnit1</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'pages'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/other</ms:sizeUnit>
         </xsl:when>
         <xsl:when test="$unit = 'segments'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/entry</ms:sizeUnit>
         </xsl:when>
         <xsl:when test="$unit = 'sentences'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/sentence1</ms:sizeUnit>
+        </xsl:when>
+        <xsl:when test="$unit = 'semanticUnits'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/semanticUnit1</ms:sizeUnit>
         </xsl:when>
         <xsl:when test="$unit = 'terms'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/term</ms:sizeUnit>
@@ -602,14 +628,11 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
         <xsl:when test="$unit = 'tokens'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/token</ms:sizeUnit>
         </xsl:when>
-        <xsl:when test="$unit = 'units'">
-          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/unit</ms:sizeUnit>
-        </xsl:when>
         <xsl:when test="$unit = 'trigrams'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/trigram</ms:sizeUnit>
         </xsl:when>
-        <xsl:when test="$unit = 'units'">
-          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/unit</ms:sizeUnit>
+        <xsl:when test="$unit = 'turns'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/turn</ms:sizeUnit>
         </xsl:when>
         <xsl:when test="$unit = 'units'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/unit</ms:sizeUnit>
