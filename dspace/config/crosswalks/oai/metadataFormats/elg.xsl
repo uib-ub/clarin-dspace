@@ -290,20 +290,6 @@
     <xsl:variable name="name" select="concat($upperType, 'MediaPart')"/>
     <xsl:element name="ms:{$name}">
       <xsl:call-template name="commonMediaElements"/>
-      <xsl:choose>
-        <xsl:when test="$mediaType = 'audio'">
-          <xsl:call-template name="audio"/>
-        </xsl:when>
-        <xsl:when test="$mediaType = 'video'">
-          <xsl:call-template name="video"/>
-        </xsl:when>
-        <xsl:when test="$mediaType = 'text'">
-          <xsl:call-template name="text"/>
-        </xsl:when>
-        <xsl:when test="$mediaType = 'image'">
-          <xsl:call-template name="image"/>
-        </xsl:when>
-      </xsl:choose>
     </xsl:element>
   </xsl:template>
 
@@ -338,6 +324,20 @@
           <xsl:with-param name="isoCode" select="langUtil:getShortestId(.)"/>
         </xsl:call-template>
       </xsl:for-each>
+      <xsl:choose>
+        <xsl:when test="$mediaType = 'audio'">
+          <xsl:call-template name="audio"/>
+        </xsl:when>
+        <xsl:when test="$mediaType = 'video'">
+          <xsl:call-template name="video"/>
+        </xsl:when>
+        <xsl:when test="$mediaType = 'text'">
+          <xsl:call-template name="text"/>
+        </xsl:when>
+        <xsl:when test="$mediaType = 'image'">
+          <xsl:call-template name="image"/>
+        </xsl:when>
+      </xsl:choose>
     </xsl:element>
   </xsl:template>
 
@@ -371,10 +371,10 @@
 elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http://w3id.org/meta-share/meta-share/}typeOfVideoContent': This element is not expected.
      -->
   <xsl:template name="video">
-    <ms:typeOfVideoContent xml:lang="en">undefined</ms:typeOfVideoContent>
+    <ms:typeOfVideoContent xml:lang="en">unspecified</ms:typeOfVideoContent>
   </xsl:template>
   <xsl:template name="image">
-    <ms:typeOfImageContent xml:lang="en">undefined</ms:typeOfImageContent>
+    <ms:typeOfImageContent xml:lang="en">unspecified</ms:typeOfImageContent>
   </xsl:template>
 
   <xsl:template name="Language">
