@@ -609,6 +609,9 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
         <xsl:when test="$unit = 'items'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/item</ms:sizeUnit>
         </xsl:when>
+        <xsl:when test="$unit = 'keywords'">
+          <ms:sizeUnit>http://w3id.org/meta-share/meta-share/keyword1</ms:sizeUnit>
+        </xsl:when>
         <xsl:when test="$unit = 'lexicalTypes'">
           <ms:sizeUnit>http://w3id.org/meta-share/meta-share/lexicalType</ms:sizeUnit>
         </xsl:when>
