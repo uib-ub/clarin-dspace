@@ -484,16 +484,29 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
   <xsl:template name="languageDescription">
     <ms:LanguageDescription>
       <ms:lrType>LanguageDescription</ms:lrType>
-      <ms:LanguageDescriptionSubclass>undefined</ms:LanguageDescriptionSubclass>
-        <!-- XXX if undefined not working
-        we have only grammar/other in detailed type
-        <ms:NGramModel>
-          <ms:ldSubclassType>NGramModel</ms:ldSubclassType>
-          <ms:baseItem>http://w3id.org/meta-share/meta-share/word</ms:baseItem>
-          <ms:order>5</ms:order>
-        </ms:NGramModel>
+      <ms:LanguageDescriptionSubclass>
+        <xsl:choose>
+          <xsl:when test="$detailedType='grammar'">
+            <ms:Grammar>
+              <ms:ldSubclassType>Grammar</ms:ldSubclassType>
+              <ms:encodingLevel>http://w3id.org/meta-share/meta-share/unspecified</ms:encodingLevel>
+            </ms:Grammar>
+          </xsl:when>
+          <xsl:when test="$detailedType='mlmodel'">
+            <ms:MLModel>
+              <ms:ldSubclassType>MlModel</ms:ldSubclassType>
+            </ms:MLModel>
+          </xsl:when>
+          <xsl:when test="$detailedType='ngrammodel'">
+            <ms:NGramModel>
+              <ms:ldSubclassType>NGramModel</ms:ldSubclassType>
+              <ms:baseItem>http://w3id.org/meta-share/meta-share/unspecified</ms:baseItem>
+              <!-- XXX this is supposed to mean unspecified -->
+              <ms:order>-1</ms:order>
+            </ms:NGramModel>
+          </xsl:when>
+        </xsl:choose>
       </ms:LanguageDescriptionSubclass>
-       -->
       <xsl:call-template name="CommonMediaPart"/>
       <xsl:call-template name="Distribution"/>
       <xsl:call-template name="personalSensitiveAnon"/>
