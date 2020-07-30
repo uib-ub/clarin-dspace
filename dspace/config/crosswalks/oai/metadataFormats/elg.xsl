@@ -192,25 +192,27 @@
 
   <xsl:template name="resourceCreator">
       <xsl:for-each select="doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='author']/doc:element/doc:field[@name='value']">
-        <xsl:variable name="surname" select="str:split(., ', ')[1]"/>
-        <xsl:variable name="given">
-          <xsl:for-each select="str:split(., ', ')">
-            <xsl:if test="position() &gt; 1">
-              <xsl:value-of select="."/>
-              <xsl:if test="position() != last()">
-                <xsl:text>, </xsl:text>
-              </xsl:if>
-            </xsl:if>
-          </xsl:for-each>
-        </xsl:variable>
-        <ms:resourceCreator>
-          <ms:Person>
-            <ms:actorType>Person</ms:actorType>
-            <!--  xml:lang doesn't make much sense for surnames and givenName; it should be "script", en mandatory -->
-            <ms:surname xml:lang="en"><xsl:value-of select="$surname"/></ms:surname>
-            <ms:givenName xml:lang="en"><xsl:value-of select="$given"/></ms:givenName>
-          </ms:Person>
-        </ms:resourceCreator>
+          <xsl:if test="not(. = 'et al.')">
+            <xsl:variable name="surname" select="str:split(., ', ')[1]"/>
+            <xsl:variable name="given">
+              <xsl:for-each select="str:split(., ', ')">
+                <xsl:if test="position() &gt; 1">
+                  <xsl:value-of select="."/>
+                  <xsl:if test="position() != last()">
+                    <xsl:text>, </xsl:text>
+                  </xsl:if>
+                </xsl:if>
+              </xsl:for-each>
+            </xsl:variable>
+            <ms:resourceCreator>
+              <ms:Person>
+                <ms:actorType>Person</ms:actorType>
+                <!--  xml:lang doesn't make much sense for surnames and givenName; it should be "script", en mandatory -->
+                <ms:surname xml:lang="en"><xsl:value-of select="$surname"/></ms:surname>
+                <ms:givenName xml:lang="en"><xsl:value-of select="$given"/></ms:givenName>
+              </ms:Person>
+            </ms:resourceCreator>
+          </xsl:if>
       </xsl:for-each>
   </xsl:template>
 
