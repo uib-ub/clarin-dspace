@@ -518,9 +518,7 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
       <ms:lrType>LexicalConceptualResource</ms:lrType>
       <ms:lcrSubclass>
         <xsl:choose>
-          <xsl:when test="$detailedType = 'wordnet'">
-            <ms:sizeUnit>http://w3id.org/meta-share/meta-share/wordNet</ms:sizeUnit>
-          </xsl:when>
+          <xsl:when test="$detailedType = 'wordnet'">http://w3id.org/meta-share/meta-share/wordNet</xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="concat('http://w3id.org/meta-share/meta-share/', $detailedType)"/>
           </xsl:otherwise>
