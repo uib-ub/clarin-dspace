@@ -21,19 +21,8 @@
     
     <xsl:variable name="handle" select="/doc:metadata/doc:element[@name='others']/doc:field[@name='handle']/text()"/>
 
-    <xsl:variable name="type">
-      <xsl:choose>
-        <xsl:when test="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='resourceType']/doc:element/doc:field[@name='value']">
-          <xsl:value-of select="/doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='resourceType']/doc:element/doc:field[@name='value']"/>
-        </xsl:when>
-        <xsl:when test="/doc:metadata/doc:element[@name='dc']/doc:element[@name='type']/doc:element/doc:field[@name='value']">
-          <xsl:value-of select="/doc:metadata/doc:element[@name='dc']/doc:element[@name='type']/doc:element/doc:field[@name='value']"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="logUtil:logMissing('type',$handle)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:variable name="type"
+                  select="/doc:metadata/doc:element[@name='dc']/doc:element[@name='type']/doc:element/doc:field[@name='value']/text()"/>
 
     <xsl:variable name="upperType">
       <xsl:value-of select="translate(substring($type,1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
@@ -144,35 +133,11 @@
   </xsl:template>
 
   <xsl:template name="resourceName">
-      <ms:resourceName xml:lang="en">
-        <xsl:choose>
-          <xsl:when test="doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#IdentificationInfo']/doc:element[@name='resourceName']/doc:element/doc:field[@name='value']">
-            <xsl:value-of select="doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#IdentificationInfo']/doc:element[@name='resourceName']/doc:element/doc:field[@name='value']"/>
-          </xsl:when>
-          <xsl:when test="doc:metadata/doc:element[@name='dc']/doc:element[@name='title']/doc:element/doc:field[@name='value']">
-            <xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='title']/doc:element/doc:field[@name='value']"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="logUtil:logMissing('resourceName',$handle)"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </ms:resourceName>
+      <ms:resourceName xml:lang="en"><xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='title']/doc:element/doc:field[@name='value']"/></ms:resourceName>
   </xsl:template>
 
   <xsl:template name="description">
-      <ms:description xml:lang="en">
-        <xsl:choose>
-          <xsl:when test="doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='description']/doc:element/doc:field[@name='value']">
-            <xsl:value-of select="doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#ContentInfo']/doc:element[@name='description']/doc:element/doc:field[@name='value']"/>
-          </xsl:when>
-          <xsl:when test="doc:metadata/doc:element[@name='dc']/doc:element[@name='description']/doc:element/doc:field[@name='value']">
-            <xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='description']/doc:element/doc:field[@name='value']"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="logUtil:logMissing('description',$handle)"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </ms:description>
+      <ms:description xml:lang="en"><xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='description']/doc:element/doc:field[@name='value']"/></ms:description>
   </xsl:template>
 
   <xsl:template name="keyword">
