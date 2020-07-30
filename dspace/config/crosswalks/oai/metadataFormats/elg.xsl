@@ -219,7 +219,8 @@
   <xsl:template name="fundingProject">
     <xsl:for-each select="doc:metadata/doc:element[@name='local']/doc:element[@name='sponsor']/doc:element/doc:field[@name='value']">
       <xsl:variable name="proj_arr" select="str:split(., '@@')"/>
-        <xsl:if test="count($proj_arr) &gt;= 4">
+        <xsl:if
+                test="count($proj_arr) &gt;= 4 and $proj_arr[1] != '' and $proj_arr[2] != '' and $proj_arr[3] != '' and $proj_arr[4] != ''">
           <ms:fundingProject>
             <ms:projectName xml:lang="en">
               <xsl:value-of select="$proj_arr[3]"/>
