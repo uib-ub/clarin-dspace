@@ -3044,7 +3044,7 @@ Google Analytics Statistics Aspect
   <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.wordnet">wordnet</message>
   <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.thesaurus">tezaver</message>
   <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.framenet">framenet</message>
-  <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.terminilogicalResource">terminološkiVir</message>
+  <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.terminologicalResource">terminološkiVir</message>
   <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.machineReadableDictionary">strojnoBerljivSlovar</message>
   <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.lexicon">slovar</message>
   <message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.other">drugo</message>
