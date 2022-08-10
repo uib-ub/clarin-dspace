@@ -161,24 +161,36 @@
   <xsl:template name="resourceCreator">
       <xsl:for-each select="doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='author']/doc:element/doc:field[@name='value']">
           <xsl:if test="not(. = 'et al.')">
-            <xsl:variable name="surname" select="str:split(., ', ')[1]"/>
-            <xsl:variable name="given">
-              <xsl:for-each select="str:split(., ', ')">
-                <xsl:if test="position() &gt; 1">
-                  <xsl:value-of select="."/>
-                  <xsl:if test="position() != last()">
-                    <xsl:text>, </xsl:text>
-                  </xsl:if>
-                </xsl:if>
-              </xsl:for-each>
-            </xsl:variable>
             <ms:resourceCreator>
-              <ms:Person>
-                <ms:actorType>Person</ms:actorType>
-                <!--  xml:lang doesn't make much sense for surnames and givenName; it should be "script", en mandatory -->
-                <ms:surname xml:lang="en"><xsl:value-of select="$surname"/></ms:surname>
-                <ms:givenName xml:lang="en"><xsl:value-of select="$given"/></ms:givenName>
-              </ms:Person>
+              <xsl:choose>
+                <!-- assume names stored in 'last, first, any, other' fashion -->
+                <xsl:when test="contains(., ', ')">
+                  <xsl:variable name="surname" select="str:split(., ', ')[1]"/>
+                  <xsl:variable name="given">
+                    <xsl:for-each select="str:split(., ', ')">
+                      <xsl:if test="position() &gt; 1">
+                        <xsl:value-of select="."/>
+                        <xsl:if test="position() != last()">
+                          <xsl:text>, </xsl:text>
+                        </xsl:if>
+                      </xsl:if>
+                    </xsl:for-each>
+                  </xsl:variable>
+                  <ms:Person>
+                    <ms:actorType>Person</ms:actorType>
+                    <!--  xml:lang doesn't make much sense for surnames and givenName; it should be "script", en mandatory -->
+                    <ms:surname xml:lang="en"><xsl:value-of select="$surname"/></ms:surname>
+                    <ms:givenName xml:lang="en"><xsl:value-of select="$given"/></ms:givenName>
+                  </ms:Person>
+                </xsl:when>
+                <!-- no comma assume it's an org -->
+                <xsl:otherwise>
+                  <ms:Organization>
+                    <ms:actorType>Organization</ms:actorType>
+                    <ms:organizationName xml:lang="en"><xsl:value-of select="."/></ms:organizationName>
+                  </ms:Organization>
+                </xsl:otherwise>
+              </xsl:choose>
             </ms:resourceCreator>
           </xsl:if>
       </xsl:for-each>
