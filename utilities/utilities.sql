@@ -431,7 +431,7 @@ ALTER TABLE ONLY user_metadata ALTER COLUMN user_metadata_id SET DEFAULT nextval
 -- Data for Name: user_registration; Type: TABLE DATA; Schema: public; Owner: dspace
 --
 
-COPY user_registration (eperson_id, email, organization, confirmation) FROM stdin;
+\copy user_registration (eperson_id, email, organization, confirmation) FROM stdin;
 0	anonymous	anonymous	t
 1	administrator	administrator	t
 \.
@@ -441,13 +441,15 @@ COPY user_registration (eperson_id, email, organization, confirmation) FROM stdi
 --
 
 \set afile :utildir '/license_definition.txt'
-copy license_definition(name, definition,eperson_id, label_id, created_on, confirmation, required_info) from :'afile';
+-- \copy doesn't interpolate variables, a workaround...
+\set ld_command '\\copy license_definition(name, definition,eperson_id, label_id, created_on, confirmation, required_info) from ' :'afile'
+:ld_command
 
 --
 -- Data for Name: license_label; Type: TABLE DATA; Schema: public; Owner: dspace
 --
 
-COPY license_label (label_id, label, title, is_extended) FROM stdin;
+\copy license_label (label_id, label, title, is_extended) FROM stdin;
 1	PUB	Publicly Available	f
 2	ACA	Academic Use	f
 3	RES	Restricted Use	f

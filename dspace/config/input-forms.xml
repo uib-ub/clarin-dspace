@@ -1039,8 +1039,8 @@
                 <stored-value>framenet</stored-value>
             </pair>
             <pair>
-                <displayed-value>input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.terminilogicalResource</displayed-value>
-                <stored-value>terminilogicalResource</stored-value>
+                <displayed-value>input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.terminologicalResource</displayed-value>
+                <stored-value>terminologicalResource</stored-value>
             </pair>
             <pair>
                 <displayed-value>input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.machineReadableDictionary</displayed-value>
