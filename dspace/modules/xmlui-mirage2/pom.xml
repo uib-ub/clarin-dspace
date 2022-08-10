@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.dspace</groupId>
         <artifactId>modules</artifactId>
-        <version>5.11-SNAPSHOT</version>
+        <version>5.12-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -26,8 +26,8 @@
         <!-- These versions should be kept in sync with ./.travis.yml -->
         <sass.version>3.4.25</sass.version>
         <compass.version>1.0.1</compass.version>
-        <node.version>0.10.31</node.version>
-        <npm.version>1.4.23</npm.version>
+        <node.version>8.10.0</node.version>
+        <npm.version>6.5.0</npm.version>
         <!-- Override version of JRuby that gem-maven-plugin installs when "mirage2.deps.included=true" -->
         <jruby.version>9.1.17.0</jruby.version>
     </properties>
@@ -37,6 +37,15 @@
             <!-- Filter using the properties file defined by dspace-parent POM -->
             <filter>${filters.file}</filter>
         </filters>
+        <extensions>
+            <extension>
+                <!-- Allows us to download Ruby gems -->
+                <!-- See https://github.com/jruby/mavengem -->
+                <groupId>org.torquebox.mojo</groupId>
+                <artifactId>mavengem-wagon</artifactId>
+                <version>1.0.3</version>
+            </extension>
+        </extensions>
         <!-- Centrally manage the versions of all plugins used below -->
         <pluginManagement>
             <plugins>
@@ -67,55 +76,6 @@
                             <includeArtifactIds>
                                 dspace-xmlui-mirage2
                             </includeArtifactIds>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/themes</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/src/main/webapp/themes</directory>
-                                    <excludes>
-                                        <exclude>**/*.bmp</exclude>
-                                        <exclude>**/*.jpg</exclude>
-                                        <exclude>**/*.jpeg</exclude>
-                                        <exclude>**/*.gif</exclude>
-                                        <exclude>**/*.png</exclude>
-                                        <exclude>**/*.ico</exclude>
-                                        <exclude>**/*.svg</exclude>
-                                        <include>**/*.ttf</include>
-                                        <include>**/*.woff</include>
-                                        <include>**/*.eot</include>
-                                    </excludes>
-                                    <filtering>true</filtering>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/src/main/webapp/themes</directory>
-                                    <includes>
-                                        <include>**/*.bmp</include>
-                                        <include>**/*.jpg</include>
-                                        <include>**/*.jpeg</include>
-                                        <include>**/*.gif</include>
-                                        <include>**/*.png</include>
-                                        <include>**/*.ico</include>
-                                        <include>**/*.svg</include>
-                                        <include>**/*.ttf</include>
-                                        <include>**/*.woff</include>
-                                        <include>**/*.eot</include>
-                                    </includes>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
                         </configuration>
                     </execution>
                 </executions>
@@ -237,7 +197,6 @@
                                             <goal>copy-resources</goal>
                                             <configuration>
                                                 <outputDirectory>${project.build.directory}/themes/@item@</outputDirectory>
-                                                <overwrite>false</overwrite>
                                                 <resources>
                                                     <resource>
                                                         <directory>${project.build.directory}/mirage2-source-extracted</directory>
@@ -245,6 +204,13 @@
                                                         <excludes>
                                                             <exclude>sitemap.xmap</exclude>
                                                         </excludes>
+                                                    </resource>
+                                                    <resource>
+                                                        <directory>${project.build.directory}/mirage2-source-extracted</directory>
+                                                        <filtering>true</filtering>
+                                                        <includes>
+                                                            <include>sitemap.xmap</include>
+                                                        </includes>
                                                     </resource>
                                                 </resources>
                                             </configuration>
@@ -257,10 +223,17 @@
                                             <goal>copy-resources</goal>
                                             <configuration>
                                                 <outputDirectory>${project.build.directory}/themes/@item@</outputDirectory>
-                                                <overwrite>false</overwrite>
+                                                <overwrite>true</overwrite>
                                                 <resources>
                                                     <resource>
-                                                        <directory>${project.build.directory}/mirage2-source-extracted</directory>
+                                                        <directory>${basedir}/src/main/webapp/themes/@item@</directory>
+                                                        <filtering>false</filtering>
+                                                        <excludes>
+                                                            <exclude>sitemap.xmap</exclude>
+                                                        </excludes>
+                                                    </resource>
+                                                    <resource>
+                                                        <directory>${basedir}/src/main/webapp/themes/@item@</directory>
                                                         <filtering>true</filtering>
                                                         <includes>
                                                             <include>sitemap.xmap</include>
@@ -331,9 +304,10 @@
                 </property>
             </activation>
             <repositories>
+                <!-- https://github.com/jruby/mavengem -->
                 <repository>
-                    <id>rubygems-release</id>
-                    <url>http://rubygems-proxy.torquebox.org/releases</url>
+                    <id>mavengems</id>
+                    <url>mavengem:https://rubygems.org</url>
                 </repository>
             </repositories>
             <dependencies>
@@ -399,7 +373,6 @@
                                             <goal>copy-resources</goal>
                                             <configuration>
                                                 <outputDirectory>${project.build.directory}/themes/@item@</outputDirectory>
-                                                <overwrite>false</overwrite>
                                                 <resources>
                                                     <resource>
                                                         <directory>${project.build.directory}/mirage2-source-extracted</directory>
@@ -407,6 +380,13 @@
                                                         <excludes>
                                                             <exclude>sitemap.xmap</exclude>
                                                         </excludes>
+                                                    </resource>
+                                                    <resource>
+                                                        <directory>${project.build.directory}/mirage2-source-extracted</directory>
+                                                        <filtering>true</filtering>
+                                                        <includes>
+                                                            <include>sitemap.xmap</include>
+                                                        </includes>
                                                     </resource>
                                                 </resources>
                                             </configuration>
@@ -419,10 +399,17 @@
                                             <goal>copy-resources</goal>
                                             <configuration>
                                                 <outputDirectory>${project.build.directory}/themes/@item@</outputDirectory>
-                                                <overwrite>false</overwrite>
+                                                <overwrite>true</overwrite>
                                                 <resources>
                                                     <resource>
-                                                        <directory>${project.build.directory}/mirage2-source-extracted</directory>
+                                                        <directory>${basedir}/src/main/webapp/themes/@item@</directory>
+                                                        <filtering>false</filtering>
+                                                        <excludes>
+                                                            <exclude>sitemap.xmap</exclude>
+                                                        </excludes>
+                                                    </resource>
+                                                    <resource>
+                                                        <directory>${basedir}/src/main/webapp/themes/@item@</directory>
                                                         <filtering>true</filtering>
                                                         <includes>
                                                             <include>sitemap.xmap</include>

@@ -253,10 +253,10 @@ test_databases: test_utilities_database test_dspace_database
 create_databases:
 ifeq ("${CI}", "true")
 			@echo "CREATING DSpace DATABASE .."
-			createdb --username=postgres  -p $(DB_PORT) "$(DATABASE_NAME)" --owner $(DSPACE_USER) --encoding "UTF-8" --template=template0
+			PGPASSWORD=password createdb --username=dspace -h postgres  -p $(DB_PORT) "$(DATABASE_NAME)" --owner $(DSPACE_USER) --encoding "UTF-8" --template=template0
 			@echo "CREATING UTILITIES DATABASE ..."
-			createdb --username postgres  -p $(DB_PORT) "$(UTILITIES_DATABASE_NAME)" --owner $(DSPACE_USER) --encoding "UTF-8" --template=template0
-			psql --username postgres  --set=utildir="$(DIR_UTILITIES)" -p $(DB_PORT) $(UTILITIES_DATABASE_NAME) < $(DIR_UTILITIES)/utilities.sql
+			PGPASSWORD=password createdb --username dspace -h postgres  -p $(DB_PORT) "$(UTILITIES_DATABASE_NAME)" --owner $(DSPACE_USER) --encoding "UTF-8" --template=template0
+			PGPASSWORD=password psql --username dspace -h postgres  --set=utildir="$(DIR_UTILITIES)" -p $(DB_PORT) $(UTILITIES_DATABASE_NAME) < $(DIR_UTILITIES)/utilities.sql
 			@echo "DONE"
 else
 			@echo "CREATING DSpace DATABASE .."
