@@ -3164,7 +3164,7 @@
 	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.wordnet">wordnet</message>
 	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.thesaurus">thesaurus</message>
 	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.framenet">framenet</message>
-	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.terminilogicalResource">terminilogicalResource</message>
+	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.terminologicalResource">terminologicalResource</message>
 	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.machineReadableDictionary">machineReadableDictionary</message>
 	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.lexicon">lexicon</message>
 	<message key="input_forms.value_pairs.metashare_detailed_lexicalConceptualResource.other">other</message>
