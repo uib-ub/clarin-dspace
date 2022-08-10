@@ -358,11 +358,18 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
 
   <xsl:template name="Language">
     <xsl:param name="isoCode"/>
-    <ms:language>
-        <xsl:call-template name="ms_language_inside">
-          <xsl:with-param name="isoCode" select="$isoCode"/>
-        </xsl:call-template>
-    </ms:language>
+    <xsl:choose>
+      <xsl:when test="$isoCode = 'und'">
+        <xsl:call-template name="uncoded_languages"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <ms:language>
+          <xsl:call-template name="ms_language_inside">
+            <xsl:with-param name="isoCode" select="$isoCode"/>
+          </xsl:call-template>
+        </ms:language>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="ms_language_inside">
@@ -373,6 +380,31 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
     <ms:languageId>
       <xsl:value-of select="$isoCode"/>
     </ms:languageId>
+  </xsl:template>
+
+  <xsl:template name="uncoded_languages">
+    <xsl:choose>
+      <!-- Assume that if we have 'und' there are language names in dc.language -->
+      <xsl:when test="/doc:metadata/doc:element[@name='dc']/doc:element[@name='language']/doc:element/doc:field[@name='value']">
+        <xsl:for-each
+                select="/doc:metadata/doc:element[@name='dc']/doc:element[@name='language']/doc:element/doc:field[@name='value']">
+          <ms:language>
+            <xsl:call-template name="ms_language_inside">
+              <xsl:with-param name="isoCode" select="'und'"/>
+            </xsl:call-template>
+            <ms:languageVarietyName xml:lang="en"><xsl:value-of select="."/></ms:languageVarietyName>
+          </ms:language>
+        </xsl:for-each>
+      </xsl:when>
+      <!-- if not just produce the und/und tag/id; though, elg will complain -->
+      <xsl:otherwise>
+        <ms:language>
+          <xsl:call-template name="ms_language_inside">
+            <xsl:with-param name="isoCode" select="'und'"/>
+          </xsl:call-template>
+        </ms:language>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="Distribution">
