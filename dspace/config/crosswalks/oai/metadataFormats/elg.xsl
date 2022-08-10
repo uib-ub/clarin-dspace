@@ -371,7 +371,7 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
   <xsl:template name="Language">
     <xsl:param name="isoCode"/>
     <xsl:choose>
-      <xsl:when test="$isoCode = 'und'">
+      <xsl:when test="$isoCode = 'und' or $isoCode = 'mis'">
         <xsl:call-template name="uncoded_languages"/>
       </xsl:when>
       <xsl:otherwise>
@@ -395,6 +395,13 @@ elg.xml:62: element typeOfVideoContent: Schemas validity error : Element '{http:
   </xsl:template>
 
   <xsl:template name="uncoded_languages">
+    <!-- This is expected in ELG:
+      Languages without ISO 639-3 but with a glottolog code: use “mis” for ISO and add the glottolog code
+      Languages with neither ISO 639-3 nor a glottolog code: use “und” for ISO and add the free text name at “languageVarietyName”
+
+      At the moment we don't have/know glottolog codes, so behave as 'und' (Undetermined) even if the iso is 'mis'
+      (Uncoded languages).
+    -->
     <xsl:choose>
       <!-- Assume that if we have 'und' there are language names in dc.language -->
       <xsl:when test="/doc:metadata/doc:element[@name='dc']/doc:element[@name='language']/doc:element/doc:field[@name='value']">
