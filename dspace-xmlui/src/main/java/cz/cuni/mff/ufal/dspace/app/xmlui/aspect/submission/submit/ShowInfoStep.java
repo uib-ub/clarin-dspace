@@ -36,7 +36,7 @@ public class ShowInfoStep extends AbstractSubmissionStep
 
         div.setHead(T_head);
 
-        div.addPara(T_info1);
+        div.addPara(T_info1.parameterize(collection.getName()));
 
         // add standard control/paging buttons
         List list = div.addList( "submit-showinfo-controls", List.TYPE_FORM );
