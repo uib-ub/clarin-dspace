@@ -842,15 +842,6 @@
                     <required/>
                 </field>
 
-                <field>
-                    <dc-schema>local</dc-schema>
-                    <dc-element>size</dc-element>
-                    <dc-qualifier>info</dc-qualifier>
-                    <repeatable>true</repeatable>
-                    <label>input_forms.field.local.size.info.label</label>
-                    <input-type complex-definition-ref="clariahSizeInfo">complex</input-type>
-                    <hint>input_forms.field.local.size.info.hint</hint>
-                </field>
             </page>
 
 
