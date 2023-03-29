@@ -18,6 +18,8 @@
  <!-- for handle "default".                                                -->
  <submission-map>
    <name-map collection-handle="default" submission-name="traditional" />
+   <name-map collection-handle="20.500.12800/3" submission-name="clariah" />
+   <name-map collection-handle="11234/5012" submission-name="clariah" />
  </submission-map>
 
 

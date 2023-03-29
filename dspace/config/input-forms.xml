@@ -13,8 +13,8 @@
 
     <form-map>
         <name-map collection-handle="default" form-name="traditional"/>
-        <!-- TODO real handle -->
-        <name-map collection-handle="123456789/2" form-name="clariah_submissions"/>
+        <name-map collection-handle="20.500.12800/3" form-name="clariah_submissions"/>
+        <name-map collection-handle="11234/5012" form-name="teaching_submissions"/>
     </form-map>
 
 
