@@ -853,7 +853,22 @@ public class HibernateFunctionalityManager implements IFunctionalities {
 		
 		return true;
 	}
-	
+
+	public List<Integer> getBitstreamIdsOfAskOnlyOnceWhereConfirmedByAnonymous(){
+		/**
+		 * This is `select * from license_definition d join license_resource_mapping m on d.license_id = m.license_id
+		 * and d.confirmation = 1 and m.active = true join license_resource_user_allowance al on m.mapping_id = al
+		 * .mapping_id and al.eperson_id = 0;` but in HQL
+		 */
+
+		String query = "select m.bitstreamId FROM LicenseDefinition d"
+				+ " JOIN d.licenseResourceMappings m"
+				+ " JOIN m.licenseResourceUserAllowances al"
+				+ " WHERE d.confirmation=1 AND m.active=true"
+				+ " AND al.userRegistration.epersonId=0";
+		return (List<Integer>)hibernateUtil.findByQuery(query, null);
+	}
+
 	public static void shutdown() {
 		HibernateUtil.getSessionFactory().close();
 	}
