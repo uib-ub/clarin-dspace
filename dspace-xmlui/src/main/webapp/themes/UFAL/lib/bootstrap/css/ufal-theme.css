@@ -1502,3 +1502,8 @@ div.modal-scrollbar {
 		margin-left: 100px;
 	}
 }
+
+li:has(select.hide-me){
+        display: none !important;
+        visibility: hidden !important;
+}

@@ -3290,6 +3290,8 @@
 	<message key="input_forms.field.dc.alternate.identifiers.hint">The item will get a handle. If the item has any
 		identification numbers	or codes associated with it, please enter the types and the actual numbers or codes.
    </message>
+	<message key="input_forms.field.local.demo.uri2.label">Course homepage</message>
+	<message key="input_forms.field.dc.type.teaching.hint">This is here to autofill a value. The value should not be changed.</message>
 
 	<!-- cz.cuni.mff.ufal.ContractPage -->
 	<message key="xmlui.ContractPage.title">Distribution License Agreement</message>
@@ -3300,10 +3302,10 @@
 	<!-- cz.cuni.mff.ufal.dspace.app.xmlui.aspect.submission.submit.ShowInfoStep -->
 	<message key="xmlui.Submission.submit.progressbar.showinfo">Notice</message>
 	<message key="xmlui.Submission.submit.ShowInfoStep.head">Notice</message>
-	<message key="xmlui.Submission.submit.ShowInfoStep.info1">The submission process for digital humanities
-		collections is still being fine tuned. If you find yourself not being able to continue the submission,
-	because you can't provide the required information, or because the required format for a field is too strict, or
-		because there's no appropriate field for your information or for any other reason,
+	<message key="xmlui.Submission.submit.ShowInfoStep.info1">The submission process for this collection ("{0}") is
+		still being fine-tuned. If you find yourself unable to continue the submission because you can't
+		provide the required information, because the required format for a field is too strict, because there's
+		no appropriate field for your information, or for any other reason
 		<a class="helpdesk-tolink">let us know</a>.</message>
 
 </catalogue>

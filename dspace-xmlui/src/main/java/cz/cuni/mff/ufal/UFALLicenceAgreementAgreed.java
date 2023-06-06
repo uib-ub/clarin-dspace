@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 
+import cz.cuni.mff.ufal.lindat.utilities.hibernate.*;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Item;
@@ -20,10 +22,6 @@ import org.dspace.eperson.EPerson;
 import org.dspace.handle.HandleManager;
 import static org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer.encodeForURL;
 
-import cz.cuni.mff.ufal.lindat.utilities.hibernate.LicenseResourceMapping;
-import cz.cuni.mff.ufal.lindat.utilities.hibernate.LicenseResourceUserAllowance;
-import cz.cuni.mff.ufal.lindat.utilities.hibernate.UserMetadata;
-import cz.cuni.mff.ufal.lindat.utilities.hibernate.UserRegistration;
 import cz.cuni.mff.ufal.lindat.utilities.interfaces.IFunctionalities;
 
 /**
@@ -49,7 +47,7 @@ public class UFALLicenceAgreementAgreed {
 
 			int eID = 0;
 			EPerson eperson = context.getCurrentUser();
-			if(eperson!=null) {
+			if (eperson != null) {
 				eID = eperson.getID();
 			}
 
@@ -78,7 +76,7 @@ public class UFALLicenceAgreementAgreed {
 					actions.add(exField);
 				}
 			}
-			
+
 			StringBuilder ids = new StringBuilder();
 
 			functionalityManager.openSession();
@@ -96,6 +94,12 @@ public class UFALLicenceAgreementAgreed {
 				bss[0] = Bitstream.find(context, requestedBitstreamId);
 			}
 
+			for (LicenseDefinition ld : functionalityManager.getLicenses(bss[0].getID())) {
+				// LicenseForm.LicenseConfirmation.ALLOW_ANONYMOUS
+				if (ld.getConfirmation() != 3 && eID == 0) {
+					throw new AuthorizeException("Anonymous user is not allowed to download this file. Please login.");
+				}
+			}
 			String token = Utils.generateHexKey();
 
 			for (Bitstream bitstream : bss) {
@@ -128,7 +132,7 @@ public class UFALLicenceAgreementAgreed {
 
 						functionalityManager.update(LicenseResourceUserAllowance.class, allowance);
 					}
-					
+
 					// add IP address
 					UserMetadata metaData = new UserMetadata();
 					metaData.setMetadataKey("IP");
@@ -138,7 +142,7 @@ public class UFALLicenceAgreementAgreed {
 					functionalityManager.persist(UserMetadata.class, metaData);
 
 					functionalityManager.update(LicenseResourceUserAllowance.class, allowance);
-					
+
 
 				}
 
@@ -163,11 +167,11 @@ public class UFALLicenceAgreementAgreed {
 			/*
 			 * AK: this is not working well with some requirements commenting
 			 * this out for now.
-			 * 
+			 *
 			 * After signing the license add the bitstream to session so that
 			 * for the current session the system will not check for licenses
 			 * again
-			 * 
+			 *
 			 * HttpSession session =
 			 * dspace.getSessionService().getCurrentSession(); String
 			 * authorizedBistreams = (String)
@@ -210,6 +214,10 @@ public class UFALLicenceAgreementAgreed {
 				return contextPath + "/handle/" + handle;
 			}
 
+		} catch (AuthorizeException e){
+			log.error(e);
+			functionalityManager.close();
+			throw new RuntimeException(e);
 		} catch (Exception e) {
 			log.error(e);
 			functionalityManager.close();
