@@ -56,6 +56,8 @@ public class Data extends AbstractWingElement
     /** The number parameter type */
     private static final String TYPE_NUMBER = "number";
 
+    private static final String A_KEY = "key";
+
 
     /** Translated data key. */
     private final Message message;
@@ -123,19 +125,26 @@ public class Data extends AbstractWingElement
             String catalogue = message.getCatalogue();
             Object[] dictionaryParameters = message.getDictionaryParameters();
 
+            final AttributeMap attributes = new AttributeMap();
+            attributes.setNamespace(WingConstants.I18N);
+            attributes.put(A_CATALOGUE, catalogue);
+            final String i18nTextContent;
+            if(message.hasText()){
+                attributes.put(A_KEY, message.getKey());
+                i18nTextContent = message.getText();
+            }else {
+                i18nTextContent = message.getKey();
+            }
+
             if (dictionaryParameters == null
                     || dictionaryParameters.length == 0)
             {
                 // No parameters, we can use the simple method
                 // <i18n:text> Text to be translated </i18n:text>
 
-                AttributeMap attributes = new AttributeMap();
-                attributes.setNamespace(WingConstants.I18N);
-                attributes.put(A_CATALOGUE, catalogue);
-
                 startElement(contentHandler, namespaces, WingConstants.I18N,
                         E_TEXT, attributes);
-                sendCharacters(contentHandler, message.getKey());
+                sendCharacters(contentHandler, i18nTextContent);
                 endElement(contentHandler, namespaces, WingConstants.I18N,
                         E_TEXT);
 
@@ -152,13 +161,9 @@ public class Data extends AbstractWingElement
                 startElement(contentHandler, namespaces, WingConstants.I18N,
                         E_TRANSLATE, null);
 
-                AttributeMap attributes = new AttributeMap();
-                attributes.setNamespace(WingConstants.I18N);
-                attributes.put(A_CATALOGUE, catalogue);
-
                 startElement(contentHandler, namespaces, WingConstants.I18N,
                         E_TEXT, attributes);
-                sendCharacters(contentHandler, message.getKey());
+                sendCharacters(contentHandler, i18nTextContent);
                 endElement(contentHandler, namespaces, WingConstants.I18N,
                         E_TEXT);
 
