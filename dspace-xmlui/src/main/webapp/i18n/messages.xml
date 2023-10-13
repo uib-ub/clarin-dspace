@@ -1939,6 +1939,8 @@
     <message key="xmlui.ExtraLicenseField.LicenseForm.EXTRA_EMAIL">Ask user for another email address</message>
     <message key="xmlui.ExtraLicenseField.LicenseForm.ORGANIZATION">Ask user for organization (optional).</message>
 	<message key="xmlui.ExtraLicenseField.LicenseForm.REQUIRED_ORGANIZATION">Ask user for organization (mandatory).</message>
+	<message key="xmlui.ExtraLicenseField.LicenseForm.ACA_ORG_NAME_AND_SEAT">Ask for the name and seat
+		(address) of user's academic institution.</message>
 	<message key="xmlui.ExtraLicenseField.LicenseForm.INTENDED_USE">Ask user for his intentions with the item.</message>
 
     <!-- These keys will map to the labels for extra license fields during LicenseStep in submission -->
@@ -1950,6 +1952,8 @@
     <message key="xmlui.ExtraLicenseField.submission.EXTRA_EMAIL">Email</message>
     <message key="xmlui.ExtraLicenseField.submission.ORGANIZATION">Organization</message>
 	<message key="xmlui.ExtraLicenseField.submission.REQUIRED_ORGANIZATION">Organization</message>
+	<message key="xmlui.ExtraLicenseField.submission.ACA_ORG_NAME_AND_SEAT">Name and seat (address) of your
+		academic institution.</message>
 	<message key="xmlui.ExtraLicenseField.submission.INTENDED_USE">Intended use</message>
 
 	<!-- org.dspace.app.xmlui.administrative.item.FindItemForm -->

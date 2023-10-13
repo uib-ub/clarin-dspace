@@ -43,8 +43,8 @@ public enum ExtraLicenseField {
 	EXTRA_EMAIL (new EmailValidator(), true, "Please enter a valid email address.", null),
 	ORGANIZATION (new LengthValidator(), true, "Please enter organization."),
 	REQUIRED_ORGANIZATION (new RequiredValidator(), true, "Organization is required."),
-	INTENDED_USE (new LengthValidator(), true, "Please state your intended use of this item.");
-
+	INTENDED_USE (new LengthValidator(), true, "Please state your intended use of this item."),
+	ACA_ORG_NAME_AND_SEAT(new RequiredValidator(), true, "Please fill in the name and the seat of your academic institution organization name and seat.");
 	private Validator validator = null;
 	private Action action = null;
 	private boolean metadata = true;
