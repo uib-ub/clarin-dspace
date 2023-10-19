@@ -72,6 +72,7 @@ public class PageStructureUtil {
 
     private static Node documentRead(InputSource is) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(is);
         return doc.getDocumentElement();
