@@ -1957,6 +1957,7 @@
 	<message key="xmlui.ExtraLicenseField.LicenseForm.EXTRA_EMAIL">Vyžádat si další e-mailovou adresu.</message>
 	<message key="xmlui.ExtraLicenseField.LicenseForm.ORGANIZATION">Vyžádat si uživatelovu organizaci (volitelně).</message>
 	<message key="xmlui.ExtraLicenseField.LicenseForm.REQUIRED_ORGANIZATION">Vyžádat si uživatelovu organizaci (povinně).</message>
+	<message key="xmlui.ExtraLicenseField.LicenseForm.ACA_ORG_NAME_AND_SEAT">Zeptat se na název a sídlo vědecké instituce.</message>
 	<message key="xmlui.ExtraLicenseField.LicenseForm.INTENDED_USE">Vyžádat si plánované použití záznamu.</message>
 
 	<!-- These keys will map to the labels for extra license fields during LicenseStep in submission -->
@@ -1968,6 +1969,7 @@
 	<message key="xmlui.ExtraLicenseField.submission.EXTRA_EMAIL">E-mail</message>
 	<message key="xmlui.ExtraLicenseField.submission.ORGANIZATION">Organizace</message>
 	<message key="xmlui.ExtraLicenseField.submission.REQUIRED_ORGANIZATION">Organizace</message>
+	<message key="xmlui.ExtraLicenseField.submission.ACA_ORG_NAME_AND_SEAT">Název a sídlo vědecké instituce</message>
 	<message key="xmlui.ExtraLicenseField.submission.INTENDED_USE">Zamýšlené použití</message>
 
 	<!-- org.dspace.app.xmlui.administrative.item.FindItemForm -->
