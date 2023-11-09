@@ -171,5 +171,5 @@ jobs:
 
   deploy:
     needs: docker
-    uses: dataquest-dev/DSpace/.github/workflows/deploy.yml@customer/uk
+    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@customer/uk
     secrets: inherit
