@@ -1,12 +1,12 @@
 # DSpace Docker image build for hub.docker.com
 name: Docker images
 
-# Run this Build for all pushes to dtq-dev branch
+# Run this Build for all pushes to customer/uk branch
 # Also run for PRs to ensure PR doesn't break Docker build process
 on:
   push:
     branches:
-      - dtq-dev
+      - customer/uk
   pull_request:
   workflow_dispatch:
 
@@ -169,12 +169,7 @@ jobs:
           tags: ${{ steps.meta_build_cli.outputs.tags }}
           labels: ${{ steps.meta_build_cli.outputs.labels }}
 
-      - name: redeploy
-        if: '!cancelled()'
-        run: |
-          curl -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" \
-          --request POST \
-          https://api.github.com/repos/dataquest-dev/\
-          dspace-angular/actions/workflows/deploy.yml/dispatches \
-          --data "{\"ref\":\"refs/heads/dtq-dev\"}"
+  deploy:
+    needs: docker
+    uses: dataquest-dev/DSpace/.github/workflows/deploy.yml@customer/uk
+    secrets: inherit
