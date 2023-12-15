@@ -438,7 +438,7 @@ public class DataCiteConnector
                 return;
             }
             // 400 -> invalid XML
-	    case (422):
+            case (422):
             case (400): {
                 log.warn("DataCite was unable to understand the XML we send.");
                 log.warn("DataCite Metadata API returned a http status code "
