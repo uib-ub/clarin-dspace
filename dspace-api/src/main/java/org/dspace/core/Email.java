@@ -701,6 +701,7 @@ public class Email
         public BurstDelayQueue(int burstSize){
             super();
             this.burstSize = burstSize;
+	    log.info("BurstDelayQueue initiated with burstSize=" + burstSize);
         }
 
         @Override

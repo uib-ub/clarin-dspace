@@ -33,6 +33,9 @@ public class Message implements Serializable
     /** The key to look up in the catalogue. */
     protected final String key;
 
+    /** To generate <i18n:text key="{key}">{text}</i18n:text> **/
+    private final String text;
+
     /**
      * Create a new translatable element.
      * 
@@ -43,8 +46,14 @@ public class Message implements Serializable
      */
     public Message(String catalogue, String key)
     {
+        this(catalogue, key, null);
+    }
+
+    public Message(String catalogue, String key, String text)
+    {
         this.catalogue = catalogue;
         this.key = key;
+        this.text = text;
     }
     
     /**
@@ -63,6 +72,13 @@ public class Message implements Serializable
     public String getKey()
     {
         return this.key;
+    }
+
+    public boolean hasText(){
+        return this.text != null;
+    }
+    public String getText(){
+        return this.text;
     }
 
     /** 

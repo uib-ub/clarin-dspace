@@ -157,8 +157,13 @@ public class UFALLicenceAgreement extends AbstractDSpaceTransformer {
 				List i = licences_div.addList("licenses-url", List.TYPE_FORM);
 				
 				for (LicenseDefinition license : licenses) {
-				    i.addItem( "license-to-sign", "alert text-center" ).addXref(
-						license.getDefinition(), " " + license.getName(), "target_blank label-big btn licence_to_sign fa fa-search fa-1x");
+					
+
+					final org.dspace.app.xmlui.wing.element.Item li = i.addItem("license-to-sign", "alert text-center");
+					//this is a link to the license text page
+					li.addXref(license.getDefinition(), " " + license.getName(), "target_blank label-big btn licence_to_sign fa fa-search fa-1x");
+					//this is the license text if any
+					li.addContent(new Message(getDefaultMessageCatalogue(), license.getDefinition(), " "));
 				    //XXX cumulate the extra requirements from all(?) licenses
 					String lr = license.getRequiredInfo();
 					if(lr!=null) {
