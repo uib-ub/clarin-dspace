@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
@@ -23,6 +24,7 @@ import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.discovery.IsoLangCodes;
 import org.dspace.embargo.service.EmbargoService;
 import org.dspace.event.Event;
 import org.dspace.identifier.Identifier;
@@ -39,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @version $Revision$
  */
 public class InstallItemServiceImpl implements InstallItemService {
+
+    public static final String SET_OWNING_COLLECTION_EVENT_DETAIL = "setCollection:";
 
     @Autowired(required = true)
     protected ContentServiceFactory contentServiceFactory;
@@ -71,6 +75,13 @@ public class InstallItemServiceImpl implements InstallItemService {
         AuthorizeException {
         Item item = is.getItem();
         Collection collection = is.getCollection();
+
+        // CLARIN
+        // The owning collection is needed for getting owning community and creating configured handle.
+        c.addEvent(new Event(Event.MODIFY, Constants.ITEM, item.getID(),
+                SET_OWNING_COLLECTION_EVENT_DETAIL + collection.getID()));
+        // CLARIN
+
         // Get map of filters to use for identifier types.
         Map<Class<? extends Identifier>, Filter> filters = FilterUtils.getIdentifierFilters(false);
         try {
@@ -200,6 +211,9 @@ public class InstallItemServiceImpl implements InstallItemService {
         // Add provenance description
         itemService.addMetadata(c, item, MetadataSchemaEnum.DC.getName(),
                                 "description", "provenance", "en", provDescription);
+
+        // Add language name into metadata. The lang name is fetched from the `lang_codes.txt`.
+        addLanguageNameToMetadata(c, item);
     }
 
     /**
@@ -294,5 +308,33 @@ public class InstallItemServiceImpl implements InstallItemService {
         // add sizes and checksums of bitstreams
         provmessage.append(getBitstreamProvenanceMessage(context, item));
         return provmessage.toString();
+    }
+
+    /**
+     * Language is stored in the metadatavalue in the ISO format e.g., `fra, cse,..` and not in the human satisfying
+     * format e.g., `France, Czech`. This method converts ISO format into human satisfying format e.g., `cse -> Czech`
+     * and stores it into `local.language.name` metadata field.
+     * @param c
+     * @param item
+     * @throws SQLException
+     */
+    private void addLanguageNameToMetadata(Context c, Item item) throws SQLException {
+        itemService.clearMetadata(c, item, "local", "language", "name", null);
+        List<MetadataValue> languageMetadata = itemService.getMetadataByMetadataString(item, "dc.language.iso");
+        for (MetadataValue mv: languageMetadata) {
+            if (StringUtils.isBlank(mv.getValue())) {
+                log.error("Cannot get name of the iso language (`dc.language.iso`) because the value is blank.");
+                return;
+            }
+            String langName = IsoLangCodes
+                    .getLangForCode(mv.getValue());
+            if (StringUtils.isBlank(langName)) {
+                log.error(String
+                        .format("No language found for iso code %s",
+                                langName));
+                return;
+            }
+            itemService.addMetadata(c, item, "local", "language", "name", null, langName);
+        }
     }
 }

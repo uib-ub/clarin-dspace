@@ -368,6 +368,11 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "person", "email", null, email);
     }
 
+    public ItemBuilder withCCLicense(String uri) throws SQLException, AuthorizeException {
+        creativeCommonsService.updateLicense(context, uri, item);
+        return this;
+    }
+
     @Override
     public Item build() {
         try {

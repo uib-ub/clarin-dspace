@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.requestitem.RequestItem;
 import org.dspace.app.requestitem.service.RequestItemService;
+import org.dspace.app.statistics.clarin.ClarinMatomoBitstreamTracker;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authorize.AuthorizeConfiguration;
 import org.dspace.authorize.AuthorizeException;
@@ -169,6 +170,9 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
     @Autowired(required = true)
     protected SubscribeService subscribeService;
+
+    @Autowired(required = true)
+    ClarinMatomoBitstreamTracker matomoBitstreamTracker;
 
     protected ItemServiceImpl() {
         super();
@@ -1133,8 +1137,8 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
     }
 
     @Override
-    public boolean hasUploadedFiles(Item item) throws SQLException {
-        List<Bundle> bundles = getBundles(item, "ORIGINAL");
+    public boolean hasUploadedFiles(Item item, String bundleName) throws SQLException {
+        List<Bundle> bundles = getBundles(item, bundleName);
         for (Bundle bundle : bundles) {
             if (CollectionUtils.isNotEmpty(bundle.getBitstreams())) {
                 return true;
