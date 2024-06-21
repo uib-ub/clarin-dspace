@@ -1,5 +1,13 @@
-[![Build Status](https://travis-ci.org/ufal/clarin-dspace.svg?branch=lindat)](https://travis-ci.org/ufal/clarin-dspace)
 # clarin-dspace repository
+
+---
+>
+> If you are looking for the DSpace 7 based version see [clarin-v7](https://github.com/ufal/clarin-dspace/tree/clarin-v7)
+>
+
+---
+
+## Description
 
 * developed at: [Institute of Formal and Applied Linguistics, Charles University](http://ufal.mff.cuni.cz/)
 * primary deploy at: https://lindat.mff.cuni.cz/repository/xmlui/
