@@ -98,6 +98,11 @@ public class LinksetRestControllerIT extends AbstractControllerIntegrationTest {
                 .withEntityType("Publication")
                 .build();
         context.restoreAuthSystemState();
+
+        //This is here to call init() on ChoiceAuthorityServiceImpl
+        //This makes sure all the choiceAuthorityService.clearCache() calls
+        //in tests below operate on an inited object
+        choiceAuthorityService.getChoiceAuthoritiesNames();
     }
 
     @Test
