@@ -2273,6 +2273,7 @@
             Dissertation
             Event
             Image
+            Instrument
             InteractiveResource
             Journal
             JournalArticle
@@ -2286,6 +2287,7 @@
             Software
             Sound
             Standard
+            StudyRegistration
             Text
             Workflow
             Other
@@ -2339,6 +2341,10 @@
                 <stored-value>Image</stored-value>
             </pair>
             <pair>
+                <displayed-value>Instrument</displayed-value>
+                <stored-value>Instrument</stored-value>
+            </pair>
+            <pair>
                 <displayed-value>Interactive Resource</displayed-value>
                 <stored-value>InteractiveResource</stored-value>
             </pair>
@@ -2389,6 +2395,10 @@
             <pair>
                 <displayed-value>Standard</displayed-value>
                 <stored-value>Standard</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Study Registration</displayed-value>
+                <stored-value>StudyRegistration</stored-value>
             </pair>
             <pair>
                 <displayed-value>Text</displayed-value>
