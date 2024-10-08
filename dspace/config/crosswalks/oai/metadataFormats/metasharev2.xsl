@@ -300,6 +300,9 @@
                         <!-- Implies funding info is incomplete -->
                         <xsl:variable name="msg" select="concat('Item with handle ', $handle,' has incomplete funding info')"/>
                         <xsl:variable name="iJustWantToLog" select="fn:logMissingMsg('fundingInfo', $handle, $msg)" />
+		        <xsl:if test="false()">
+				<xsl:message select="$iJustWantToLog"/>
+			</xsl:if>
                     </xsl:when>
                 </xsl:choose>
             </xsl:otherwise>
