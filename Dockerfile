@@ -50,14 +50,17 @@ RUN ant init_installation update_configs update_code update_webapps
 FROM tomcat:9-jdk${JDK_VERSION}
 # NOTE: DSPACE_INSTALL must align with the "dspace.dir" default configuration.
 ENV DSPACE_INSTALL=/dspace
+# Create a custom dspace user and group
+RUN groupadd -g 1234 dspace && \
+    useradd -m -u 1234 -g dspace dspace
 # Copy the /dspace directory from 'ant_build' container to /dspace in this container
-COPY --from=ant_build /dspace $DSPACE_INSTALL
+COPY --from=ant_build --chown=1234:1234  /dspace $DSPACE_INSTALL
 # Expose Tomcat port and AJP port
 EXPOSE 8080 8009 8000
 # Give java extra memory (2GB)
 ENV JAVA_OPTS=-Xmx2000m
-COPY scripts/restart_debug/* /usr/local/tomcat/bin
-COPY scripts/index-scripts/* /dspace/bin
+COPY --chown=1234:1234 scripts/restart_debug/* /usr/local/tomcat/bin
+COPY --chown=1234:1234 scripts/index-scripts/* /dspace/bin
 # Link the DSpace 'server' webapp into Tomcat's webapps directory.
 # This ensures that when we start Tomcat, it runs from /server path (e.g. http://localhost:8080/server/)
 RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server
@@ -66,6 +69,6 @@ RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server
 # Please note that server webapp should only run on one path at a time.
 #RUN mv /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.bk && \
 #    ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/ROOT
-
+USER 1234
 WORKDIR /usr/local/tomcat/bin
 RUN chmod u+x redebug.sh undebug.sh custom_run.sh
