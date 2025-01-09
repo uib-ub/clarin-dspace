@@ -70,7 +70,7 @@ RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server
 #RUN mv /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.bk && \
 #    ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/ROOT
 # Run as dspace user
-USER dspace
+USER 1234
 
 WORKDIR /usr/local/tomcat/bin
 RUN chmod u+x redebug.sh undebug.sh custom_run.sh
