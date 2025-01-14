@@ -52,6 +52,14 @@ stages:
 - build
 - deploy
 
+build_dependencies:
+  stage: build
+  variables:
+    dir: .
+    image_name: Dockerfile.dependencies
+  extends:
+   - .build_container_image
+
 build_container:
   stage: build
   variables:
@@ -60,11 +68,15 @@ build_container:
     dockerfile: Dockerfile
   extends:
     - .build_container_image
+  needs: ['build_dependencies']
 
 promote_prod:
   stage: deploy
-  variables:
-    image_name: clarin-dspace
+  parallel:
+    matrix:
+     - image_name: 
+       - clarin-dspace
+       - dspace-dependencies
     existing_tag: $CI_COMMIT_SHORT_SHA
   before_script:
     - apk add git
