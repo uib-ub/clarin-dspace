@@ -8,7 +8,7 @@
 ARG JDK_VERSION=11
 ARG DSPACE_DEPENDENCY_IMAGE=ufal/dspace-dependencies:dspace-7_x
 # Step 1 - Run Maven Build
-FROM ufal/dspace-dependencies:dspace-7_x AS build
+FROM $DSPACE_DEPENDENCY_IMAGE AS build
 ARG TARGET_DIR=dspace-installer
 WORKDIR /app
 # The dspace-installer directory will be written to /install

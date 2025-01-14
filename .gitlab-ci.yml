@@ -64,6 +64,7 @@ build_dependencies:
 build_container:
   stage: build
   variables:
+    DSPACE_DEPENDENCY_IMAGE: itgit.app.uib.no:4567/ub/clarino/clarin-dspace/clarin-dspace-dependencies:latest
     dir: .
     image_name: clarin-dspace
     dockerfile: Dockerfile
