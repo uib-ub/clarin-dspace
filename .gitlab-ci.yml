@@ -56,7 +56,8 @@ build_dependencies:
   stage: build
   variables:
     dir: .
-    image_name: Dockerfile.dependencies
+    image_name: clarin-dspace-dependencies
+    dockerfile: Dockerfile.dependencies
   extends:
    - .build_container_image
 
