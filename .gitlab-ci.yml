@@ -68,6 +68,7 @@ build_container:
     docker_build_extra_args: "--build-arg DSPACE_DEPENDENCY_IMAGE=itgit.app.uib.no:4567/ub/clarino/clarin-dspace/clarin-dspace-dependencies:latest"
     image_name: clarin-dspace
     dockerfile: Dockerfile
+    dir: .
   extends:
     - .build_container_image
   needs: ['build_dependencies']
