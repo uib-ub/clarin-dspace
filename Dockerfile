@@ -63,9 +63,13 @@ COPY --chown=1234:1234 scripts/restart_debug/* /usr/local/tomcat/bin
 COPY --chown=1234:1234 scripts/index-scripts/* /dspace/bin
 # Link the DSpace 'server' webapp into Tomcat's webapps directory.
 # This ensures that when we start Tomcat, it runs from /server path (e.g. http://localhost:8080/server/)
-RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server
+RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server && \
+mkdir -p /usr/local/tomcat/conf/Catalina/localhost && \
+chown 1234:1234 /usr/local/tomcat/conf/Catalina/localhost
 # If you wish to run "server" webapp off the ROOT path, then comment out the above RUN, and uncomment the below RUN.
 # You also MUST update the 'dspace.server.url' configuration to match.
+#
+/usr/local/tomcat/conf/Catalina/localhost
 # Please note that server webapp should only run on one path at a time.
 #RUN mv /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.bk && \
 #    ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/ROOT
