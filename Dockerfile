@@ -69,7 +69,6 @@ chown 1234:1234 /usr/local/tomcat/conf/Catalina/localhost
 # If you wish to run "server" webapp off the ROOT path, then comment out the above RUN, and uncomment the below RUN.
 # You also MUST update the 'dspace.server.url' configuration to match.
 #
-/usr/local/tomcat/conf/Catalina/localhost
 # Please note that server webapp should only run on one path at a time.
 #RUN mv /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.bk && \
 #    ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/ROOT
@@ -77,4 +76,3 @@ chown 1234:1234 /usr/local/tomcat/conf/Catalina/localhost
 USER 1234
 
 WORKDIR /usr/local/tomcat/bin
-RUN chmod u+x redebug.sh undebug.sh custom_run.sh
