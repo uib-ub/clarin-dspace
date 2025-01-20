@@ -59,6 +59,7 @@ build_dependencies:
     dir: .
     image_name: clarin-dspace-dependencies
     dockerfile: Dockerfile.dependencies
+    docker_build_extra_args: " "
   extends:
    - .build_container_image
 
