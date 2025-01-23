@@ -81,7 +81,7 @@ build_container:
 build_postgres_container:
   stage: build
   variables:
-    docker_build_extra_args: "--build-arg POSTGRES_VERSION=13 --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
+    docker_build_extra_args: "--build-arg POSTGRES_DATA_DIR=/data/pgdata --build-arg POSTGRES_VERSION=13 --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
     image_name: dspace-postgres-pgcrypto-curl
     dockerfile: Dockerfile
     dir:  ./dspace/src/main/docker/dspace-postgres-pgcrypto-curl/
