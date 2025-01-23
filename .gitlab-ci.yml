@@ -1,4 +1,4 @@
-image: docker:stable
+image: docker:27
 # 0.0.4
 # Anchors  
 .docker_login: &docker_login
