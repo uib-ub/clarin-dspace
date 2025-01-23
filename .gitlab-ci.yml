@@ -114,6 +114,4 @@ promote_prod:
     - echo "Existing tag is $existing_tag, new tag is $new_tag"
   extends:
     - .promote
-  needs:
-    - build_container
   when: manual
