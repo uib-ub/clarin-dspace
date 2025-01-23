@@ -90,7 +90,7 @@ build_postgres_container:
 build_solr_container:
   stage: build
   variables:
-    docker_build_extra_args: "--build-context solrconfigs=./dspace/solr/"
+    docker_build_extra_args: "../../../../solr/"
     image_name: dspace-solr
     dockerfile: Dockerfile
     dir:  ./dspace/src/main/docker/dspace-solr/
