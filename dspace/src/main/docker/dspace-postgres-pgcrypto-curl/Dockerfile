@@ -11,9 +11,10 @@
 # This will be published as dspace/dspace-postgres-pgcrypto:$DSPACE_VERSION-loadsql
 
 ARG POSTGRES_VERSION=13
+FROM postgres:${POSTGRES_VERSION}
+
 ARG POSTGRES_PASSWORD=dspace
 ARG POSTGRES_DATA_DIR=/pgdata
-FROM postgres:${POSTGRES_VERSION}
 
 ENV POSTGRES_DB dspace
 ENV POSTGRES_USER dspace
