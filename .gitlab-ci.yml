@@ -10,11 +10,11 @@ image: docker:stable
     - cd $dir
     - docker pull $CI_REGISTRY_IMAGE/$image_name:latest || true
     - du -h -d 1
-    - docker build -f ./$dockerfile --cache-from $CI_REGISTRY_IMAGE/$image_name:latest $docker_build_extra_args
+    - docker  buildx build -f ./$dockerfile --cache-from $CI_REGISTRY_IMAGE/$image_name:latest $docker_build_extra_args
       --tag $CI_REGISTRY_IMAGE/$image_name:$CI_COMMIT_SHORT_SHA
       --tag $CI_REGISTRY_IMAGE/$image_name:latest
       --tag $CI_REGISTRY_IMAGE/$image_name:test
-      ${docker_build_context:-.}
+      .
     - docker push $CI_REGISTRY_IMAGE/$image_name:$CI_COMMIT_SHORT_SHA
     - docker push $CI_REGISTRY_IMAGE/$image_name:latest
     - docker push $CI_REGISTRY_IMAGE/$image_name:test
@@ -90,11 +90,10 @@ build_postgres_container:
 build_solr_container:
   stage: build
   variables:
-    docker_build_extra_args: ""
+    docker_build_extra_args: "--build-context solrconfigs=./dspace/solr/"
     image_name: dspace-solr
-    dockerfile: Dockerfile
-    dspace_docker_context:  "../../../../solr/"
-    dir:  ./dspace/src/main/docker/dspace-solr/
+    dockerfile: ./dspace/src/main/docker/dspace-solr/Dockerfile
+    dir:  .
   extends:
     - .build_container_image
 
