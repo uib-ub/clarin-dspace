@@ -18,11 +18,11 @@ FROM postgres:${POSTGRES_VERSION}
 ENV POSTGRES_DB dspace
 ENV POSTGRES_USER dspace
 ENV POSTGRES_PASSWORD ${POSTGRES_PASSWORD}
-ENV POSTGRES_DATA_DIR=${POSTGRES_DATA_DIR}
+ENV POSTGRES_DATA_DIR ${POSTGRES_DATA_DIR}
 # Install curl which is necessary to load SQL file
 # Copy directory needed by postgres to initialize first time
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*  && \
-echo $POSTGRES_DATA_DIR && \
+echo ${POSTGRES_DATA_DIR} && \
  mkdir -p $POSTGRES_DATA_DIR && \
 chown 999 $POSTGRES_DATA
 # Load a SQL dump.  Set LOADSQL to a URL for the sql dump file.
