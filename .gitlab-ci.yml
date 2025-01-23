@@ -10,7 +10,7 @@ image: docker:stable
     - cd $dir
     - docker pull $CI_REGISTRY_IMAGE/$image_name:latest || true
     - du -h -d 1
-    - docker  buildx build -f ./$dockerfile --cache-from $CI_REGISTRY_IMAGE/$image_name:latest $docker_build_extra_args
+    - docker buildx build --file ./$dockerfile --cache-from $CI_REGISTRY_IMAGE/$image_name:latest $docker_build_extra_args
       --tag $CI_REGISTRY_IMAGE/$image_name:$CI_COMMIT_SHORT_SHA
       --tag $CI_REGISTRY_IMAGE/$image_name:latest
       --tag $CI_REGISTRY_IMAGE/$image_name:test
@@ -92,7 +92,7 @@ build_solr_container:
   variables:
     docker_build_extra_args: "--build-context solrconfigs=./dspace/solr/"
     image_name: dspace-solr
-    dockerfile: ./dspace/src/main/docker/dspace-solr/Dockerfile
+    dockerfile: dspace/src/main/docker/dspace-solr/Dockerfile
     dir:  .
   extends:
     - .build_container_image
