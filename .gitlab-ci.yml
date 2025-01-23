@@ -1,5 +1,5 @@
 image: docker:27
-# 0.0.4
+# 0.0.5
 # Anchors  
 .docker_login: &docker_login
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
