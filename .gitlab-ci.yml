@@ -80,10 +80,20 @@ build_container:
 build_postgres_container:
   stage: build
   variables:
-    docker_build_extra_args: "--build-arg POSTGRES_VERSION=16 --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
+    docker_build_extra_args: "--build-arg POSTGRES_VERSION=13 --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
     image_name: dspace-postgres-pgcrypto-curl
     dockerfile: Dockerfile
     dir:  ./dspace/src/main/docker/dspace-postgres-pgcrypto-curl/
+  extends:
+    - .build_container_image
+
+build_solr_container:
+  stage: build
+  variables:
+    docker_build_extra_args: "--build-context solrconfigs=./dspace/solr/"
+    image_name: dspace-solr
+    dockerfile: Dockerfile
+    dir:  ./dspace/src/main/docker/solr/
   extends:
     - .build_container_image
 
@@ -97,6 +107,7 @@ promote_prod:
       - clarin-dspace
       - clarin-dspace-dependencies
       - dspace-postgres-pgcrypto-curl
+      - dspace-solr
   before_script:
     - apk add git
     - new_tag=$(git describe --tags | tr "-" "." | cut -d "." -f1-3 | grep "[0-9]\.[0-9]\.[0-9]" || echo "$(git describe --tags).0")
@@ -105,3 +116,4 @@ promote_prod:
     - .promote
   needs:
     - build_container
+  when: manual
