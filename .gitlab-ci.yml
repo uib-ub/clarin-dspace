@@ -93,7 +93,7 @@ build_solr_container:
     docker_build_extra_args: "--build-context solrconfigs=./dspace/solr/"
     image_name: dspace-solr
     dockerfile: Dockerfile
-    dir:  ./dspace/src/main/docker/solr/
+    dir:  ./dspace/src/main/docker/dspace-solr/
   extends:
     - .build_container_image
 
