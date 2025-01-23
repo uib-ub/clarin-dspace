@@ -24,3 +24,4 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Load a SQL dump.  Set LOADSQL to a URL for the sql dump file.
 COPY install-pgcrypto.sh /docker-entrypoint-initdb.d/
+USER 999
