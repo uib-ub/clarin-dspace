@@ -22,7 +22,7 @@ ENV POSTGRES_PASSWORD ${POSTGRES_PASSWORD}
 # Install curl which is necessary to load SQL file
 # Copy directory needed by postgres to initialize first time
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*  &&\
-mkdir $POSTGRES_DATA_DIR && \
+mkdir -p $POSTGRES_DATA_DIR && \
 chown 999 $POSTGRES_DATA
 # Load a SQL dump.  Set LOADSQL to a URL for the sql dump file.
 COPY install-pgcrypto.sh /docker-entrypoint-initdb.d/
