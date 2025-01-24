@@ -15,24 +15,24 @@ ARG SOLR_VERSION=8.11
 FROM solr:${SOLR_VERSION}-slim
 
 ENV AUTHORITY_CONFIGSET_PATH=/opt/solr/server/solr/configsets/authority/conf \
-    OAI_CONFIGSET_PATH=/opt/solr/server/solr/configsets/oai/conf \
-    SEARCH_CONFIGSET_PATH=/opt/solr/server/solr/configsets/search/conf \
-    STATISTICS_CONFIGSET_PATH=/opt/solr/server/solr/configsets/statistics/conf
+  OAI_CONFIGSET_PATH=/opt/solr/server/solr/configsets/oai/conf \
+  SEARCH_CONFIGSET_PATH=/opt/solr/server/solr/configsets/search/conf \
+  STATISTICS_CONFIGSET_PATH=/opt/solr/server/solr/configsets/statistics/conf
 
 USER root
 
 RUN mkdir -p $AUTHORITY_CONFIGSET_PATH && \
-    mkdir -p $OAI_CONFIGSET_PATH && \
-    mkdir -p $SEARCH_CONFIGSET_PATH && \
-    mkdir -p $STATISTICS_CONFIGSET_PATH
+  mkdir -p $OAI_CONFIGSET_PATH && \
+  mkdir -p $SEARCH_CONFIGSET_PATH && \
+  mkdir -p $STATISTICS_CONFIGSET_PATH
 
 COPY dspace/solr/authority/conf/* $AUTHORITY_CONFIGSET_PATH/
 COPY dspace/solr/oai/conf/* $OAI_CONFIGSET_PATH/
 COPY dspace/solr/search/conf/* $SEARCH_CONFIGSET_PATH/
 COPY dspace/solr/statistics/conf/* $STATISTICS_CONFIGSET_PATH/
 
-RUN chown -R solr:solr /opt/solr/server/solr/configsets
+RUN chown -R 8983:8983 /opt/solr/server/solr/configsets
 
 COPY scripts/log4j2.solr.xml /var/solr/log4j2.xml
 
-USER solr
+USER 8983
