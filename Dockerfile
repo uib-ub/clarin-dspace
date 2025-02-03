@@ -67,7 +67,7 @@ RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server && \
 mkdir -p /usr/local/tomcat/conf/Catalina/localhost && \
 chown 1234:1234 /usr/local/tomcat/conf/Catalina/localhost && \
 apt-get update -y && \
-apt-get install -y --no-install-recommends python3 && \
+apt-get install -y --no-install-recommends python3 postgresql-client && \
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 rm -rf /var/lib/apt/lists/*; 
 # If you wish to run "server" webapp off the ROOT path, then comment out the above RUN, and uncomment the below RUN.
