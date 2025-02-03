@@ -73,7 +73,6 @@ build_container:
     dir: .
   extends:
     - .build_container_image
-  needs: ['build_dependencies']
   when: manual
 
 
