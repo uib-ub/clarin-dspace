@@ -11,16 +11,21 @@
 # This will be published as dspace/dspace-postgres-pgcrypto:$DSPACE_VERSION-loadsql
 
 ARG POSTGRES_VERSION=13
-ARG POSTGRES_PASSWORD=dspace
-
 FROM postgres:${POSTGRES_VERSION}
+
+ARG POSTGRES_PASSWORD=dspace
+ARG POSTGRES_DATA_DIR=/pgdata
 
 ENV POSTGRES_DB dspace
 ENV POSTGRES_USER dspace
 ENV POSTGRES_PASSWORD ${POSTGRES_PASSWORD}
-
+ENV POSTGRES_DATA_DIR ${POSTGRES_DATA_DIR}
 # Install curl which is necessary to load SQL file
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-
+# Copy directory needed by postgres to initialize first time
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*  && \
+echo ${POSTGRES_DATA_DIR} && \
+ mkdir -p $POSTGRES_DATA_DIR && \
+chown 999 $POSTGRES_DATA_DIR
 # Load a SQL dump.  Set LOADSQL to a URL for the sql dump file.
 COPY install-pgcrypto.sh /docker-entrypoint-initdb.d/
+USER 999

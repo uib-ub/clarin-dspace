@@ -6,9 +6,10 @@
 # This Dockerfile uses JDK11 by default, but has also been tested with JDK17.
 # To build with JDK17, use "--build-arg JDK_VERSION=17"
 ARG JDK_VERSION=11
+ARG DSPACE_DEPENDENCY_IMAGE=ufal/dspace-dependencies:dspace-7_x
 
 # Step 1 - Run Maven Build
-FROM ufal/dspace-dependencies:dspace-7_x as build
+FROM $DSPACE_DEPENDENCY_IMAGE AS build
 ARG TARGET_DIR=dspace-installer
 WORKDIR /app
 # The dspace-installer directory will be written to /install
@@ -51,7 +52,7 @@ ENV DSPACE_INSTALL=/dspace
 RUN groupadd -g 1234 dspace && \
     useradd  -u 1234 -g dspace dspace
 # Copy the /dspace directory from 'ant_build' container to /dspace in this container
-COPY --from=ant_build --chown 1234:1234 /dspace $DSPACE_INSTALL
+COPY --from=ant_build --chown=1234:1234 /dspace $DSPACE_INSTALL
 # Give java extra memory (1GB)
 ENV JAVA_OPTS=-Xmx1000m
-USER dspace
+USER 1234
