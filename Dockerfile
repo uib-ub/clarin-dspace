@@ -6,9 +6,9 @@
 # This Dockerfile uses JDK11 by default, but has also been tested with JDK17.
 # To build with JDK17, use "--build-arg JDK_VERSION=17"
 ARG JDK_VERSION=11
-
+ARG DSPACE_DEPENDENCY_IMAGE=ufal/dspace-dependencies:dspace-7_x
 # Step 1 - Run Maven Build
-FROM ufal/dspace-dependencies:dspace-7_x AS build
+FROM $DSPACE_DEPENDENCY_IMAGE AS build
 ARG TARGET_DIR=dspace-installer
 WORKDIR /app
 # The dspace-installer directory will be written to /install
@@ -63,9 +63,16 @@ COPY --chown=1234:1234 scripts/restart_debug/* /usr/local/tomcat/bin
 COPY --chown=1234:1234 scripts/index-scripts/* /dspace/bin
 # Link the DSpace 'server' webapp into Tomcat's webapps directory.
 # This ensures that when we start Tomcat, it runs from /server path (e.g. http://localhost:8080/server/)
-RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server
+RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server && \
+mkdir -p /usr/local/tomcat/conf/Catalina/localhost && \
+chown 1234:1234 /usr/local/tomcat/conf/Catalina/localhost && \
+apt-get update -y && \
+apt-get install -y --no-install-recommends python3 postgresql-client && \
+apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+rm -rf /var/lib/apt/lists/*; 
 # If you wish to run "server" webapp off the ROOT path, then comment out the above RUN, and uncomment the below RUN.
 # You also MUST update the 'dspace.server.url' configuration to match.
+#
 # Please note that server webapp should only run on one path at a time.
 #RUN mv /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.bk && \
 #    ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/ROOT
@@ -73,4 +80,3 @@ RUN ln -s $DSPACE_INSTALL/webapps/server   /usr/local/tomcat/webapps/server
 USER 1234
 
 WORKDIR /usr/local/tomcat/bin
-RUN chmod u+x redebug.sh undebug.sh custom_run.sh
