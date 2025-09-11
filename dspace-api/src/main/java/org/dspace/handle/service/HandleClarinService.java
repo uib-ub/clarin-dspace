@@ -8,6 +8,7 @@
 package org.dspace.handle.service;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.dspace.authorize.AuthorizeException;
@@ -75,6 +76,23 @@ public interface HandleClarinService {
      * @throws AuthorizeException if authorization error
      */
     public Handle createExternalHandle(Context context, String handleStr, String url)
+            throws SQLException, AuthorizeException;
+
+    /**
+     * Creates a new external Handle with the given handle string, URL, and optional dead status and date.
+     * Only administrators are authorized to create external handles.
+     * The created handle is saved and returned.
+     *
+     * @param context    the DSpace context
+     * @param handleStr  the string representation of the handle
+     * @param url        the URL to associate with the handle
+     * @param dead       whether the handle is marked as dead
+     * @param deadSince  the date since the handle has been dead
+     * @return the newly created Handle
+     * @throws SQLException        if a database error occurs
+     * @throws AuthorizeException  if the current user is not an administrator
+     */
+    public Handle createExternalHandle(Context context, String handleStr, String url, Boolean dead, Date deadSince)
             throws SQLException, AuthorizeException;
 
     /**
@@ -157,6 +175,14 @@ public interface HandleClarinService {
     public DSpaceObject resolveToObject(Context context, String handle) throws IllegalStateException, SQLException;
 
     /**
+     * Return the number of entries in the handle table.
+     * @param context
+     * @return number of rows in the handle table
+     * @throws SQLException
+     */
+    int count(Context context) throws SQLException;
+
+    /**
      * Create the external handles from the list of handles with magic URL
      *
      * @param magicHandles handles with `@magicLindat` string in the URL
@@ -226,4 +252,15 @@ public interface HandleClarinService {
      * @throws AuthorizeException if authorization error
      */
     public Handle createHandle(Context context, String handle) throws SQLException, AuthorizeException;
+
+    /**
+     * Returns a handle entity matching the provided `prefix/suffix` but only when the "magic url"
+     * contains the provided token.
+     * @param context
+     * @param handle prefix/suffix
+     * @param token the automatically generated part of the magic URL
+     * @return Handle entity or null (if the handle is not found or the "magic url" does not contain the provided token)
+     * @throws SQLException
+     */
+    Handle findByHandleAndMagicToken(Context context, String handle, String token) throws SQLException;
 }

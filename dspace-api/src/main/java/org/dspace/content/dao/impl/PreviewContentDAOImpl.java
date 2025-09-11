@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.persistence.Query;
 
+import org.dspace.content.Bitstream;
 import org.dspace.content.PreviewContent;
 import org.dspace.content.dao.PreviewContentDAO;
 import org.dspace.core.AbstractHibernateDAO;
@@ -39,16 +40,25 @@ public class PreviewContentDAOImpl extends AbstractHibernateDAO<PreviewContent> 
     }
 
     @Override
-    public List<PreviewContent> findRootByBitstream(Context context, UUID bitstreamId) throws SQLException {
-        // select only data from the previewcontent table whose ID is not a child in the preview2preview table
+    public boolean hasPreview(Context context, Bitstream bitstream) throws SQLException {
         Query query = createQuery(context,
-                "SELECT pc FROM " + PreviewContent.class.getSimpleName() + " pc " +
-                        "JOIN pc.bitstream b " +
-                        "WHERE b.id = :bitstream_id " +
-                        "AND pc.id NOT IN (SELECT child.id FROM " + PreviewContent.class.getSimpleName() + " parent " +
-                        "JOIN parent.sub child)"
+                "SELECT COUNT(pc) FROM " + PreviewContent.class.getSimpleName() +
+                        " pc WHERE pc.bitstream.id = :bitstream_id");
+        query.setParameter("bitstream_id", bitstream.getID());
+        return count(query) > 0;
+    }
+
+    @Override
+    public List<PreviewContent> getPreview(Context context, Bitstream bitstream) throws SQLException {
+        // select only data from the previewcontent table whose ID is not a child in the preview2preview table
+        Query query = getHibernateSession(context).createNativeQuery(
+                "SELECT pc.* FROM previewcontent pc " +
+                        "JOIN bitstream b ON pc.bitstream_id = b.uuid " +
+                        "WHERE b.uuid = :bitstream_id " +
+                        "AND NOT EXISTS (SELECT 1 FROM preview2preview p2p WHERE pc.previewcontent_id = p2p.child_id)",
+                PreviewContent.class
         );
-        query.setParameter("bitstream_id", bitstreamId);
+        query.setParameter("bitstream_id", bitstream.getID());
         query.setHint("org.hibernate.cacheable", Boolean.TRUE);
         return findMany(context, query);
     }
