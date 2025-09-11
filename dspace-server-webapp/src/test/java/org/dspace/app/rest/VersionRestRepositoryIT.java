@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -23,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -325,6 +328,53 @@ public class VersionRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void createVersionTitleWithDateTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                .withName("Parent Community")
+                .build();
+
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                .withName("Collection test")
+                .build();
+
+        Item item = ItemBuilder.createItem(context, col)
+                .withTitle("Public test item")
+                .withIssueDate("2021-04-27")
+                .withAuthor("Doe, John")
+                .withSubject("ExtraEntry")
+                .build();
+
+        context.restoreAuthSystemState();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = LocalDate.now().format(formatter);
+        // Set the item's title with the formatted date appended
+        String titleWithDate = item.getName() + " (" + formattedDate + ")";
+
+        AtomicReference<Integer> idRef = new AtomicReference<Integer>();
+        String adminToken = getAuthToken(admin.getEmail(), password);
+
+        try {
+            getClient(adminToken).perform(post("/api/versioning/versions")
+                            .param("summary", "test summary!")
+                            .contentType(MediaType.parseMediaType(RestMediaTypes.TEXT_URI_LIST_VALUE))
+                            .content("/api/core/items/" + item.getID()))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$", Matchers.allOf(
+                            hasJsonPath("$.version", is(2)),
+                            hasJsonPath("$.summary", is("test summary!")),
+                            hasJsonPath("$.submitterName", is("first (admin) last (admin)")),
+                            hasJsonPath("$.type", is("version"))
+                    )))
+                    .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$.id")));
+            assertEquals(titleWithDate, versioningService.getVersion(context, idRef.get()).getItem().getName());
+        } finally {
+            VersionBuilder.delete(idRef.get());
+        }
+    }
+
+    @Test
     public void createFirstVersionWithoutSummaryTest() throws Exception {
         context.turnOffAuthorisationSystem();
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -376,6 +426,8 @@ public class VersionRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Test
     public void createFirstVersionItemForbiddenTest() throws Exception {
+        configurationService.setProperty("versioning.submitterCanCreateNewVersion", false);
+
         String epersonToken = getAuthToken(eperson.getEmail(), password);
         getClient(epersonToken).perform(post("/api/versioning/versions")
                                .param("summary", "test summary!")
@@ -1498,6 +1550,7 @@ public class VersionRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Test
     public void checkDeleteOfMultipleVersionWithAuthorizationTest() throws Exception {
+        configurationService.setProperty("versioning.unarchive.previous.version", true);
         context.turnOffAuthorisationSystem();
 
         AuthorizationFeature canDeleteVersionFeature = authorizationFeatureService.find(CanDeleteVersionFeature.NAME);
@@ -1705,4 +1758,65 @@ public class VersionRestRepositoryIT extends AbstractControllerIntegrationTest {
         return newItem;
     }
 
+    @Test
+    public void createNewVersionDoesNotUnarchivePreviousVersionTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        // Use a collection where admin can deposit to complete the archive quickly
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection test")
+                                          .withSubmitterGroup(admin)
+                                          .build();
+
+        // Create first version (archived)
+        Item firstVersionItem = ItemBuilder.createItem(context, col)
+                                           .withTitle("Public test item")
+                                           .withIssueDate("2021-04-27")
+                                           .withAuthor("Doe, John")
+                                           .withSubject("ExtraEntry")
+                                           .grantLicense()
+                                           .build();
+
+        // Create new version (initially not archived)
+        Version v2 = VersionBuilder.createVersion(context, firstVersionItem, "test summary").build();
+        Item newVersionItem = v2.getItem();
+        context.restoreAuthSystemState();
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+
+        // Sanity: first version is archived
+        getClient(adminToken).perform(get("/api/core/items/" + firstVersionItem.getID()))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$.inArchive", Matchers.is(true)));
+
+        // Sanity: new version is not archived yet
+        getClient(adminToken).perform(get("/api/core/items/" + newVersionItem.getID()))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$.inArchive", Matchers.is(false)));
+
+        // Move new version out of workspace into archive
+        AtomicReference<Integer> wsiIdRef = new AtomicReference<Integer>();
+        getClient(adminToken).perform(get("/api/submission/workspaceitems/search/item")
+                             .param("uuid", String.valueOf(newVersionItem.getID())))
+                             .andExpect(status().isOk())
+                             .andDo(result -> wsiIdRef.set(read(result.getResponse().getContentAsString(), "$.id")));
+
+        getClient(adminToken).perform(post(BASE_REST_SERVER_URL + "/api/workflow/workflowitems")
+                             .content("/api/submission/workspaceitems/" + wsiIdRef.get())
+                             .contentType(textUriContentType))
+                             .andExpect(status().isCreated());
+
+        // After archiving new version: it should be archived
+        getClient(adminToken).perform(get("/api/core/items/" + newVersionItem.getID()))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$.inArchive", Matchers.is(true)));
+
+        // And the previous version MUST remain archived (NOT unarchived)
+        getClient(adminToken).perform(get("/api/core/items/" + firstVersionItem.getID()))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$.inArchive", Matchers.is(true)));
+    }
 }

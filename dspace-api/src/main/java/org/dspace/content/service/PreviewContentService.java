@@ -7,6 +7,7 @@
  */
 package org.dspace.content.service;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,10 @@ import java.util.UUID;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
+import org.dspace.content.Item;
 import org.dspace.content.PreviewContent;
 import org.dspace.core.Context;
+import org.dspace.util.FileInfo;
 
 /**
  * Service interface class for the PreviewContent object.
@@ -80,13 +83,24 @@ public interface PreviewContentService {
     List<PreviewContent> findByBitstream(Context context, UUID bitstream_id) throws SQLException;
 
     /**
+     * Returns true if the bitstream has associated preview content.
+     *
+     * @param context        DSpace context
+     * @param bitstream      The bitstream to get bitstream UUID
+     * @return               True if preview content exists, false otherwise
+     * @throws SQLException  If a database error occurs
+     */
+    boolean hasPreview(Context context, Bitstream bitstream) throws SQLException;
+
+    /**
      * Find all preview content based on bitstream that are the root directory.
      *
      * @param context        DSpace context
-     * @param bitstream_id   The ID of the bitstream
+     * @param bitstream      The bitstream to get bitstream UUID
+     * @return               List of preview contents
      * @throws SQLException  If a database error occurs
      */
-    List<PreviewContent> findRootByBitstream(Context context, UUID bitstream_id) throws SQLException;
+    List<PreviewContent> getPreview(Context context, Bitstream bitstream) throws SQLException;
 
     /**
      * Find all preview contents from database.
@@ -95,4 +109,60 @@ public interface PreviewContentService {
      * @throws SQLException  If a database error occurs
      */
     List<PreviewContent> findAll(Context context) throws SQLException;
+
+    /**
+     * Find out if the bitstream could be previewed
+     *
+     * @param context DSpace context object
+     * @param bitstream check if this bitstream could be previewed
+     * @param authorization true if authorization is required else false
+     * @return true if the bitstream could be previewed, false otherwise
+     */
+    boolean canPreview(Context context, Bitstream bitstream, boolean authorization)
+            throws SQLException, AuthorizeException;
+
+    /**
+     * Return converted ZIP file content into FileInfo classes.
+     *
+     * @param context DSpace context object
+     * @param bitstream ZIP file bitstream
+     * @return List of FileInfo classes where is wrapped ZIP file content
+     */
+    List<FileInfo> getFilePreviewContent(Context context, Bitstream bitstream) throws Exception;
+
+    /**
+     * Create preview content from file info for bitstream.
+     *
+     * @param context   DSpace context object
+     * @param bitstream bitstream
+     * @param fi        file info
+     * @return          created preview content
+     * @throws SQLException If database error is occurred
+     */
+    PreviewContent createPreviewContent(Context context, Bitstream bitstream, FileInfo fi) throws SQLException;
+
+    /**
+     * Compose download URL for calling `MetadataBitstreamController` to download single file or
+     * all files as a single ZIP file.
+     */
+    String composePreviewURL(Context context, Item item, Bitstream bitstream, String contextPath) throws SQLException;
+
+    /**
+     * Create file info from preview content.
+     *
+     * @param pc  preview content
+     * @return    created file info
+     */
+    FileInfo createFileInfo(PreviewContent pc);
+
+    /**
+     * Convert File of the ZIP file into FileInfo classes.
+     *
+     * @param context DSpace context object
+     * @param bitstream previewing bitstream
+     * @param file content of the zip file
+     * @return List of FileInfo classes where is wrapped ZIP file content
+     */
+    List<FileInfo> processFileToFilePreview(Context context, Bitstream bitstream, File file)
+            throws Exception;
 }

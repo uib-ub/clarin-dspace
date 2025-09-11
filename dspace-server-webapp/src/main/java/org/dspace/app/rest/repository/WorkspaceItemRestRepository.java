@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.BadRequestException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FileUtils;
@@ -71,6 +70,8 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.EPersonServiceImpl;
+import org.dspace.eperson.Group;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.event.Event;
 import org.dspace.importer.external.datamodel.ImportRecord;
 import org.dspace.importer.external.exception.FileMultipleOccurencesException;
@@ -150,6 +151,9 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
 
     @Autowired
     WorkspaceItemService workspaceItemService;
+
+    @Autowired
+    GroupService groupService;
 
     private SubmissionConfigService submissionConfigService;
 
@@ -492,9 +496,15 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
             if (CollectionUtils.isEmpty(witems)) {
                 String errorMessage = "The workspace item with share token:" + shareToken + " does not exist.";
                 log.error(errorMessage);
-                throw new BadRequestException(errorMessage);
+                throw new DSpaceBadRequestException(errorMessage);
             }
-            if (!authorizeService.authorizeActionBoolean(context, witems.get(0).getItem(), Constants.READ)) {
+            // One token can be used to share only one item
+            Collection collection = witems.get(0).getCollection();
+            Group submittersGroup = collection.getSubmitters();
+            boolean isSubmitterGroupMember = submittersGroup != null &&
+                    groupService.isMember(context, context.getCurrentUser(), submittersGroup);
+            boolean canRead = authorizeService.authorizeActionBoolean(context, witems.get(0).getItem(), Constants.READ);
+            if (!canRead && !isSubmitterGroupMember) {
                 String errorMessage = "The current user does not have rights to view the WorkflowItem";
                 log.error(errorMessage);
                 throw new AccessDeniedException(errorMessage);

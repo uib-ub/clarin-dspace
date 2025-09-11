@@ -25,6 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -61,6 +63,7 @@ import org.dspace.discovery.IndexingService;
 import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SolrSearchCore;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.services.ConfigurationService;
 import org.dspace.versioning.Version;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.hamcrest.Matcher;
@@ -80,7 +83,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
  * Some discovery configurations should show all versions, while others should only consider the latest versions.
  */
 public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
-
     @Autowired
     private SearchService searchService;
 
@@ -102,7 +104,11 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
     @Autowired
     private RelationshipService relationshipService;
 
+    @Autowired
+    private ConfigurationService configurationService;
+
     protected Community community;
+    private String formattedDate;
 
     @Override
     @Before
@@ -116,6 +122,9 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             .build();
 
         context.restoreAuthSystemState();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        formattedDate = LocalDate.now().format(formatter);
     }
 
     @Override
@@ -1126,8 +1135,9 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
         // NOTE: VersioningConsumer updates the latest version status of relationships
         //       this implies the relation.* fields change so the relevant items should be re-indexed
 
+        configurationService.setProperty("versioning.unarchive.previous.version", true);
         context.turnOffAuthorisationSystem();
-
+        String publication1date = "publication 1 (" + formattedDate + ")";
         EntityType publicationEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication")
             .build();
 
@@ -1357,7 +1367,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_1 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -1526,7 +1536,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_1 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -1535,7 +1545,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_2 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -1685,7 +1695,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "project-relationships",
             (r) -> r.param("f.isPublicationOfProject", idPub1_2 + ",equals"),
             List.of(
-                matchSearchResult(pro1_2, "project 1")
+                matchSearchResult(pro1_2, "project 1 (" + formattedDate + ")")
             )
         );
 
@@ -1694,7 +1704,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_1 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -1703,7 +1713,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_2 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
     }
@@ -1713,8 +1723,9 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
         // NOTE: VersioningConsumer updates the latest version status of relationships
         //       this implies the relation.* fields change so the relevant items should be re-indexed
 
+        configurationService.setProperty("versioning.unarchive.previous.version", true);
         context.turnOffAuthorisationSystem();
-
+        String publication1date = "publication 1 (" + formattedDate + ")";
         EntityType publicationEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication")
             .build();
 
@@ -1944,7 +1955,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_1 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -2120,7 +2131,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_1 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -2129,7 +2140,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_2 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -2279,7 +2290,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "project-relationships",
             (r) -> r.param("f.isPublicationOfProject", idPub1_2 + ",equals"),
             List.of(
-                matchSearchResult(pro1_2, "project 1")
+                matchSearchResult(pro1_2, "project 1 (" + formattedDate + ")")
             )
         );
 
@@ -2288,7 +2299,7 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_1 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
 
@@ -2297,13 +2308,14 @@ public class DiscoveryVersioningIT extends AbstractControllerIntegrationTest {
             null, "publication-relationships",
             (r) -> r.param("f.isProjectOfPublication", idPro1_2 + ",equals"),
             List.of(
-                matchSearchResult(pub1_2, "publication 1")
+                matchSearchResult(pub1_2, publication1date)
             )
         );
     }
 
     @Test
     public void test_rebuildIndexAllVersionsShouldStillBePresentInSolrCore() throws Exception {
+        configurationService.setProperty("versioning.unarchive.previous.version", true);
         context.turnOffAuthorisationSystem();
 
         EntityType publicationEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication")
