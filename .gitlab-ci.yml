@@ -1,6 +1,6 @@
 image: docker:27
 # 0.0.7
-# Anchors  
+# Anchors
 .docker_login: &docker_login
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
@@ -58,7 +58,7 @@ build_dependencies:
   variables:
     dir: .
     image_name: clarin-dspace-dependencies-v5
-    dockerfile: Dockerfile.dependencies-jdk8
+    dockerfile: Dockerfile.dependencies-jdk8.update
     docker_build_extra_args: " "
   extends:
    - .build_container_image

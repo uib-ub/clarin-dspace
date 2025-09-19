@@ -1,0 +1,30 @@
+# Build cache image for DSpace 5.x using JDK8 + Maven
+FROM maven:3-jdk-8 AS build
+WORKDIR /app
+
+# Create non-root user (Mirage2 can't run as root)
+USER root
+RUN useradd -m -s /bin/bash dspace \
+  && mkdir -p /app/target /home/dspace/.m2 \
+  && chown -R dspace: /home/dspace /app
+
+# Make Maven look in /home/dspace/.m2
+ENV MAVEN_CONFIG=/home/dspace/.m2
+
+# Copy your local Maven settings into the image (rename on copy)
+# Ensure ownership so Maven (running as dspace) can read it.
+COPY --chown=dspace maven-settings.xml ${MAVEN_CONFIG}/settings.xml
+
+# Switch to dspace
+USER dspace
+
+# Copy sources and the build.properties used by the Docker build
+ADD --chown=dspace . /app/
+COPY --chown=dspace dspace/src/main/docker/build.properties /app/build.properties
+
+# Build to pull all deps (incl. Mirage2), then clean artifacts to keep image small
+RUN mvn -B -U package -Dmirage2.on=true && mvn -B clean
+
+# Clear source tree so the image only keeps the warmed ~/.m2 cache
+USER root
+RUN rm -rf /app/*
