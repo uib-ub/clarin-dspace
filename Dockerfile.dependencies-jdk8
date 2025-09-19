@@ -18,7 +18,7 @@ COPY dspace/src/main/docker/build.properties /app/build.properties
 # Install and copy prerequisites
 WORKDIR /app/utilities/project_helpers/scripts
 
-RUN ./setup.prerequisites.sh && cp -r ../bits/ /app/bits && cp../config/local.conf.dist /app/local.properties
+RUN ./setup.prerequisites.sh && cp -r ../bits/ /app/bits && cp ../config/local.conf.dist /app/local.properties
 
 WORKDIR /app
 
