@@ -15,9 +15,16 @@ USER dspace
 ADD --chown=dspace . /app/
 COPY dspace/src/main/docker/build.properties /app/build.properties
 
+# Install and copy prerequisites
+WORKDIR /app/utilities/project_helpers/scripts
+
+RUN ./setup.prerequisites.sh && cp -r ../bits/ /app/bits && cp../config/local.config.dist /app/local.properties
+
+WORKDIR /app
+
 # Trigger the installation of all maven dependencies including the Mirage2 dependencies
 # Clean up the built artifacts in the same step to keep the docker image small
-RUN mvn package  -pl '!b2safe-dspace' -Dmirage2.on=true && mvn clean
+RUN mvn package -Dmirage2.on=true && mvn clean
 
 # Clear the contents of the /app directory so no artifacts are left when dspace:dspace is built
 USER root
