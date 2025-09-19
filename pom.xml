@@ -610,7 +610,7 @@
 	<profile>
 	  <id>lr-b2safe-dspace</id>
 	  <activation>
-	    <activeByDefault>true</activeByDefault>
+	    <activeByDefault>false</activeByDefault>
 	  </activation>
 	  <modules>
 	    <module>lr-b2safe-dspace</module>
