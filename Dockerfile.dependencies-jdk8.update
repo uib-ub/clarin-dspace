@@ -23,7 +23,7 @@ ADD --chown=dspace . /app/
 COPY --chown=dspace dspace/src/main/docker/build.properties /app/build.properties
 
 # Build to pull all deps (incl. Mirage2), then clean artifacts to keep image small
-RUN mvn -B -U package -P '!dspace-oai,!dspace-lni,!dspace-xmlui' -pl '!lr-b2safe-dspace' && mvn -B clean -pl '!lr-b2safe-dspace,!dspace-xmlui,!dspace-xmlui-mirage2'
+RUN mvn -B -U package -P '!dspace-oai,!dspace-lni,!dspace-xmlui' && mvn -B clean -pl '!lr-b2safe-dspace,!dspace-xmlui,!dspace-xmlui-mirage2'
 
 # Clear source tree so the image only keeps the warmed ~/.m2 cache
 USER root
