@@ -1,4 +1,4 @@
-# This image will be published as dspace/dspace
+# This image will be published as dspace/dspace 
 # See https://github.com/DSpace/DSpace/tree/main/dspace/src/main/docker for usage details
 #
 # - note: default tag for branch: dspace/dspace: dspace/dspace:dspace-7_x
