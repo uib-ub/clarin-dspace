@@ -39,7 +39,7 @@ image: docker:28
     - trivy image --exit-code 0 --no-progress --severity "UNKNOWN,HIGH,CRITICAL" --format template --template "@/tmp/trivy-gitlab.tpl" -o gl-container-scanning-report.json $CI_REGISTRY_IMAGE/$image_name:$image_tag
     - trivy image --exit-code 0 --no-progress --severity "UNKNOWN,HIGH,CRITICAL" -o gl-container-scanning-report.txt $CI_REGISTRY_IMAGE/$image_name:$image_tag
     - trivy image --exit-code 0 --no-progress --severity "UNKNOWN,HIGH,CRITICAL" $CI_REGISTRY_IMAGE/$image_name:$image_tag
-    - trivy --quiet image --exit-code $exit_code_when_found --no-progress --severity CRITICAL $CI_REGISTRY_IMAGE/$image_name:$image_tag >/dev/null
+    - trivy --quiet image --exit-code 1 --no-progress --severity CRITICAL $CI_REGISTRY_IMAGE/$image_name:$image_tag >/dev/null
   artifacts:
     paths:
       - gl-container-scanning-report.json
