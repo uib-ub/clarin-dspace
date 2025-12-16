@@ -26,13 +26,13 @@ RUN mvn --no-transfer-progress package && \
   mvn clean
 
 # Step 2 - Run Ant Deploy
-FROM openjdk:${JDK_VERSION}-slim AS ant_build
+FROM docker.io/eclipse-temurin:${JDK_VERSION} AS ant_build
 ARG TARGET_DIR=dspace-installer
 # COPY the /install directory from 'build' container to /dspace-src in this container
 COPY --from=build /install /dspace-src
 WORKDIR /dspace-src
 # Create the initial install deployment using ANT
-ENV ANT_VERSION 1.10.13
+ENV ANT_VERSION 1.10.15
 ENV ANT_HOME /tmp/ant-$ANT_VERSION
 ENV PATH $ANT_HOME/bin:$PATH
 # Need wget to install ant
