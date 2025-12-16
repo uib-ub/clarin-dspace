@@ -34,7 +34,7 @@ image: docker:28
     - apk add --no-cache curl docker-cli
     - curl -sSL -o /tmp/trivy-gitlab.tpl https://github.com/aquasecurity/trivy/raw/main/contrib/gitlab.tpl
     - *docker_login
-    - trivy image --clear-cache
+    - trivy clean --scan-cache
     - docker pull $CI_REGISTRY_IMAGE/$image_name:$image_tag
     - trivy image --exit-code 0 --no-progress --severity "UNKNOWN,HIGH,CRITICAL" --format template --template "@/tmp/trivy-gitlab.tpl" -o gl-container-scanning-report.json $CI_REGISTRY_IMAGE/$image_name:$image_tag
     - trivy image --exit-code 0 --no-progress --severity "UNKNOWN,HIGH,CRITICAL" -o gl-container-scanning-report.txt $CI_REGISTRY_IMAGE/$image_name:$image_tag
