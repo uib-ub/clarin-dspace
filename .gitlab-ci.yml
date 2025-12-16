@@ -135,6 +135,8 @@ security_scan:
     matrix:
       - scan_image_name: clarin-dspace
         scan_image_tag: latest
+      - scan_image_name: dspace-solr
+        scan_image_tag: latest
   variables:
     image_name: $scan_image_name
     image_tag: $scan_image_tag
