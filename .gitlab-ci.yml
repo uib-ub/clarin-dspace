@@ -1,4 +1,4 @@
-image: docker:27
+image: docker:28
 # 0.0.7
 # Anchors  
 .docker_login: &docker_login
@@ -51,6 +51,7 @@ image: docker:27
 # Stages
 stages:
 - build
+- scan
 - deploy
 
 build_dependencies:
@@ -126,3 +127,17 @@ promote_prod:
   extends:
     - .promote
   when: manual
+
+  ## Scans
+security_scan:
+  stage: scan
+  parallel:
+    matrix:
+      - scan_image_name: clarin-dspace
+        scan_image_tag: latest
+  variables:
+    image_name: $scan_image_name
+    image_tag: $scan_image_tag
+  extends:
+    - .security_scan
+
