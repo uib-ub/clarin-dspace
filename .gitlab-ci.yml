@@ -41,6 +41,7 @@ image: docker:28
     - trivy image --exit-code 0 --no-progress --severity "UNKNOWN,HIGH,CRITICAL" $CI_REGISTRY_IMAGE/$image_name:$image_tag
     - trivy --quiet image --exit-code 1 --no-progress --severity CRITICAL $CI_REGISTRY_IMAGE/$image_name:$image_tag >/dev/null
   artifacts:
+    when: always
     paths:
       - gl-container-scanning-report.json
       - gl-container-scanning-report.txt
